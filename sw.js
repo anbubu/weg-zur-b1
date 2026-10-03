@@ -1,0 +1,15 @@
+// Offline helper for Weg zur B1. build.py fills in the version and the file list.
+const CACHE = 'wzb1-32bcb26d7886';
+const FILES = ["./", "apple-touch-icon.png", "fonts.css", "fonts/f0.woff2", "fonts/f1.woff2", "fonts/f10.woff2", "fonts/f2.woff2", "fonts/f3.woff2", "fonts/f4.woff2", "fonts/f5.woff2", "fonts/f6.woff2", "fonts/f7.woff2", "fonts/f8.woff2", "fonts/f9.woff2", "icon-192.png", "icon-512.png", "icon-maskable-512.png", "index.html", "lucide.min.js", "manifest.webmanifest"];
+
+self.addEventListener('install', e => {
+  e.waitUntil(caches.open(CACHE).then(c => c.addAll(FILES)).then(() => self.skipWaiting()));
+});
+self.addEventListener('activate', e => {
+  e.waitUntil(caches.keys().then(keys => Promise.all(keys.filter(k => k !== CACHE).map(k => caches.delete(k)))).then(() => self.clients.claim()));
+});
+self.addEventListener('fetch', e => {
+  if (e.request.method !== 'GET' || new URL(e.request.url).origin !== location.origin) return;  // YouTube links go straight to the network
+  e.respondWith(caches.match(e.request, {ignoreSearch: true}).then(hit => hit || fetch(e.request).catch(() =>
+    e.request.mode === 'navigate' ? caches.match('./') : Response.error())));
+});
