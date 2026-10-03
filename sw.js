@@ -1,6 +1,6 @@
 // Offline helper for Weg zur B1. build.py fills in the version and the file list.
-const CACHE = 'wzb1-edf65f728bae';
-const FILES = ["./", "apple-touch-icon.png", "fonts.css", "fonts/f0.woff2", "fonts/f1.woff2", "fonts/f10.woff2", "fonts/f2.woff2", "fonts/f3.woff2", "fonts/f4.woff2", "fonts/f5.woff2", "fonts/f6.woff2", "fonts/f7.woff2", "fonts/f8.woff2", "fonts/f9.woff2", "icon-192.png", "icon-512.png", "icon-maskable-512.png", "index.html", "lucide.min.js", "manifest.webmanifest"];
+const CACHE = 'wzb1-c95a1f2d8040';
+const FILES = ["./", "apple-touch-icon.png", "fonts.css", "fonts/f0.woff2", "fonts/f1.woff2", "fonts/f2.woff2", "fonts/f3.woff2", "icon-192.png", "icon-512.png", "icon-maskable-512.png", "index.html", "lucide.min.js", "manifest.webmanifest"];
 
 self.addEventListener('install', e => {
   // cache: 'reload' skips the browser's HTTP cache (GitHub Pages keeps files 10 minutes), so an update never stores the old files

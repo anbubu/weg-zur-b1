@@ -14,39 +14,48 @@
 <link rel="stylesheet" href="fonts.css">
 <script src="lucide.min.js"></script>
 <style>
-/* Layout: coral study dashboard. Gradient ground, a soft frame holding a sidebar plus a bento of white panels; mobile collapses to one column with a bottom tab bar. */
+/* Layout: Brilliant-calm white screens with Drops-colour tiles. A sidebar and an open canvas on desktop; on phones one scrolling column above a floating tab bar. Dark mode is Drops' deep purple. */
 :root{
-  --g1:#E5603F; --g2:#EF9A83; --g3:#FAE3DC; --frame:rgba(255,255,255,.55);
-  --panel:#FFFFFF; --panel2:#FBF5F3; --line:#F1E3DF; --ink:#241A18; --muted:#776560; --faint:#A8968F;
-  --accent:#E8664B; --accent-fill:#C4412A; --accent-ink:#C23F27; --accent-soft:#FDE6DF; --on-accent:#FFFFFF; --cta:#241A18; --on-cta:#FFFFFF;
-  --sun:#F4B43C; --sun-soft:#FDEFD0; --ring3:#7C6CD9;
-  --p-rose:#FADCD7; --p-butter:#FCEBC5; --p-mint:#D3F0E2; --p-lilac:#E2DEF9; --p-sky:#D9E8FB;
-  --der:#2860C8; --die:#C4245E; --das:#177A49;
-  --ok:#13795B; --okbg:#DDF3EA; --bad:#B3261E; --badbg:#FCE4E1;
-  --shadow:0 1px 2px rgba(130,48,26,.06),0 14px 34px -16px rgba(130,48,26,.22);
-  --f:"Geist",ui-sans-serif,system-ui,"Segoe UI",sans-serif; --fm:"Geist Mono",ui-monospace,Consolas,monospace;
-  --r-panel:22px; --r-card:16px; --r-field:12px;
+  --g1:#F6F6F9; --g2:#F6F6F9; --g3:#F6F6F9; --frame:transparent;
+  --panel:#FFFFFF; --panel2:#F2F2F6; --line:#E4E4EB; --ink:#17171F; --muted:#636373; --faint:#9C9CAB;
+  --accent:#7B5CFA; --accent-fill:#6A45F2; --accent-ink:#5A36E0; --accent-soft:#EFEBFF; --on-accent:#FFFFFF;
+  --cta:#1D1D27; --cta-edge:#000000; --on-cta:#FFFFFF;
+  --go:#21B95A; --go-edge:#16904A; --on-go:#FFFFFF; --lime:#E2EA6A; --lime-edge:#B5BD3B; --on-lime:#2A1150;
+  --sun:#F9CF46; --sun-soft:#FFF6D6; --ring3:#188A7E; --glow:#EAF8DF;
+  --t1:#157A70; --t2:#BC2A6E; --t3:#2C7D33; --t4:#7B3FE4; --t5:#A9570C; --t6:#2B67D1;
+  --p-rose:#FDE7F1; --p-butter:#FFF3D6; --p-mint:#DDF6EF; --p-lilac:#EFEBFF; --p-sky:#E3EEFE;
+  --der:#2563EB; --die:#C2185B; --das:#15803D;
+  --ok:#15803D; --okbg:#DCFCE7; --bad:#DC2626; --badbg:#FEE2E2;
+  --shadow:none;
+  --f:"Plus Jakarta Sans",ui-sans-serif,system-ui,"Segoe UI",sans-serif; --fm:var(--f);
+  --r-panel:24px; --r-card:18px; --r-field:14px;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]):not([data-mode="light"]){
-  --g1:#5A2216; --g2:#2D1713; --g3:#161110; --frame:rgba(255,255,255,.06);
-  --panel:#1F1917; --panel2:#2A2220; --line:#3A2F2C; --ink:#F7EFEC; --muted:#BBA9A3; --faint:#86756F;
-  --accent:#F27C60; --accent-fill:#F27C60; --accent-ink:#F7987F; --accent-soft:#4A2A22; --on-accent:#2A120C; --cta:#F7EFEC; --on-cta:#1F1917;
-  --sun:#F2C25A; --sun-soft:#45391D; --ring3:#A79BF4;
-  --p-rose:#4A2A2D; --p-butter:#47381E; --p-mint:#1D3C31; --p-lilac:#322D4E; --p-sky:#1F3248;
-  --der:#8AB1FF; --die:#FF7DA8; --das:#5FD39C;
-  --ok:#4FD1A8; --okbg:#143128; --bad:#FF8E84; --badbg:#3E1D1A;
-  --shadow:0 1px 2px rgba(0,0,0,.3),0 16px 36px -18px rgba(0,0,0,.6);
+  --g1:#371565; --g2:#371565; --g3:#371565; --frame:transparent;
+  --panel:#45207A; --panel2:#522C8A; --line:#613B99; --ink:#FFFFFF; --muted:#D6C8EE; --faint:#A897C9;
+  --accent:#E2EA6A; --accent-fill:#E2EA6A; --accent-ink:#E9EF8C; --accent-soft:#5C3696; --on-accent:#2A1150;
+  --cta:#E2EA6A; --cta-edge:#B4BB3A; --on-cta:#2A1150;
+  --go:#34D399; --go-edge:#109C74; --on-go:#0B2A1E; --lime:#E2EA6A; --lime-edge:#B4BB3A; --on-lime:#2A1150;
+  --sun:#F9CF46; --sun-soft:#5A3A84; --ring3:#5FD3C6; --glow:#5A3A8A;
+  --t1:#157A70; --t2:#CC3379; --t3:#2C7D33; --t4:#8E52F0; --t5:#A9570C; --t6:#2B67D1;
+  --p-rose:#5E2F7C; --p-butter:#5E3F76; --p-mint:#2E4F7A; --p-lilac:#55348C; --p-sky:#3A3F8C;
+  --der:#9DC3FF; --die:#FF8FC4; --das:#7FE3AE;
+  --ok:#6EE7A8; --okbg:#1F5240; --bad:#FF9B9B; --badbg:#6A2350;
+  --shadow:none;
   color-scheme:dark;
 }}
 :root[data-theme="dark"]:not([data-mode="light"]),:root[data-mode="dark"]{
-  --g1:#5A2216; --g2:#2D1713; --g3:#161110; --frame:rgba(255,255,255,.06);
-  --panel:#1F1917; --panel2:#2A2220; --line:#3A2F2C; --ink:#F7EFEC; --muted:#BBA9A3; --faint:#86756F;
-  --accent:#F27C60; --accent-fill:#F27C60; --accent-ink:#F7987F; --accent-soft:#4A2A22; --on-accent:#2A120C; --cta:#F7EFEC; --on-cta:#1F1917;
-  --sun:#F2C25A; --sun-soft:#45391D; --ring3:#A79BF4;
-  --p-rose:#4A2A2D; --p-butter:#47381E; --p-mint:#1D3C31; --p-lilac:#322D4E; --p-sky:#1F3248;
-  --der:#8AB1FF; --die:#FF7DA8; --das:#5FD39C;
-  --ok:#4FD1A8; --okbg:#143128; --bad:#FF8E84; --badbg:#3E1D1A;
-  --shadow:0 1px 2px rgba(0,0,0,.3),0 16px 36px -18px rgba(0,0,0,.6);
+  --g1:#371565; --g2:#371565; --g3:#371565; --frame:transparent;
+  --panel:#45207A; --panel2:#522C8A; --line:#613B99; --ink:#FFFFFF; --muted:#D6C8EE; --faint:#A897C9;
+  --accent:#E2EA6A; --accent-fill:#E2EA6A; --accent-ink:#E9EF8C; --accent-soft:#5C3696; --on-accent:#2A1150;
+  --cta:#E2EA6A; --cta-edge:#B4BB3A; --on-cta:#2A1150;
+  --go:#34D399; --go-edge:#109C74; --on-go:#0B2A1E; --lime:#E2EA6A; --lime-edge:#B4BB3A; --on-lime:#2A1150;
+  --sun:#F9CF46; --sun-soft:#5A3A84; --ring3:#5FD3C6; --glow:#5A3A8A;
+  --t1:#157A70; --t2:#CC3379; --t3:#2C7D33; --t4:#8E52F0; --t5:#A9570C; --t6:#2B67D1;
+  --p-rose:#5E2F7C; --p-butter:#5E3F76; --p-mint:#2E4F7A; --p-lilac:#55348C; --p-sky:#3A3F8C;
+  --der:#9DC3FF; --die:#FF8FC4; --das:#7FE3AE;
+  --ok:#6EE7A8; --okbg:#1F5240; --bad:#FF9B9B; --badbg:#6A2350;
+  --shadow:none;
   color-scheme:dark;
 }
 :root[data-mode="light"]{color-scheme:light}
@@ -508,6 +517,189 @@ textarea.write{width:100%;min-height:230px;resize:vertical;line-height:1.65;font
 .toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--cta);color:var(--on-cta);padding:11px 18px;border-radius:999px;font-weight:600;font-size:.9rem;z-index:30;max-width:calc(100% - 32px);text-align:center;box-shadow:0 12px 30px -12px rgba(0,0,0,.45);animation:toastin .28s cubic-bezier(.16,1,.3,1)}
 @keyframes toastin{from{opacity:0;transform:translate(-50%,8px)}}
 @media (min-width:901px){.toast{bottom:32px}}
+
+/* ---------- premium layer: Brilliant's calm white screens + Drops' colour tiles ---------- */
+body{background:var(--g3);font-size:15.5px;font-variant-numeric:tabular-nums}
+h1,h2,h3{font-weight:800;letter-spacing:-.025em}
+h2{font-size:1.55rem}
+h4{font-weight:700;letter-spacing:.07em;text-transform:uppercase;font-size:.7rem}
+.shell{background:none;padding:0;gap:20px;border-radius:0}
+.side{border:1px solid var(--line);box-shadow:none}
+.brand{border-bottom-color:var(--line)}
+.logo{border-radius:12px;box-shadow:0 3px 0 var(--accent-ink);font-weight:800;letter-spacing:-.02em}
+.navgroup button{font-weight:600;letter-spacing:0}
+.navgroup button[aria-current="page"]{background:var(--accent-soft);color:var(--accent-ink);font-weight:700}
+.navgroup button .badge{background:var(--sun);color:#3A2600;font-weight:700}
+.navgroup button[aria-current="page"] .badge{background:var(--sun);color:#3A2600}
+.topbar{background:transparent;box-shadow:none;padding:8px 4px 4px 6px}
+.tb-title h1{font-size:1.75rem;letter-spacing:-.03em}
+.chip{background:var(--panel);border:1.5px solid var(--line);font:700 .86rem var(--f)}
+.chip.lit svg.i{color:var(--t5)}
+.iconbtn{background:var(--panel);border:1.5px solid var(--line)}
+.avatar{background:var(--accent-soft);color:var(--accent-ink);border:0;box-shadow:none;font-weight:800}
+.card{border:1px solid var(--line);box-shadow:none}
+
+/* chunky buttons: a darker edge underneath that presses down */
+.btn{border-radius:999px;padding:13px 22px;font-weight:700;font-size:.95rem;letter-spacing:.01em;box-shadow:0 4px 0 var(--cta-edge);transition:transform .08s,box-shadow .08s,filter .15s}
+.btn:hover:not(:disabled){box-shadow:0 4px 0 var(--cta-edge);filter:brightness(1.1)}
+.btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--cta-edge)}
+.btn.ghost{background:var(--panel);color:var(--ink);box-shadow:inset 0 0 0 2px var(--line),0 4px 0 var(--line)}
+.btn.ghost:hover:not(:disabled){box-shadow:inset 0 0 0 2px var(--line),0 4px 0 var(--line);filter:none;background:var(--panel2)}
+.btn.ghost:active:not(:disabled){box-shadow:inset 0 0 0 2px var(--line),0 1px 0 var(--line)}
+.btn.go{background:var(--go);color:var(--on-go);box-shadow:0 4px 0 var(--go-edge)}
+.btn.go:hover:not(:disabled){box-shadow:0 4px 0 var(--go-edge)} .btn.go:active:not(:disabled){box-shadow:0 1px 0 var(--go-edge)}
+.btn.lime{background:var(--lime);color:var(--on-lime);box-shadow:0 4px 0 var(--lime-edge)}
+.btn.lime:hover:not(:disabled){box-shadow:0 4px 0 var(--lime-edge)} .btn.lime:active:not(:disabled){box-shadow:0 1px 0 var(--lime-edge)}
+.btn.big{padding:16px;font-size:1.02rem}
+.btn:disabled{box-shadow:none}
+.pill.done{background:var(--go);color:var(--on-go)}
+.bar{height:10px}
+.bar i{background:var(--go)}
+
+/* Drops tiles: saturated colour, white type */
+.tile{border:0;box-shadow:inset 0 0 0 2px var(--line),0 4px 0 var(--line);transition:transform .08s,box-shadow .08s}
+.tile:hover:not(:disabled){transform:none;filter:brightness(1.04)}
+.tile:active:not(:disabled){transform:translateY(3px)}
+.tile b{font-weight:800}
+.tile.p-rose{background:var(--t2)} .tile.p-butter{background:var(--t5)} .tile.p-mint{background:var(--t1)} .tile.p-lilac{background:var(--t4)} .tile.p-sky{background:var(--t6)}
+.tile[class*="p-"]{color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.2)}
+.tile[class*="p-"] span{color:#fff;opacity:.9}
+.tile[class*="p-"] .ic{background:rgba(255,255,255,.22);color:#fff;box-shadow:none}
+.stage{background:var(--p-rose);border-radius:var(--r-card)}
+
+/* the path: every stage has its own colour (--sc) */
+.road div{background:var(--panel2);border-radius:var(--r-card)}
+.road b{font-family:var(--f);font-weight:800}
+.pstage{border:1px solid var(--line);box-shadow:none;padding:6px 8px}
+.pstage .sn{border-radius:12px;background:var(--sc,var(--t4));color:#fff;font:800 .95rem var(--f);box-shadow:0 3px 0 rgba(0,0,0,.18)}
+.pstage.is-done .sn{background:var(--go);color:#fff}
+.pstage.is-cur{box-shadow:inset 0 0 0 2px var(--sc,var(--accent))}
+.pstage .st b{font-size:1.05rem;font-weight:800}
+.course{border:0;box-shadow:inset 0 0 0 2px var(--line),0 4px 0 var(--line);transition:transform .08s}
+.course:hover{transform:translateY(-2px)}
+.course:active{transform:translateY(2px)}
+.course .cover,.course.k-vocab .cover{background:var(--sc,var(--t4));min-height:136px}
+.course .cover .phrase{color:#fff;font-weight:800}
+.course .cover .phrase .m,.course .cover .phrase .f,.course .cover .phrase .n{color:#fff;opacity:.72}
+.course .cover .lv{color:#fff}
+.kchip{background:rgba(255,255,255,.22);color:#fff;font-weight:700}
+.course.next{outline:3px solid var(--sun);outline-offset:-3px}
+.course .ttl b{font-weight:800}
+.course .ttl .pc{color:var(--ok);font-family:var(--f);font-weight:800}
+.cover-hero,.cover-hero.k-vocab{background:var(--sc,var(--t4));color:#fff;border-radius:var(--r-card)}
+.cover-hero .phrase{font-weight:800}
+.cover-hero .phrase .m,.cover-hero .phrase .f,.cover-hero .phrase .n{color:#fff;opacity:.72}
+.lesson{border:0;box-shadow:inset 0 0 0 2px var(--line),0 4px 0 var(--line)}
+.lesson:hover{transform:none;background:var(--panel2)}
+.lesson .num{border-radius:14px;font:800 .95rem var(--f)}
+.lesson.done .num{background:var(--go);color:var(--on-go)}
+.lesson.next{box-shadow:inset 0 0 0 2px var(--accent),0 4px 0 var(--accent)}
+
+/* today's plan: a Drops-style colour header with one lime button */
+.plancard{padding:0;overflow:hidden}
+.phero{background:var(--sc,var(--t4));color:#fff;padding:22px 22px 24px;display:flex;flex-direction:column;gap:10px}
+.phero .ptop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.phero .plabel{font:800 .72rem var(--f);letter-spacing:.08em;text-transform:uppercase;opacity:.9}
+.phero h2{font-size:1.9rem;color:#fff}
+.phero .pcan{margin:0;font-size:.9rem;opacity:.9;max-width:60ch}
+.phero .pmeta{display:flex;justify-content:space-between;font:700 .84rem var(--f);opacity:.95}
+.pbar{height:10px;border-radius:99px;background:rgba(255,255,255,.28);overflow:hidden}
+.pbar i{display:block;height:100%;background:#fff;border-radius:99px;transition:width .5s cubic-bezier(.16,1,.3,1)}
+.phero .cta-row{padding-top:6px;margin-top:0}
+.phero .btn.lime{align-self:flex-start}
+.phero .seg-tabs{background:rgba(255,255,255,.18);box-shadow:none}
+.phero .seg-tabs button{color:#fff;font-weight:700;padding:6px 12px;cursor:pointer}
+.phero .seg-tabs button[aria-pressed="true"]{background:#fff;color:#17171F}
+.phero .btn.lime{max-width:100%;white-space:normal;text-align:left}
+.phero .btn.lime .bmin{white-space:nowrap}
+#testout{white-space:normal;max-width:100%;text-align:center}
+.phero .done-note{margin:6px 0 0;font-weight:700}
+.plancard .blocks{margin:0;padding:18px 18px 4px}
+.plancard > .muted{padding:0 18px 18px}
+.blk{background:var(--panel);box-shadow:inset 0 0 0 2px var(--line)}
+.blk.next{box-shadow:inset 0 0 0 2px var(--accent)}
+.blk.rest{box-shadow:none;background:transparent;border:2px dashed var(--line)}
+.tick{border:2px solid var(--line)}
+.tick[aria-pressed="true"]{background:var(--go);border-color:var(--go);color:#fff}
+.bt > b{font-weight:700}
+.dstreak svg.i{color:var(--t5)}
+.dstreak b{font-family:var(--f);font-weight:800}
+
+/* quiz: open white canvas, chunky answers, a feedback sheet */
+.qtop{background:transparent;box-shadow:none;padding:4px 0}
+.qtop .bar{height:14px}
+.qtop .bar i{background:var(--go)}
+.qtop .linkbtn{background:transparent}
+.qcard{background:transparent;box-shadow:none;padding:14px 2px 6px}
+.qtext{font-size:1.75rem;font-weight:800;letter-spacing:-.025em}
+.qlead{color:var(--accent-ink);font-weight:700}
+.blank{border-bottom-color:var(--accent);color:var(--muted)}
+.opt{background:var(--panel);border:2px solid var(--line);font:700 1.1rem var(--f);padding:15px 16px;box-shadow:0 4px 0 var(--line);transition:transform .08s,box-shadow .08s,border-color .15s}
+.opt:hover:not(:disabled){border-color:var(--accent);box-shadow:0 4px 0 var(--accent)}
+.opt:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--line)}
+.opt kbd{border:2px solid var(--line);background:var(--panel2);font:700 .78rem var(--f)}
+.opt.right{border-color:var(--go);background:var(--okbg);color:var(--ok);box-shadow:0 4px 0 var(--go-edge)}
+.opt.right kbd{background:var(--go);border-color:var(--go);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--badbg);color:var(--bad);box-shadow:0 4px 0 var(--bad)}
+.fb{position:sticky;bottom:12px;z-index:3;margin-top:22px;padding:18px;gap:10px;border-radius:var(--r-panel)}
+.fbhead{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+.fbi{width:40px;height:40px;border-radius:50%;display:grid;place-items:center;flex:none;color:#fff}
+.fb.ok .fbi{background:var(--go)} .fb.no .fbi{background:var(--bad)}
+.fbi svg.i{width:22px;height:22px;stroke-width:2.6}
+.fb h3{font-size:1.35rem;font-weight:800}
+.fbxp{display:inline-flex;align-items:center;gap:5px;font-weight:800;color:var(--ok)}
+.fbxp svg.i{width:18px;height:18px}
+.fbans{margin:0;font-size:1rem}
+.fbwhy{font-size:.95rem;line-height:1.55}
+.fbwhy .en{color:var(--muted);font-style:italic;margin-top:4px}
+.fbrow{display:flex;gap:10px;align-items:center;flex-wrap:nowrap;margin-top:2px}
+.fbrow #next{flex:1}
+.fc{border:1px solid var(--line);box-shadow:0 4px 0 var(--line)}
+.fc .word{font-weight:800}
+.item{border:1px solid var(--line);box-shadow:none}
+.io{border-width:2px}
+
+/* celebrations: lesson complete and streak */
+.celebrate{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:26px 16px 10px;max-width:520px;margin:0 auto;width:100%}
+.burst{position:relative;width:210px;height:180px;display:grid;place-items:center}
+.burst::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(closest-side,var(--glow),transparent)}
+.cbadge{position:relative;width:116px;height:116px;border-radius:34px;display:grid;place-items:center;color:#fff;background:linear-gradient(160deg,#A8EE6A,#20B957);box-shadow:0 8px 0 #15964A,0 22px 40px -14px rgba(34,197,94,.6);transform:rotate(-6deg)}
+.cbadge.zap{background:linear-gradient(160deg,#F7F98C,#D3DB3F);color:#3B3F08;box-shadow:0 8px 0 #A9B12E,0 22px 40px -14px rgba(201,210,60,.6)}
+.cbadge svg.i{width:58px;height:58px;stroke-width:2.2}
+.spark{position:absolute;color:var(--go)}
+.spark svg.i{width:22px;height:22px}
+.spark.s1{top:10px;left:16px} .spark.s2{top:22px;right:12px} .spark.s3{bottom:18px;left:30px} .spark.s4{bottom:6px;right:34px}
+.celebrate h2{font-size:2.1rem;line-height:1.1}
+.bigstreak{font:800 3.6rem/1 var(--f);letter-spacing:-.04em}
+.cstats{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.cstats div{min-width:124px;background:var(--panel);border:2px solid var(--line);border-radius:var(--r-card);padding:10px 16px;box-shadow:0 4px 0 var(--line)}
+.cstats small{display:block;font:800 .68rem var(--f);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.cstats b{font-size:1.8rem;font-weight:800;letter-spacing:-.03em}
+.week{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.week span{display:flex;flex-direction:column;align-items:center;gap:5px;font:800 .72rem var(--f);color:var(--muted)}
+.week i{width:36px;height:36px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;background:var(--panel)}
+.week i.on{background:var(--lime);border-color:var(--lime-edge);color:var(--on-lime)}
+.week i.today{box-shadow:0 0 0 3px var(--accent-soft)}
+.week i svg.i{width:17px;height:17px}
+.celebrate .btn.big{max-width:420px}
+@media (prefers-reduced-motion:no-preference){
+  .cbadge{animation:pop .55s cubic-bezier(.34,1.56,.64,1) both}
+  .spark{animation:twinkle 1.8s ease-in-out infinite}
+  .spark.s2{animation-delay:.45s} .spark.s3{animation-delay:.9s} .spark.s4{animation-delay:1.35s}
+  .fb{animation:sheetin .28s cubic-bezier(.16,1,.3,1)}
+}
+@keyframes pop{from{transform:scale(.5) rotate(-6deg);opacity:0}}
+@keyframes twinkle{50%{transform:scale(.55);opacity:.35}}
+@keyframes sheetin{from{transform:translateY(18px);opacity:0}}
+
+@media (max-width:900px){
+  .topbar{background:var(--g3);top:0;margin-top:0;padding:12px 4px 8px;border-radius:0}
+  .tb-title h1{font-size:1.35rem}
+  .side{margin:0 10px calc(8px + env(safe-area-inset-bottom,0px));border-radius:26px;padding:6px;box-shadow:0 14px 34px -16px rgba(23,23,31,.4)}
+  .navgroup.primary button{font-weight:700}
+  .phero h2{font-size:1.55rem}
+}
+@media (max-width:640px){.qtext{font-size:1.4rem}.celebrate h2{font-size:1.75rem}}
 
 /* ---------- motion ---------- */
 @media (prefers-reduced-motion:no-preference){
@@ -2514,6 +2706,7 @@ const STAGES = [
   {name:'Wortschatz für Beruf und Alltag', can:'Talk about professions, health, money, the internet, the environment and education.', ids:['b1-wort-berufe','b1-wort-gesundheit','b1-wort-geld','b1-wort-medien','b1-wort-umwelt','b1-wort-bildung']},
 ];
 const stageOf = l => STAGES.find(st => st.ids.includes(l.id));
+const stageColor = st => st ? 'var(--t' + (STAGES.indexOf(st) % 6 + 1) + ')' : 'var(--t4)';
 // ---- the study plan: a day made of blocks that add up to 30, 60 or 120 minutes ----
 const PLAN_MIN = {
   30:  {cards:5, lesson:15, practice:10},
@@ -2715,7 +2908,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = 'b69cc91';  // build.py puts the build number here
+const APP_VERSION = 'f13a386';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -2962,12 +3155,15 @@ function vHeute(){
     };
     const pct = Math.min(100, Math.round(mins / goal * 100));
     card = `<section class="card step plancard">
-      <div class="chead"><h2>Dein Plan für heute</h2>
-        <div class="seg-tabs" role="group" aria-label="Length of the plan">${[[30, '30 min'], [60, '1 hour'], [120, '2 hours']].map(([v, l]) => `<button data-size="${v}" aria-pressed="${goal === v}">${l}</button>`).join('')}</div></div>
-      ${st ? `<p class="muted" style="margin:6px 0 0;font-size:.88rem">Stage ${sn} of ${STAGES.length}: <b>${st.name}</b>. ${st.can}</p>` : '<p class="muted" style="margin:6px 0 0;font-size:.88rem">All lessons are done. Now it is exam training: reading, writing, listening and full practice exams.</p>'}
-      <div class="progline" style="margin-top:16px"><span>Studied today</span><b>${mins} / ${goal} min</b></div><div class="bar"><i style="width:${pct}%"></i></div>
-      ${next ? `<div class="cta-row"><button class="btn wide" id="go"><span>${next.t === 'app' ? 'Next: ' : 'Done: '}${esc(next.title)}</span><span class="bmin">${next.min} min</span>${icon(next.t === 'app' ? 'play' : 'check')}</button></div>`
-             : `<p class="pass" style="margin:16px 0 0"><b>Plan complete.</b> ${mins >= goal ? 'Daily goal reached. Your streak is safe.' : 'Well done. Add a longer plan above if you want to keep going.'}</p>`}
+      <div class="phero" style="--sc:${stageColor(st)}">
+        <div class="ptop"><span class="plabel">${st ? `Stage ${sn} of ${STAGES.length} · ${st.name}` : 'Exam training'}</span>
+          <div class="seg-tabs" role="group" aria-label="Length of the plan">${[[30, '30 min'], [60, '1 hour'], [120, '2 hours']].map(([v, l]) => `<button data-size="${v}" aria-pressed="${goal === v}">${l}</button>`).join('')}</div></div>
+        <h2>Dein Plan für heute</h2>
+        <p class="pcan">${st ? st.can : 'All lessons are done. Now it is exam training: reading, writing, listening and full practice exams.'}</p>
+        <div class="pmeta"><span>Studied today</span><span>${mins} / ${goal} min</span></div><div class="pbar"><i style="width:${pct}%"></i></div>
+        ${next ? `<div class="cta-row"><button class="btn lime" id="go">${icon(next.t === 'app' ? 'play' : 'check')}<span>${next.t === 'app' ? 'Next: ' : 'Done: '}${esc(next.title)}</span><span class="bmin">${next.min} min</span></button></div>`
+               : `<p class="done-note">Plan complete. ${mins >= goal ? 'Daily goal reached. Your streak is safe.' : 'Well done. Choose a longer plan above if you want to keep going.'}</p>`}
+      </div>
       <ol class="blocks">${plan.blocks.map(row).join('')}</ol>
       <p class="muted" style="margin:12px 0 0;font-size:.82rem">Time in lessons and exercises counts by itself. Book and video blocks count when you tick them.</p>
     </section>`;
@@ -3064,11 +3260,15 @@ function startSession(){
 function sessionDone(){
   activity = true; nav();
   const s = streakInfo(state.met, today()), xpT = minutesOn(state, today());
-  $main.innerHTML = `<section class="card stack" style="text-align:center;align-items:center">
-    <h2><span class="hl">Geschafft!</span></h2>
-    <div class="streak-num">${s.streak}</div><div class="tag">${s.streak === 1 ? 'Tag' : 'Tage'} in Folge</div>
-    <p>${xpT} of ${state.planMin} minutes today${s.todayDone ? '. Daily goal reached.' : `. ${state.planMin - xpT} more to reach your goal. Back to your plan, or play a Blitz round.`}</p>
-    <div class="row" style="justify-content:center"><button class="btn" id="home">Back to today</button>${s.todayDone ? '' : '<button class="btn ghost" id="bl">Play Blitz</button>'}</div></section>`;
+  const t = today(), [yy, mm, dd] = t.split('-').map(Number), mon = addDays(t, -((new Date(yy, mm - 1, dd).getDay() + 6) % 7));
+  const week = ['Mo','Di','Mi','Do','Fr','Sa','So'].map((d, i) => { const k = addDays(mon, i); return `<span><i class="${state.met[k] ? 'on' : ''}${k === t ? ' today' : ''}">${state.met[k] ? icon('flame') : ''}</i>${d}</span>`; }).join('');
+  $main.innerHTML = `<section class="celebrate">
+    <div class="burst" aria-hidden="true"><div class="cbadge zap">${icon('flame')}</div>${[1,2,3,4].map(n => `<i class="spark s${n}">${icon('sparkles')}</i>`).join('')}</div>
+    <div class="bigstreak">${s.streak}</div>
+    <h2>${s.todayDone ? (s.streak === 1 ? 'Du hast eine Serie gestartet!' : `${s.streak} Tage in Folge!`) : 'Geschafft!'}</h2>
+    <div class="week" aria-label="This week">${week}</div>
+    <p class="muted" style="margin:0;max-width:44ch">${xpT} of ${state.planMin} minutes today${s.todayDone ? '. Daily goal reached.' : `. ${state.planMin - xpT} more to reach your goal. Back to your plan, or play a Blitz round.`}</p>
+    <button class="btn big" id="home">Back to today${icon('next')}</button>${s.todayDone ? '' : '<button class="btn ghost big" id="bl">Play Blitz</button>'}</section>`;
   document.getElementById('home').onclick = () => { stopActivity(); view = 'heute'; render(); };
   const bl = document.getElementById('bl'); if (bl) bl.onclick = () => runBlitz(sessionDone);
 }
@@ -3084,7 +3284,7 @@ function vPfad(){
         <div class="meta"><span>${icon('list')}${q} questions</span><span>${icon('say')}${l.ex.length} examples</span>${l.th ? `<span>${icon('karten')}${VOCAB.filter(v => v.th === l.th).length} words</span>` : ''}</div></div>
     </button>`; };
   const stage = (st, n) => { const ls = st.ids.map(id => LESSONS.find(l => l.id === id)), d = ls.filter(l => state.done[l.id]).length, full = d === ls.length, open = st === cur;
-    return `<details class="pstage${full ? ' is-done' : ''}${open ? ' is-cur' : ''}" ${open ? 'open' : ''}>
+    return `<details class="pstage${full ? ' is-done' : ''}${open ? ' is-cur' : ''}" style="--sc:${stageColor(st)}" ${open ? 'open' : ''}>
       <summary><span class="sn">${full ? icon('check') : n}</span><span class="st"><b>${st.name}</b><span>${st.can}</span></span><span class="sp">${d}/${ls.length}</span></summary>
       <section class="courses">${ls.map(card).join('')}</section></details>`; };
   $main.innerHTML = `
@@ -3111,7 +3311,7 @@ function openLesson(l, onDone){
   $main.innerHTML = `
   <div class="row"><button class="linkbtn" id="back">${icon('back')}Back</button></div>
   <section class="card intro">
-    <div class="cover-hero ${kindClass(l)}"><span class="phrase">${coverHtml(l)}</span><span class="pill">${l.level} · Lesson ${i+1} · ${l.kind}</span></div>
+    <div class="cover-hero ${kindClass(l)}" style="--sc:${stageColor(stageOf(l))}"><span class="phrase">${coverHtml(l)}</span><span class="pill">${l.level} · Lesson ${i+1} · ${l.kind}</span></div>
     <h2 style="margin:0 0 .5em">${l.title}</h2>
     ${l.intro}
     <h4>Examples · tap to listen</h4>
@@ -3170,13 +3370,16 @@ function runQuiz(questions, {title, onDone}){
       const bl = document.getElementById('blank'); if (bl && q.fill){ bl.textContent = q.fill; bl.classList.add('filled'); }
       queue.shift();
       if (!item.tries && q.kind){ const st = state.stats[q.kind] || (state.stats[q.kind] = {n:0, c:0}); st.n++; if (ok) st.c++; }
-      if (ok){ cleared++; if (!item.tries) firstTry++; const x = item.tries ? 5 : 10; earned += x; addXP(x); }
+      const x = ok ? (item.tries ? 5 : 10) : 0;
+      if (ok){ cleared++; if (!item.tries) firstTry++; earned += x; addXP(x); }
       else if (item.tries < 1) queue.push({q, tries:1});
       else cleared++;
-      document.getElementById('fb').innerHTML = `<div class="fb ${ok ? 'ok' : 'no'}">
-        <h3>${ok ? rnd(['Richtig!','Super!','Genau!','Sehr gut!']) : `Not quite. The answer is <u>${q.options[q.answer]}</u>.`}</h3>
-        <div>${q.explain}</div>${q.en ? `<div class="en">${q.en}</div>` : ''}
-        <div class="fbrow">${q.say ? sayBtn(q.say) : '<span></span>'}<button class="btn" id="next">Weiter${icon('next')}</button></div></div>`;
+      document.getElementById('fb').innerHTML = `<div class="fb ${ok ? 'ok' : 'no'}" role="status">
+        <div class="fbhead"><span class="fbi">${icon(ok ? 'check' : 'x')}</span><h3>${ok ? rnd(['Richtig!','Super!','Genau!','Sehr gut!']) : 'Nicht ganz.'}</h3>${ok ? `<span class="fbxp">${icon('sparkles')}+${x} XP</span>` : ''}</div>
+        ${ok ? '' : `<p class="fbans">The answer is <b>${q.options[q.answer]}</b>.</p>`}
+        <div class="fbwhy" id="why-txt" ${ok ? 'hidden' : ''}>${q.explain}${q.en ? `<div class="en">${q.en}</div>` : ''}</div>
+        <div class="fbrow">${ok ? '<button class="btn ghost" id="why">Why?</button>' : ''}${q.say ? sayBtn(q.say) : ''}<button class="btn ${ok ? 'go' : ''}" id="next">Weiter${icon('next')}</button></div></div>`;
+      const wb = document.getElementById('why'); if (wb) wb.onclick = () => { document.getElementById('why-txt').hidden = false; wb.remove(); };
       document.getElementById('next').onclick = show;
       document.getElementById('next').focus({preventScroll:true});
       if (state.sound && q.say) say(q.say);
@@ -3190,11 +3393,12 @@ function runQuiz(questions, {title, onDone}){
   function finish(){
     keyHandler = null;
     const pct = Math.round(firstTry/total*100);
-    $main.innerHTML = `<section class="card stack" style="text-align:center;align-items:center">
-      <div class="stamp" aria-label="${firstTry} of ${total} right on the first try"><span><b>${firstTry}/${total}</b><small>${pct >= 90 ? 'Ausgezeichnet' : pct >= 70 ? 'Gut gemacht' : 'Weiter so'}</small></span></div>
-      <div class="tag">right on the first try</div>
-      <p>+${earned} XP${pct < 70 ? '. Mistakes are how this works. Read the lesson again and repeat it tomorrow.' : ''}</p>
-      <button class="btn" id="cont">Weiter${icon('next')}</button></section>`;
+    $main.innerHTML = `<section class="celebrate">
+      <div class="burst" aria-hidden="true"><div class="cbadge">${icon(pct >= 70 ? 'trophy' : 'check')}</div>${[1,2,3,4].map(n => `<i class="spark s${n}">${icon('sparkles')}</i>`).join('')}</div>
+      <h2>${pct >= 90 ? 'Ausgezeichnet!' : pct >= 70 ? 'Gut gemacht!' : 'Geschafft!'}</h2>
+      <div class="cstats"><div><small>XP earned</small><b>+${earned}</b></div><div><small>First try</small><b>${firstTry}/${total}</b></div></div>
+      <p class="muted" style="margin:0;max-width:44ch">${pct < 70 ? 'Mistakes are how this works. Read the lesson again and repeat it tomorrow.' : 'Your answers are saved. The ones you missed come back later.'}</p>
+      <button class="btn big" id="cont">Weiter${icon('next')}</button></section>`;
     document.getElementById('cont').onclick = () => { activity = false; onDone(firstTry, total); };
     document.getElementById('cont').focus({preventScroll:true});
   }
