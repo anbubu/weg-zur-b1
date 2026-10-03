@@ -378,6 +378,8 @@ details.hit .intro{margin-top:10px}
 .pstage .st span{color:var(--muted);font-size:.86rem}
 .pstage .sp{flex:none;font:600 .86rem var(--fm);color:var(--muted)}
 .pstage .courses{padding:4px 4px 12px}
+.words .x{border:0;background:none;color:var(--muted);cursor:pointer;font-size:1.05rem;line-height:1;padding:0 2px;margin-left:2px}
+.words .x:hover{color:var(--bad)}
 .tip{background:var(--sun-soft);padding:12px 14px;border-radius:var(--r-card);color:var(--ink)}
 .tablewrap{overflow-x:auto;border-radius:var(--r-card);border:1px solid var(--line);margin:.7em 0}
 table.ct{border-collapse:collapse;font-size:.92rem;min-width:100%}
@@ -645,7 +647,9 @@ const PREPS = [['durch','akk','through'],['für','akk','for'],['gegen','akk','ag
   ['in','both','in / into'],['an','both','at / on'],['auf','both','on / onto'],['unter','both','under'],['über','both','over'],['neben','both','next to'],['hinter','both','behind'],['vor','both','in front of'],['zwischen','both','between']];
 
 // Vocabulary: "German|English|gender" (m f n pl, empty = not a noun)
-const THEMES = {hallo:'Hallo!', dinge:'Dinge', familie:'Familie', essen:'Essen & Trinken', wohnung:'Wohnung', arbeit:'Arbeit & Ausbildung', stadt:'Stadt & Verkehr', zeit:'Zeit & Tage'};
+const THEMES = {hallo:'Hallo!', dinge:'Dinge', familie:'Familie', essen:'Essen & Trinken', wohnung:'Wohnung', arbeit:'Arbeit & Ausbildung', stadt:'Stadt & Verkehr', zeit:'Zeit & Tage',
+  freizeit:'Freizeit & Hobbys', gesundheit:'Körper & Gesundheit', kleidung:'Kleidung & Einkaufen', reisen:'Reisen & Wetter', behoerden:'Ämter & Papiere', betrieb:'Im Betrieb',
+  bewerbung:'Bewerbung', meinung:'Meinung & Gefühle', vertrag:'Arbeitsvertrag & Gehalt', berufe:'Berufe & Branchen', gesundheit2:'Gesundheit & Versicherung', geld:'Bank, Post & Geld', medien:'Medien & Technik', umwelt:'Umwelt & Verkehr', bildung:'Schule & Weiterbildung', mine:'Meine Wörter'};
 const VOCAB_RAW = {
   hallo:['Hallo|hello|','Guten Morgen|good morning|','Guten Tag|hello (daytime, polite)|','Guten Abend|good evening|','Gute Nacht|good night|','Tschüss|bye|','Auf Wiedersehen|goodbye (polite)|','Wie geht’s?|how are you?|','Danke|thank you|','Bitte|please / you’re welcome|','Entschuldigung|excuse me / sorry|','Freut mich!|nice to meet you!|','Wie bitte?|pardon?|','Ich verstehe nicht.|I don’t understand.|','Woher kommst du?|where are you from?|','Ich komme aus …|I come from …|'],
   dinge:['Tisch|table|m','Stuhl|chair|m','Buch|book|n','Heft|notebook|n','Kuli|pen|m','Tasche|bag|f','Handy|mobile phone|n','Computer|computer|m','Lampe|lamp|f','Uhr|clock / watch|f','Zeitung|newspaper|f','Schlüssel|key|m','Brille|glasses|f','Mädchen|girl|n','Rechnung|bill / invoice|f','Freiheit|freedom|f','Museum|museum|n','Dokument|document|n','Frühling|spring|m','Information|information|f','Universität|university|f','Mannschaft|team|f','Häuschen|little house|n'],
@@ -1538,6 +1542,202 @@ const BANK_RAW = {
     'How is the letter V called?|“fow”, like “wow” with f|“vee”;“veh”|V is “fau” (fow) and W is “weh” (veh). When you spell, don’t mix them up.|V = fow, W = veh|Vau',
     'Which words start with a capital letter in German?|every noun, such as der Tisch|only names;only the first word of a sentence|German capitalises every noun: der Tisch, die Arbeit, das Zimmer.|der Tisch = the table|der Tisch',
     'A double consonant, as in kommen, makes the vowel before it|short|long;nasal|A double consonant makes the vowel short: kommen, Mitte, Kamm. In kam the a is long.|kommen = to come|kommen'],
+  praeteritum:[
+    'Gestern ___ ich um sieben Uhr auf.|stand|stehe;gestanden|aufstehen → stand … auf. In the Präteritum the prefix goes to the end of the sentence.|Yesterday I got up at seven.',
+    'Er ___ mir gestern eine E-Mail.|schrieb|schreibte;geschrieben|schreiben is irregular: schrieb.|He wrote me an e-mail yesterday.',
+    'Wir ___ letztes Jahr nach Berlin.|fuhren|fahrten;gefahren|fahren → fuhr, wir fuhren.|Last year we drove to Berlin.',
+    'Sie ___ den ganzen Tag zu Hause.|blieb|bleibte;geblieben|bleiben → blieb.|She stayed at home all day.',
+    'Der Kurs ___ um acht Uhr.|begann|beginnte;begonnen|beginnen → begann.|The course began at eight.',
+    'Wir ___ den Film bis zum Ende.|sahen|sehten;gesehen|sehen → sah, wir sahen.|We watched the film to the end.',
+    'Du ___ mir nicht die Wahrheit.|sagtest|sagte;gesagt|Regular verb: stem + te + st for du.|You didn’t tell me the truth.',
+    'Als Kind ___ ich oft im Park.|spielte|spielten;spielt|Regular verb: stem + te.|As a child I often played in the park.',
+    'Die Kinder ___ lange auf den Bus.|warteten|wartete;gewartet|The stem ends in -t, so an -e- is added: warteten.|The children waited a long time for the bus.',
+    'Ich ___ gestern keine Zeit.|hatte|habte;hat|haben → hatte. People use hatte even when speaking.|I had no time yesterday.',
+    'Er ___ nicht, wo der Bahnhof war.|wusste|wisste;weiß|wissen → wusste (a mixed verb).|He didn’t know where the station was.',
+    'Sie ___ mir einen Kaffee.|brachte|bringte;gebracht|bringen → brachte (a mixed verb: -te ending plus a changed stem).|She brought me a coffee.',
+    'Wir ___ gestern bis neun Uhr arbeiten.|mussten|müssten;musste|Modal verbs lose the umlaut: müssen → musste, mussten.|We had to work until nine yesterday.',
+    'Ich ___ den Bus um acht Uhr.|nahm|nehmte;genommen|nehmen → nahm.|I took the bus at eight.'],
+  plusquam:[
+    'Ich kam zu spät, weil der Bus schon ___.|abgefahren war|abgefahren hatte;war abgefahren|abfahren (movement) takes sein. In a weil-clause the auxiliary comes last.|I was late because the bus had already left.',
+    'Nachdem wir gegessen ___, gingen wir spazieren.|hatten|waren;haben|essen takes haben: hatten + gegessen.|After we had eaten, we went for a walk.',
+    'Er ___ schon gegangen, als ich ankam.|war|hatte;wurde|gehen takes sein: war gegangen.|He had already left when I arrived.',
+    'Ich ___ den Schlüssel vergessen, deshalb musste ich zurückgehen.|hatte|war;wurde|vergessen takes haben: hatte vergessen.|I had forgotten the key, so I had to go back.',
+    'Bevor sie nach Deutschland kam, ___ sie schon zwei Jahre Deutsch gelernt.|hatte|war;wurde|lernen takes haben: hatte gelernt.|Before she came to Germany she had already learned German for two years.',
+    'Als wir ankamen, ___ der Film schon begonnen.|hatte|war;wurde|beginnen takes haben: hatte begonnen.|When we arrived, the film had already started.',
+    'Sie war müde, weil sie die ganze Nacht nicht ___.|geschlafen hatte|geschlafen war;hatte geschlafen|schlafen takes haben. In a weil-clause: Partizip II + hatte at the end.|She was tired because she hadn’t slept all night.',
+    'Nachdem er den Test gemacht ___, war er zufrieden.|hatte|hat;wurde|nachdem + Plusquamperfekt: hatte + Partizip II.|After he had taken the test, he was satisfied.',
+    'Wir ___ lange gewartet, bis der Zug endlich kam.|hatten|waren;wurden|warten takes haben: hatten gewartet.|We had waited a long time until the train finally came.',
+    'Er ___ nach Köln gefahren, bevor er die Stelle bekam.|war|hatte;wurde|fahren (movement) takes sein: war gefahren.|He had travelled to Cologne before he got the job.',
+    'Ich konnte nicht anrufen, weil ich mein Handy zu Hause ___.|gelassen hatte|gelassen war;hatte gelassen|lassen takes haben. In a weil-clause hatte comes last.|I couldn’t call because I had left my phone at home.',
+    'Als ich nach Hause kam, ___ meine Frau schon gekocht.|hatte|war;wurde|kochen takes haben: hatte gekocht.|When I came home, my wife had already cooked.'],
+  relativ1:[
+    'Das ist der Mann, ___ neben mir wohnt.|der|den;dem|Mann is masculine. The pronoun is the subject of “wohnt”, so Nominativ: der.|That is the man who lives next to me.',
+    'Die Frau, ___ ich gestern getroffen habe, ist Ärztin.|die|der;das|Frau is feminine. The pronoun is the object of “getroffen”, so Akkusativ feminine: die.|The woman I met yesterday is a doctor.',
+    'Das Buch, ___ ich gerade lese, ist spannend.|das|der;dem|Buch is neuter. Object, so Akkusativ neuter: das.|The book I am reading is exciting.',
+    'Der Film, ___ wir gestern gesehen haben, war lang.|den|der;das|Film is masculine. Object, so Akkusativ masculine: den.|The film we saw yesterday was long.',
+    'Wo sind die Schlüssel, ___ auf dem Tisch lagen?|die|den;der|Plural, and subject of “lagen”, so Nominativ plural: die.|Where are the keys that were on the table?',
+    'Das sind die Kollegen, ___ ich gestern kennengelernt habe.|die|denen;den|Plural, and object, so Akkusativ plural: die.|Those are the colleagues I met yesterday.',
+    'Der Chef, ___ gestern angerufen hat, möchte mich sprechen.|der|den;dem|Chef is masculine. Subject, so Nominativ: der.|The boss who called yesterday wants to speak to me.',
+    'Der Chef, ___ ich gestern angerufen habe, ist nicht da.|den|der;dem|Chef is masculine. Object, so Akkusativ: den.|The boss I called yesterday is not there.',
+    'Die Wohnung, ___ ich besichtigt habe, ist sehr schön.|die|der;das|Wohnung is feminine. Object, so Akkusativ feminine: die.|The flat I viewed is very nice.',
+    'Das Kind, ___ im Garten spielt, ist meine Nichte.|das|der;dem|Kind is neuter. Subject, so Nominativ neuter: das.|The child who is playing in the garden is my niece.',
+    'Ich habe einen Freund, ___ in Köln arbeitet.|der|den;dem|Freund is masculine. Subject of “arbeitet”: der.|I have a friend who works in Cologne.',
+    'Ich habe einen Freund, ___ du nicht kennst.|den|der;dem|Freund is masculine. Object of “kennst”: den.|I have a friend whom you don’t know.',
+    'Sie hat eine Schwester, ___ in Berlin studiert.|die|der;den|Schwester is feminine. Subject: die.|She has a sister who studies in Berlin.',
+    'Hier ist der Brief, ___ ich dir schreiben wollte.|den|der;dem|Brief is masculine. Object of “schreiben”: den.|Here is the letter I wanted to write to you.'],
+  relativ2:[
+    'Das ist die Firma, in ___ ich arbeite.|der|die;dem|in (where?) takes the Dativ. Firma is feminine: in der.|That is the company where I work.',
+    'Der Mann, mit ___ ich gesprochen habe, ist Lehrer.|dem|den;der|mit always takes the Dativ. Mann is masculine: mit dem.|The man I spoke to is a teacher.',
+    'Die Frau, für ___ ich das Geschenk gekauft habe, ist meine Mutter.|die|der;dem|für takes the Akkusativ. Feminine: die.|The woman I bought the gift for is my mother.',
+    'Das sind die Kollegen, mit ___ ich zusammenarbeite.|denen|die;den|mit takes the Dativ. The Dativ plural of the relative pronoun is denen.|Those are the colleagues I work with.',
+    'Das Haus, in ___ wir wohnen, ist alt.|dem|das;den|in (where?) takes the Dativ. Haus is neuter: in dem.|The house we live in is old.',
+    'Das ist der Kollege, ___ Auto kaputt ist.|dessen|dem;der|Genitiv masculine and neuter: dessen (“whose”).|That is the colleague whose car is broken.',
+    'Das ist die Frau, ___ Sohn Arzt ist.|deren|dessen;der|Genitiv feminine and plural: deren (“whose”).|That is the woman whose son is a doctor.',
+    'Die Leute, ___ ich geholfen habe, haben sich bedankt.|denen|die;den|helfen takes the Dativ. Dativ plural: denen.|The people I helped said thank you.',
+    'Der Film, über ___ alle sprechen, läuft im Kino.|den|dem;der|sprechen über takes the Akkusativ. Film is masculine: den.|The film everybody is talking about is in the cinemas.',
+    'Die Stadt, aus ___ ich komme, ist klein.|der|die;dem|aus takes the Dativ. Stadt is feminine: aus der.|The town I come from is small.',
+    'Das Thema, an ___ ich arbeite, ist schwierig.|dem|das;den|arbeiten an takes the Dativ. Thema is neuter: an dem.|The topic I am working on is difficult.',
+    'Der Betrieb, bei ___ ich mich beworben habe, bildet Mechatroniker aus.|dem|den;der|bei takes the Dativ. Betrieb is masculine: bei dem.|The company I applied to trains mechatronics technicians.',
+    'Die Freundin, auf ___ ich warte, kommt spät.|die|der;dem|warten auf takes the Akkusativ. Feminine: auf die.|The friend I am waiting for is late.',
+    'Die Kinder, ___ Eltern im Ausland arbeiten, wohnen bei Verwandten.|deren|denen;dessen|Genitiv plural: deren (“whose”).|The children whose parents work abroad live with relatives.'],
+  zu:[
+    'Ich habe keine Lust, heute ___.|zu arbeiten|arbeiten zu;arbeiten|zu + infinitive stands at the end of the clause.|I don’t feel like working today.',
+    'Er hat vergessen, mich ___.|anzurufen|zu anrufen;anrufen zu|With separable verbs, zu goes between the prefix and the verb: an-zu-rufen is written as one word.|He forgot to call me.',
+    'Es ist wichtig, pünktlich ___.|zu sein|sein zu;sein|After “Es ist wichtig,” comes zu + infinitive.|It is important to be on time.',
+    'Ich möchte nächstes Jahr nach Deutschland ___.|fahren|zu fahren;fährt|After modal verbs the infinitive has no zu.|I would like to go to Germany next year.',
+    'Sie versucht, jeden Tag Deutsch ___.|zu lernen|lernen zu;lernt|versuchen + zu + infinitive.|She tries to learn German every day.',
+    'Wir hoffen, bald eine Wohnung ___.|zu finden|finden zu;gefunden zu|hoffen + zu + infinitive.|We hope to find a flat soon.',
+    'Hast du Zeit, mir ___?|zu helfen|helfen zu;zu geholfen|Zeit haben + zu + infinitive.|Do you have time to help me?',
+    'Er fängt an, ___.|zu arbeiten|arbeiten zu;zu gearbeitet|anfangen + zu + infinitive.|He starts working.',
+    'Ich habe vor, im Sommer ___.|umzuziehen|zu umziehen;umziehen zu|Separable verb: um-zu-ziehen is written as one word, umzuziehen.|I plan to move in the summer.',
+    'Es ist nicht leicht, so früh ___.|aufzustehen|zu aufstehen;aufstehen zu|Separable verb: auf-zu-stehen → aufzustehen.|It is not easy to get up so early.',
+    'Sie hat Angst, allein nach Hause ___.|zu gehen|gehen zu;geht|Angst haben + zu + infinitive.|She is afraid of walking home alone.',
+    'Er kann sehr gut Klavier ___.|spielen|zu spielen;zu gespielt|After können the infinitive has no zu.|He can play the piano very well.',
+    'Vergiss nicht, die Tür ___.|abzuschließen|zu abschließen;abschließen zu|Separable verb: ab-zu-schließen → abzuschließen.|Don’t forget to lock the door.',
+    'Ich freue mich, dich bald ___.|zu sehen|sehen zu;gesehen|sich freuen + zu + infinitive.|I am looking forward to seeing you soon.'],
+  damit:[
+    'Ich lerne Deutsch, ___ in Deutschland zu arbeiten.|um|damit;weil|Same subject and no new clause with its own verb: um … zu + infinitive.|I learn German in order to work in Germany.',
+    'Der Lehrer spricht langsam, ___ wir ihn verstehen.|damit|um;weil|Two different subjects (Lehrer / wir): damit + verb at the end.|The teacher speaks slowly so that we understand him.',
+    'Ich schreibe die Adresse auf, ___ ich sie nicht vergesse.|damit|um;dass|A full clause with its own verb at the end (vergesse) needs damit.|I write down the address so that I don’t forget it.',
+    'Sie fährt nach Hamburg, ___ ihre Freundin zu besuchen.|um|damit;weil|um … zu + infinitive expresses a purpose (same subject).|She goes to Hamburg to visit her friend.',
+    'Ich gebe dir meine Nummer, ___ du mich anrufen kannst.|damit|um;weil|A different subject (du): damit-clause.|I give you my number so that you can call me.',
+    'Er arbeitet viel, ___ genug Geld zu verdienen.|um|damit;weil|Same subject, only an infinitive follows: um … zu.|He works a lot to earn enough money.',
+    'Wir sprechen leise, ___ das Baby nicht aufwacht.|damit|um;weil|A different subject (das Baby): damit.|We speak quietly so that the baby doesn’t wake up.',
+    'Ich nehme einen Kredit, ___ eine Wohnung zu kaufen.|um|damit;weil|Same subject: um … zu.|I take out a loan to buy a flat.',
+    'Meine Eltern schicken mir Geld, ___ ich studieren kann.|damit|um;dass|A different subject (ich / meine Eltern): damit.|My parents send me money so that I can study.',
+    'Du musst früh aufstehen, ___ den Bus nicht zu verpassen.|um|damit;weil|Same subject: um … zu.|You have to get up early so as not to miss the bus.',
+    'Sie lernt jeden Tag, ___ die Prüfung zu bestehen.|um|damit;wenn|um … zu expresses the purpose.|She studies every day to pass the exam.',
+    'Ich erkläre es noch einmal, ___ alle es verstehen.|damit|um;weil|A different subject (alle): damit.|I explain it once more so that everyone understands.'],
+  temporal:[
+    '___ ich ein Kind war, wohnten wir in Casablanca.|Als|Wenn;Während|A single period in the past: als.|When I was a child, we lived in Casablanca.',
+    '___ ich Zeit habe, lese ich ein Buch.|Wenn|Als;Bevor|Repeated action, or present/future: wenn.|When I have time, I read a book.',
+    '___ ich gestern nach Hause kam, war niemand da.|Als|Wenn;Seit|One single event in the past: als.|When I came home yesterday, nobody was there.',
+    'Jedes Mal, ___ er anruft, bin ich nicht da.|wenn|als;während|Repeated action: wenn.|Every time he calls, I am not there.',
+    '___ ich koche, hört mein Mann Musik.|Während|Bevor;Nachdem|Two things at the same time: während.|While I cook, my husband listens to music.',
+    'Ich putze mir die Zähne, ___ ich ins Bett gehe.|bevor|nachdem;während|First one thing, then the other: bevor = before.|I brush my teeth before I go to bed.',
+    '___ er gegessen hatte, ging er spazieren.|Nachdem|Bevor;Während|nachdem = after, with the Plusquamperfekt in its clause.|After he had eaten, he went for a walk.',
+    'Ich wohne in Köln, ___ ich 2022 hierher gezogen bin.|seit|bis;bevor|seit = since (started in the past, still true now).|I have lived in Cologne since I moved here in 2022.',
+    'Warte hier, ___ ich zurückkomme.|bis|seit;nachdem|bis = until.|Wait here until I come back.',
+    '___ ich 18 war, bin ich nach Deutschland gekommen.|Als|Wenn;Bis|One point in the past: als.|When I was 18, I came to Germany.',
+    '___ ich nach Hause komme, koche ich zuerst.|Wenn|Als;Seit|A habit in the present: wenn.|When I get home, I cook first.',
+    'Sie lernte Deutsch, ___ sie in Berlin lebte.|während|bevor;bis|At the same time: während.|She learned German while she lived in Berlin.',
+    'Ich schaue den Film, ___ ich die Hausaufgaben gemacht habe.|nachdem|bevor;während|Homework first, then the film: nachdem.|I will watch the film after I have done my homework.',
+    'Ich habe Deutsch gelernt, ___ ich nach Deutschland gezogen bin.|bevor|nachdem;seit|German first, then the move: bevor.|I learned German before I moved to Germany.'],
+  konnektoren:[
+    'Ich spreche sowohl Arabisch ___ auch Französisch.|als|und;oder|sowohl … als auch = both … and.|I speak both Arabic and French.',
+    'Er ist nicht nur freundlich, ___ auch hilfsbereit.|sondern|aber;und|nicht nur … sondern auch = not only … but also.|He is not only friendly but also helpful.',
+    'Wir können ___ ins Kino gehen oder zu Hause bleiben.|entweder|weder;sowohl|entweder … oder = either … or.|We can either go to the cinema or stay at home.',
+    'Ich habe weder Zeit ___ Geld.|noch|oder;und|weder … noch = neither … nor.|I have neither time nor money.',
+    'Je mehr ich übe, ___ besser werde ich.|desto|sondern;also|je … desto + comparative = the more … the better.|The more I practise, the better I get.',
+    '___ es regnet, gehen wir spazieren.|Obwohl|Trotzdem;Deshalb|obwohl = although. The verb goes to the end.|Although it is raining, we go for a walk.',
+    'Es regnet. ___ gehen wir spazieren.|Trotzdem|Obwohl;Weil|trotzdem = nevertheless. The verb comes right after it (position 2).|It is raining. Nevertheless we go for a walk.',
+    'Er ist weder Arzt ___ Lehrer, sondern Pfleger.|noch|oder;und|weder … noch.|He is neither a doctor nor a teacher but a nurse.',
+    'Sie ist zwar jung, ___ sehr erfahren.|aber|sondern;oder|zwar … aber = it is true that … but.|She is young, but very experienced.',
+    'Ich möchte sowohl eine Ausbildung machen ___ auch Geld verdienen.|als|und;noch|sowohl … als auch.|I want both to do an apprenticeship and to earn money.',
+    'Ich gehe zur Arbeit, ___ ich krank bin.|obwohl|weil;deshalb|obwohl = although (a contrast).|I go to work although I am ill.',
+    '___ der Kurs teuer ist, melde ich mich an.|Obwohl|Weil;Deshalb|obwohl = although; verb at the end.|Although the course is expensive, I am signing up.',
+    'Ich habe nicht nur Hunger, ___ auch Durst.|sondern|aber;weil|nicht nur … sondern auch.|I am not only hungry but also thirsty.',
+    'Je früher du anfängst, ___ früher bist du fertig.|desto|sondern;oder|je … desto.|The earlier you start, the earlier you are finished.'],
+  indirekt:[
+    'Wissen Sie, ___ der Kurs beginnt?|wann|ob;dass|The question word stays: wann. The verb goes to the end.|Do you know when the course starts?',
+    'Ich weiß nicht, ___ er heute kommt.|ob|wann;wo|A yes/no question becomes an ob-clause.|I don’t know whether he is coming today.',
+    'Sie fragt, ___ viel das kostet.|wie|ob;wer|The question word stays: wie viel. Verb at the end.|She asks how much that costs.',
+    'Kannst du mir sagen, ___ du gestern warst?|wo|ob;wie|The question word stays: wo.|Can you tell me where you were yesterday?',
+    'Ich möchte wissen, ___ Sie verheiratet sind.|ob|wo;wer|A yes/no question becomes an ob-clause.|I would like to know whether you are married.',
+    'Er fragt, ___ ich die Stelle haben möchte.|ob|was;wann|A yes/no question becomes an ob-clause.|He asks whether I would like the job.',
+    'Weißt du, um ___ Uhr das Konzert anfängt?|wie viel|ob;wann|um wie viel Uhr = at what time.|Do you know what time the concert starts?',
+    'Ich möchte wissen · wann · der Zug · abfährt|Ich möchte wissen, wann der Zug abfährt.|Ich möchte wissen, wann fährt der Zug ab.;Ich möchte wissen, wann der Zug ab fährt.|In the subordinate clause the verb goes to the end, and a separable verb is written together again.|I would like to know when the train leaves.',
+    'Weißt du · ob · er · heute · kommt|Weißt du, ob er heute kommt?|Weißt du, ob kommt er heute?;Weißt du, ob er kommt heute?|In an ob-clause the verb goes to the end.|Do you know whether he is coming today?',
+    'Sie fragt · wie viel · das · kostet|Sie fragt, wie viel das kostet.|Sie fragt, wie viel kostet das.;Sie fragt, wie viel das kosten.|The conjugated verb goes to the end.|She asks how much that costs.',
+    'Ich frage mich · warum · er · nicht anruft|Ich frage mich, warum er nicht anruft.|Ich frage mich, warum ruft er nicht an.;Ich frage mich, warum er nicht an ruft.|Verb at the end, and the separable verb is written together: anruft.|I wonder why he doesn’t call.',
+    'Können Sie mir sagen · wo · die Post · ist|Können Sie mir sagen, wo die Post ist?|Können Sie mir sagen, wo ist die Post?;Können Sie mir sagen, wo die Post sein?|Polite: an indirect question with the verb at the end.|Can you tell me where the post office is?'],
+  passiv:[
+    'Das Auto ___ heute repariert.|wird|werden;ist|Passive present: werden + Partizip II. Auto is singular: wird.|The car is being repaired today.',
+    'Die Rechnungen ___ per Post geschickt.|werden|wird;sind|Plural: werden + Partizip II.|The invoices are sent by post.',
+    'Die Tür ___ um 18 Uhr geschlossen.|wird|werden;ist|Singular: wird + geschlossen.|The door is closed at 6 pm.',
+    'Der Mechaniker repariert das Auto. → Das Auto ___ vom Mechaniker repariert.|wird|ist;hat|The accusative object becomes the subject, and the verb becomes wird + Partizip II.|The car is repaired by the mechanic.',
+    'Hier ___ Deutsch gesprochen.|wird|ist;hat|Passive without a doer: wird + Partizip II.|German is spoken here.',
+    'Das Essen wird von der Köchin ___.|zubereitet|zubereiten;zubereitete|The Partizip II stands at the end of the sentence.|The food is prepared by the cook.',
+    '„Man baut hier ein Haus.“ Wie heißt das im Passiv?|Hier wird ein Haus gebaut.|Hier ist ein Haus gebaut.;Hier wird ein Haus bauen.|werden + Partizip II.|A house is being built here.',
+    'Die Wohnung ___ gerade renoviert.|wird|wurde;ist|gerade means right now, so present: wird.|The flat is being renovated right now.',
+    'Wir ___ morgen vom Chef informiert.|werden|wird;sind|wir → werden + Partizip II.|We will be informed by the boss tomorrow.',
+    'Die Hausaufgaben ___ von den Schülern gemacht.|werden|wird;sind|Plural: werden + gemacht.|The homework is done by the pupils.',
+    'Der Kuchen wird ___ meiner Oma gebacken.|von|durch;mit|The person who does the action in a passive sentence takes von + Dativ.|The cake is baked by my grandma.',
+    'Ich ___ morgen von meinem Chef angerufen.|werde|wird;bin|ich → werde + Partizip II.|I will be called by my boss tomorrow.'],
+  passiv2:[
+    'Der Kölner Dom ___ im Mittelalter gebaut.|wurde|wird;ist|Passive Präteritum: wurde + Partizip II.|Cologne Cathedral was built in the Middle Ages.',
+    'Die Briefe ___ gestern geschickt.|wurden|wurde;werden|Plural in the past: wurden + Partizip II.|The letters were sent yesterday.',
+    'Das Paket ist gestern geliefert ___.|worden|geworden;werden|Passive Perfekt: ist + Partizip II + worden (not geworden).|The parcel was delivered yesterday.',
+    'Das Formular muss bis Freitag ausgefüllt ___.|werden|wird;worden|Modal verb + Partizip II + werden.|The form must be filled in by Friday.',
+    'Der Mitarbeiter ___ letzte Woche entlassen.|wurde|wird;ist|Past, singular: wurde + Partizip II.|The employee was dismissed last week.',
+    'Die Rechnung kann online bezahlt ___.|werden|wird;worden|Modal verb + Partizip II + werden.|The bill can be paid online.',
+    'Die Wohnung ist letztes Jahr renoviert ___.|worden|werden;geworden|The passive Perfekt ends in worden.|The flat was renovated last year.',
+    'Wann ___ das Haus gebaut?|wurde|wird;ist|A question about the past: wurde + Partizip II.|When was the house built?',
+    'In unserer Firma ___ früher viele Autos hergestellt.|wurden|wurde;werden|Plural, past: wurden.|In our company many cars used to be made.',
+    'Der Vertrag ___ gestern unterschrieben.|wurde|ist;hat|Passive Präteritum: wurde + Partizip II.|The contract was signed yesterday.',
+    'Der Brief muss heute ___ werden.|abgeschickt|abschicken;abgeschickt zu|Modal verb + Partizip II + werden.|The letter has to be sent today.',
+    'Der Patient ___ gestern operiert worden.|ist|wurde;hat|Passive Perfekt: ist + Partizip II + worden.|The patient was operated on yesterday.'],
+  genitiv:[
+    'Das ist das Auto ___ Vaters.|meines|mein;meinem|Genitiv masculine: meines (and the noun gets -s).|That is my father’s car.',
+    'Wegen ___ Wetters bleiben wir zu Hause.|des|das;dem|wegen takes the Genitiv. Masculine/neuter: des Wetters.|Because of the weather we stay at home.',
+    'Trotz ___ Kälte gingen wir spazieren.|der|die;dem|trotz takes the Genitiv. Feminine: der Kälte.|In spite of the cold we went for a walk.',
+    'Während ___ Kurses darf man nicht telefonieren.|des|dem;der|während takes the Genitiv. Masculine: des Kurses.|During the course you may not use the phone.',
+    'Das ist die Tasche ___ Frau.|der|die;des|Genitiv feminine: der Frau.|That is the woman’s bag.',
+    'Das Haus ___ Eltern ist groß.|meiner|meine;meinen|Genitiv plural: meiner Eltern.|My parents’ house is big.',
+    'Der Name ___ Kindes ist Lea.|des|das;dem|Genitiv neuter: des Kindes.|The child’s name is Lea.',
+    'Die Hauptstadt ___ Landes ist Berlin.|des|der;dem|Land is neuter: des Landes.|The capital of the country is Berlin.',
+    'Wir bleiben wegen ___ Regens zu Hause.|des|der;dem|Regen is masculine: des Regens.|We stay at home because of the rain.',
+    'Innerhalb ___ Woche muss ich die Rechnung bezahlen.|einer|eine;einem|innerhalb takes the Genitiv. Feminine: einer Woche.|Within a week I have to pay the bill.',
+    'Kennst du die Tochter ___ Nachbarn?|des|dem;den|Genitiv masculine: des Nachbarn (Nachbar is an N-noun).|Do you know the neighbour’s daughter?',
+    'Das Büro ___ Chefs ist im dritten Stock.|des|dem;der|Genitiv masculine: des Chefs.|The boss’s office is on the third floor.',
+    'Trotz ___ Schmerzen ging er zur Arbeit.|der|den;die|Genitiv plural: der Schmerzen.|In spite of the pain he went to work.',
+    'Außerhalb ___ Stadt gibt es viele Felder.|der|die;dem|außerhalb takes the Genitiv. Feminine: der Stadt.|Outside the city there are many fields.'],
+  ndekl:[
+    'Ich kenne den ___ nicht.|Studenten|Student;Studentes|N-declension: in the Akkusativ the noun gets -en.|I don’t know the student.',
+    'Wir fragen den ___ nach dem Weg.|Kollegen|Kollege;Kollegens|Kollege is an N-noun: Akkusativ Kollegen.|We ask the colleague for directions.',
+    'Das ist das Auto meines ___.|Nachbarn|Nachbars;Nachbar|An N-noun in the Genitiv: des Nachbarn.|That is my neighbour’s car.',
+    'Er hilft dem ___.|Patienten|Patient;Patientes|Dativ: Patienten (nouns ending in -ent take -en).|He helps the patient.',
+    'Siehst du den ___ dort?|Jungen|Junge;Jungem|Akkusativ: Jungen.|Do you see the boy over there?',
+    'Der ___ hat gestern angerufen.|Kunde|Kunden;Kundes|In the Nominativ singular there is no extra ending.|The customer called yesterday.',
+    'Ich habe den ___ gesehen.|Polizisten|Polizist;Polizistes|Nouns ending in -ist: Akkusativ -en.|I saw the police officer.',
+    'Wir sprechen mit dem ___.|Praktikanten|Praktikant;Praktikantes|Nouns ending in -ant: Dativ -en.|We are talking to the intern.',
+    'Kennen Sie den ___?|Herrn|Herr;Herren|Herr only takes -n: den Herrn.|Do you know the gentleman?',
+    'Das ist der Computer des ___.|Kollegen|Kollege;Kollegens|Genitiv: des Kollegen (no extra -s).|That is the colleague’s computer.',
+    'Für den ___ ist das sehr wichtig.|Menschen|Mensch;Menschens|Mensch is an N-noun: Akkusativ Menschen.|For people this is very important.',
+    'Der Chef gibt dem ___ einen Termin.|Kunden|Kunde;Kundes|Dativ: Kunden.|The boss gives the customer an appointment.'],
+  futur:[
+    'Ich ___ dir morgen helfen.|werde|wirst;wird|ich → werde. Futur I: werden + infinitive at the end.|I will help you tomorrow.',
+    'Es ___ morgen regnen.|wird|werde;werden|es → wird.|It will rain tomorrow.',
+    'Wir ___ nächstes Jahr umziehen.|werden|wird;werdet|wir → werden.|We will move next year.',
+    'Du ___ sicher bald eine Stelle finden.|wirst|wird;werde|du → wirst.|You will surely find a job soon.',
+    'Er ist nicht da. Er wird wohl krank ___.|sein|ist;gewesen|werden + infinitive with wohl expresses an assumption.|He isn’t here. He is probably ill.',
+    'Ihr ___ viel Spaß haben.|werdet|werden;wird|ihr → werdet.|You will have a lot of fun.',
+    'Die Kinder ___ bestimmt müde sein.|werden|wird;werdet|Plural → werden. bestimmt = surely.|The children will surely be tired.',
+    'Morgen ___ ich nach Köln.|fahre|werde;fuhr|For fixed plans the present tense with a time word is enough.|Tomorrow I am going to Cologne.',
+    'Das Meeting ___ um zehn Uhr beginnen.|wird|werde;werden|Singular → wird.|The meeting will begin at ten o’clock.',
+    'Sie ___ morgen nicht kommen können.|wird|werde;wirst|Futur with a modal verb: wird + infinitive + infinitive.|She won’t be able to come tomorrow.',
+    'Der Zug ist sehr spät. Er wird wohl Verspätung ___.|haben|hat;gehabt|Assumption: wird + wohl + infinitive.|The train is very late. It probably has a delay.',
+    'In 20 Jahren ___ es mehr Elektroautos geben.|wird|werden;würde|Futur I: es wird … geben.|In 20 years there will be more electric cars.'],
   negation:[
     'Ich habe ___ Auto.|kein|nicht;keine;keinen|A noun with “ein” becomes “kein”: ein Auto → kein Auto.|I don’t have a car.',
     'Das ist ___ mein Handy.|nicht|kein;keine;keinen|With mein, dein … or der/die/das, use nicht.|That is not my phone.',
@@ -1638,7 +1838,7 @@ const BANK_RAW = {
 };
 const BANK = {};
 for (const k in BANK_RAW) BANK[k] = BANK_RAW[k].map(s => { const [q, a, d, why, en, say] = s.split('|'); return {q, a, d:d.split(';'), why, en, say}; });
-const BANK_LEAD = {aussprache:'Pronunciation', wortstellung:'Word order: which sentence is right?', negation:'nicht or kein?', modalpos:'Modal verbs', trennbar:'Separable verbs: which is right?',
+const BANK_LEAD = {aussprache:'Pronunciation',praeteritum:'Präteritum: which form?',plusquam:'Plusquamperfekt',relativ1:'Which relative pronoun?',relativ2:'Relative pronoun after a preposition',zu:'zu or no zu?',damit:'um … zu or damit?',temporal:'als, wenn, während, bevor, nachdem …',konnektoren:'Which connector?',indirekt:'Indirect question',passiv:'Passiv: werden + Partizip II',passiv2:'Passiv in the past',genitiv:'Genitiv',ndekl:'N-declension: which ending?',futur:'Futur I', wortstellung:'Word order: which sentence is right?', negation:'nicht or kein?', modalpos:'Modal verbs', trennbar:'Separable verbs: which is right?',
   nebensatz1:'Finish the sentence', nebensatz2:'Finish the sentence', konjunktiv:'würde, hätte, wäre, könnte', verbprep:'Which preposition?'};
 
 Object.assign(VERBS, {
@@ -1826,7 +2026,7 @@ Object.assign(GEN, {
 // A key per exercise type, used to track weak spots
 const kindKey = (type, p) => type + ':' + (p.bank || p.group || p.mode || '');
 const KIND_NAME = {'art:case':'Articles in Nom/Akk/Dat','art:prep':'Prepositions + articles','art:wechsel':'Wo? or Wohin?','detect:':'Which case?','pron:':'Pronouns for nouns','dialog:':'Pronouns in dialogues',
-  'ptable:':'Pronoun forms','verb:':'Verb forms','gender:':'der, die, das','meaning:':'Vocabulary','prepcase:':'Case after prepositions','bank:aussprache':'Pronunciation','bank:wortstellung':'Word order','bank:negation':'nicht or kein',
+  'ptable:':'Pronoun forms','verb:':'Verb forms','gender:':'der, die, das','meaning:':'Vocabulary','prepcase:':'Case after prepositions','bank:aussprache':'Pronunciation','bank:praeteritum':'Präteritum','bank:plusquam':'Plusquamperfekt','bank:relativ1':'Relative clauses','bank:relativ2':'Relative clauses with prepositions','bank:zu':'Infinitive with zu','bank:damit':'um … zu or damit','bank:temporal':'als, wenn, während …','bank:konnektoren':'Two-part connectors','bank:indirekt':'Indirect questions','bank:passiv':'Passiv','bank:passiv2':'Passiv in the past','bank:genitiv':'Genitiv','bank:ndekl':'N-declension','bank:futur':'Futur I','bank:wortstellung':'Word order','bank:negation':'nicht or kein',
   'bank:modalpos':'Modal verbs','bank:trennbar':'Separable verbs','bank:nebensatz1':'weil and dass','bank:nebensatz2':'wenn, ob, deshalb','bank:konjunktiv':'würde, hätte, könnte','bank:verbprep':'Verbs with prepositions',
   'perfekt:p2':'Perfekt: Partizip II','perfekt:aux':'Perfekt: haben or sein','adj:':'Adjective endings','komp:':'Comparison','refl:':'Reflexive verbs','imp:':'Imperative'};
 const errRate = s => s ? (s.n - s.c + 1) / (s.n + 2) : .5;
@@ -1842,8 +2042,20 @@ const VOCAB_A2 = {
   betrieb:['Schicht|shift|f','Frühschicht|early shift|f','Pause|break|f','Überstunden|overtime|pl','Feierabend|end of the working day|m','Lohn|wage|m','Kunde|customer|m','Auftrag|order, job|m','Werkzeug|tools|n','Maschine|machine|f','Sicherheit|safety|f','Ausbilder|trainer|m','Prüfung|exam|f','pünktlich|on time|','sich krankmelden|to call in sick|','Ich muss mich krankmelden.|I have to call in sick.|','Wann habe ich Feierabend?|When do I finish work?|','Können Sie mir das bitte zeigen?|Could you show me that, please?|','Ich habe das nicht verstanden. Noch einmal, bitte.|I didn’t understand that. Once more, please.|'],
 };
 for (const th in VOCAB_A2) for (const s of VOCAB_A2[th]){ const [de, en, g] = s.split('|'), v = {id:th + ':' + de, de, en, g, th}; VOCAB.push(v); VBYID[v.id] = v; }
+const VOCAB_B1 = {
+  bewerbung:['Bewerbung|application|f','Anschreiben|cover letter|n','Lebenslauf|CV, résumé|m','Zeugnis|certificate, reference|n','Lücke|gap|f','Stelle|job, position|f','Stellenanzeige|job advert|f','Vorstellungsgespräch|job interview|n','Bewerber|applicant|m','Arbeitgeber|employer|m','Arbeitnehmer|employee|m','Erfahrung|experience|f','Kenntnisse|skills, knowledge|pl','Praktikum|internship|n','Ausbildungsplatz|apprenticeship place|m','Probezeit|probation period|f','Einladung|invitation|f','Absage|rejection|f','Zusage|acceptance, confirmation|f','Termin|appointment|m','Unterlagen|documents|pl','Voraussetzung|requirement|f','Gehaltsvorstellung|salary expectation|f','sich bewerben|to apply|','einstellen|to hire|','kündigen|to resign, to give notice|'],
+  meinung:['Meinung|opinion|f','Argument|argument|n','Vorteil|advantage|m','Nachteil|disadvantage|m','Grund|reason|m','Beispiel|example|n','Problem|problem|n','Lösung|solution|f','Vorschlag|suggestion|m','Entscheidung|decision|f','Gefühl|feeling|n','Stimmung|mood|f','Sorge|worry|f','Angst|fear|f','Freude|joy|f','Ärger|anger, annoyance|m','Überraschung|surprise|f','Enttäuschung|disappointment|f','Zweifel|doubt|m','meiner Meinung nach|in my opinion|','ich bin dafür|I am in favour|','ich bin dagegen|I am against it|','zum Beispiel|for example|','deshalb|therefore|','außerdem|besides|','trotzdem|nevertheless|','allerdings|however|','zufrieden|satisfied|','überzeugt|convinced|','verärgert|annoyed|'],
+  vertrag:['Arbeitsvertrag|employment contract|m','Gehalt|salary|n','Brutto|gross (pay)|n','Netto|net (pay)|n','Steuer|tax|f','Sozialversicherung|social insurance|f','Krankenversicherung|health insurance|f','Urlaubsanspruch|holiday entitlement|m','Kündigungsfrist|notice period|f','Kündigung|termination, notice|f','befristet|fixed-term|','unbefristet|permanent|','Vollzeit|full time|f','Teilzeit|part time|f','Arbeitszeit|working hours|f','Überstunde|overtime hour|f','Lohnabrechnung|payslip|f','Tarifvertrag|collective agreement|m','Betriebsrat|works council|m','Arbeitsplatz|workplace|m','Vorgesetzte|supervisor|m','Ausbildungsvergütung|apprentice pay|f','Mindestlohn|minimum wage|m','Weiterbildung|further training|f','Krankmeldung|sick note|f','unterschreiben|to sign|'],
+  berufe:['Pflegefachmann|nurse (male)|m','Pflegefachfrau|nurse (female)|f','Altenpfleger|elderly care worker|m','Mechatroniker|mechatronics technician|m','Elektroniker|electronics technician|m','Kfz-Mechatroniker|car mechatronics technician|m','Tischler|joiner, carpenter|m','Maler|painter|m','Koch|cook|m','Köchin|female cook|f','Bäcker|baker|m','Verkäufer|sales assistant|m','Kaufmann|businessman, clerk|m','Fachinformatiker|IT specialist|m','Lagerist|warehouse worker|m','Erzieher|childcare worker|m','Friseur|hairdresser|m','Handwerk|craft, trade|n','Handwerker|craftsman|m','Dienstleistung|service|f','Industrie|industry|f','Gastronomie|catering trade|f','Gesundheitswesen|healthcare sector|n','Baugewerbe|construction trade|n','Berufsschule|vocational school|f','Geselle|journeyman|m','Meister|master craftsman|m','Gesellenprüfung|journeyman exam|f','Azubi|trainee, apprentice|m'],
+  gesundheit2:['Krankenkasse|health insurer|f','Versichertenkarte|insurance card|f','Hausarzt|family doctor|m','Facharzt|specialist|m','Überweisung|referral|f','Rezept|prescription|n','Apotheke|pharmacy|f','Krankschreibung|sick note|f','Krankenhaus|hospital|n','Notaufnahme|emergency room|f','Notruf|emergency call|m','Krankenwagen|ambulance|m','Untersuchung|examination|f','Behandlung|treatment|f','Impfung|vaccination|f','Allergie|allergy|f','Blutdruck|blood pressure|m','Symptom|symptom|n','Beschwerden|complaints, symptoms|pl','Nebenwirkung|side effect|f','Zahnarzt|dentist|m','Zuzahlung|co-payment|f','Gesundheitsamt|health office|n','Pflegeversicherung|care insurance|f','sich erholen|to recover|','gesund|healthy|','ansteckend|contagious|'],
+  geld:['Girokonto|current account|n','Kontoauszug|bank statement|m','Banküberweisung|bank transfer|f','Dauerauftrag|standing order|m','Lastschrift|direct debit|f','EC-Karte|debit card|f','Geldautomat|cash machine|m','PIN|PIN|f','Gebühr|fee|f','Zinsen|interest|pl','Kredit|loan|m','Schulden|debts|pl','Rechnung|bill, invoice|f','Quittung|receipt|f','Miete|rent|f','Nebenkosten|additional costs|pl','Kaution|deposit|f','Steuererklärung|tax return|f','Paket|parcel|n','Brief|letter|m','Briefmarke|stamp|f','Einschreiben|registered letter|n','Absender|sender|m','Empfänger|recipient|m','Postleitzahl|postcode|f','Schalter|counter|m','bezahlen|to pay|','abheben|to withdraw|','einzahlen|to pay in|','überweisen|to transfer|'],
+  medien:['Medien|media|pl','Nachrichten|news|pl','Zeitung|newspaper|f','Zeitschrift|magazine|f','Sendung|programme|f','Werbung|advertising|f','Internetseite|website|f','E-Mail|email|f','Nachricht|message|f','Anhang|attachment|m','Passwort|password|n','Benutzername|username|m','Datei|file|f','Bildschirm|screen|m','Tastatur|keyboard|f','Drucker|printer|m','Akku|battery|m','Ladekabel|charging cable|n','App|app|f','Netzwerk|network|n','WLAN|Wi-Fi|n','Datenschutz|data protection|m','Suchmaschine|search engine|f','herunterladen|to download|','hochladen|to upload|','speichern|to save|','löschen|to delete|','sich anmelden|to log in, to register|'],
+  umwelt:['Umwelt|environment|f','Umweltschutz|environmental protection|m','Klima|climate|n','Klimawandel|climate change|m','Müll|rubbish|m','Mülltrennung|waste separation|f','Recycling|recycling|n','Pfand|bottle deposit|n','Energie|energy|f','Strom|electricity|m','Solarenergie|solar energy|f','Windrad|wind turbine|n','Luft|air|f','Verschmutzung|pollution|f','Abgase|exhaust fumes|pl','Fahrgemeinschaft|carpool|f','Fahrrad|bicycle|n','Elektroauto|electric car|n','Stau|traffic jam|m','Tempolimit|speed limit|n','Fahrkarte|ticket|f','Monatskarte|monthly pass|f','Wald|forest|m','Natur|nature|f','Tier|animal|n','Pflanze|plant|f','sparen|to save|','vermeiden|to avoid|','schützen|to protect|'],
+  bildung:['Schule|school|f','Grundschule|primary school|f','Realschule|secondary school (to age 16)|f','Gymnasium|grammar school|n','Abitur|school-leaving exam|n','Hauptschulabschluss|lower secondary certificate|m','Abschluss|qualification|m','Studium|studies, degree|n','Universität|university|f','Hochschule|university of applied sciences|f','Semester|semester|n','Vorlesung|lecture|f','Seminar|seminar|n','Stundenplan|timetable|m','Note|grade|f','Fach|subject|n','Hausaufgabe|homework|f','Prüfung|exam|f','Wiederholung|revision, repetition|f','Sprachkurs|language course|m','Integrationskurs|integration course|m','Volkshochschule|adult education centre|f','Anmeldung|registration|f','Teilnehmer|participant|m','Lehrer|teacher|m','Dozent|lecturer|m','wiederholen|to repeat, to revise|','bestehen|to pass|','durchfallen|to fail|'],
+};
+for (const th in VOCAB_B1) for (const s of VOCAB_B1[th]){ const [de, en, g] = s.split('|'), v = {id:th + ':' + de, de, en, g, th}; VOCAB.push(v); VBYID[v.id] = v; }
 
-const vocabLesson = (id, title, sub, th, intro, ex) => ({id, level:'A2', kind:'Wortschatz', title, sub, th, intro, ex, drills:[['meaning',6,{th}],['gender',4,{th}]]});
+const vocabLesson = (id, title, sub, th, intro, ex, level = 'A2') => ({id, level, kind:'Wortschatz', title, sub, th, intro, ex, drills:[['meaning',6,{th}],['gender',4,{th}]]});
 LESSONS.forEach(l => l.level = 'A1');
 LESSONS.push(
   {id:'a2-satzbau', level:'A2', kind:'Grammatik', title:'Das Verb auf Platz 2', sub:'German word order in one rule',
@@ -2013,6 +2225,178 @@ LESSONS.push(
   vocabLesson('betrieb','Im Betrieb','Shifts, breaks, tools','betrieb',
    `<p>The everyday words of your future workplace: shifts, breaks, overtime and tools.</p><p class="tip">If you’re sick, call your Betrieb <b>before</b> your shift starts: <i>Guten Morgen, hier ist … Ich bin krank und kann heute nicht kommen.</i> Then get the Krankschreibung from the doctor.</p>`,
    [['Ich habe heute Frühschicht.','I’m on the early shift today.'],['Wann haben wir Pause?','When is our break?'],['Können Sie mir das bitte noch einmal zeigen?','Could you show me that again, please?']]),
+  // ---- B1: the grammar the Goethe exam asks for, plus the words for work and daily life ----
+  {id:'b1-praeteritum', level:'B1', kind:'Grammatik', title:'Er kam, sah und sagte', sub:'The Präteritum: telling a story in writing',
+   intro:`<p>In speech you use the Perfekt (<i>Ich bin gegangen</i>). In <b>stories, news and reports</b> you meet the Präteritum (<i>Ich ging</i>). You need to recognise it for the B1 reading exam, and to write a story in the Schreiben part.</p>
+<div class="tablewrap"><table class="ct"><tr><th>type</th><th>how it works</th><th>example</th></tr>
+<tr><td>regular</td><td>stem + <b>-te</b></td><td>machen → ich mach<b>te</b></td></tr>
+<tr><td>irregular</td><td>the vowel changes, no -te</td><td>gehen → ich <b>ging</b> · kommen → <b>kam</b> · sehen → <b>sah</b></td></tr>
+<tr><td>mixed</td><td>vowel change <b>and</b> -te</td><td>bringen → <b>brachte</b> · wissen → <b>wusste</b> · denken → <b>dachte</b></td></tr></table></div>
+<div class="tablewrap"><table class="ct"><tr><td>ich</td><td>ging</td><td>wir</td><td>gingen</td></tr><tr><td>du</td><td>gingst</td><td>ihr</td><td>gingt</td></tr><tr><td>er / sie / es</td><td>ging</td><td>sie / Sie</td><td>gingen</td></tr></table></div>
+<p>Learn the irregular ones as three forms: <i>gehen – ging – ist gegangen · sehen – sah – gesehen · schreiben – schrieb – geschrieben · nehmen – nahm – genommen · fahren – fuhr – ist gefahren</i>.</p>
+<p class="tip">Always use the Präteritum, even when speaking, for <b>sein, haben and the modal verbs</b>: <i>Ich war müde. Ich hatte keine Zeit. Ich musste arbeiten.</i></p>`,
+   ex:[['Gestern ging ich früh nach Hause.','Yesterday I went home early.'],['Er kam spät und sagte nichts.','He came late and said nothing.'],['Wir fuhren im Sommer nach Spanien.','We drove to Spain in the summer.'],['Als Kind spielte ich oft Fußball.','As a child I often played football.']],
+   drills:[['bank',10,{bank:'praeteritum'}]]},
+  {id:'b1-plusquam', level:'B1', kind:'Grammatik', title:'Ich hatte zu lange geschlafen', sub:'The Plusquamperfekt: before the past',
+   intro:`<p>The <b>Plusquamperfekt</b> is the past of the past: something happened <b>before</b> another past event. Build it like the Perfekt, but with <b>hatte</b> or <b>war</b>.</p>
+<div class="tablewrap"><table class="ct"><tr><th>Perfekt</th><th>Plusquamperfekt</th></tr>
+<tr><td>Ich <b>habe</b> gegessen.</td><td>Ich <b>hatte</b> gegessen.</td></tr>
+<tr><td>Er <b>ist</b> gegangen.</td><td>Er <b>war</b> gegangen.</td></tr></table></div>
+<p>haben or sein? The same as in the Perfekt: sein for movement and change of state (<i>gehen, fahren, aufwachen</i>), haben for the rest.</p>
+<p><i>Nachdem ich gegessen <b>hatte</b>, ging ich spazieren.</i> First I ate, then I went for a walk. The earlier event gets the Plusquamperfekt.</p>
+<p class="tip">You will find it with <b>nachdem</b>, <b>bevor</b>, <b>als</b> and <b>weil</b>. In these clauses the auxiliary goes to the end: <i>weil ich zu lange geschlafen <b>hatte</b></i>.</p>`,
+   ex:[['Nachdem ich gegessen hatte, ging ich spazieren.','After I had eaten, I went for a walk.'],['Er war schon gegangen, als ich ankam.','He had already left when I arrived.'],['Ich hatte den Schlüssel vergessen.','I had forgotten the key.'],['Wir waren müde, weil wir nicht geschlafen hatten.','We were tired because we hadn’t slept.']],
+   drills:[['bank',10,{bank:'plusquam'}]]},
+  vocabLesson('b1-wort-bewerbung','Bewerbung','Applying for a job or an Ausbildung','bewerbung',
+   `<p>The words you need to apply: the documents, the interview and the answer you get. In Germany a full application (<i>Bewerbungsmappe</i>) has a cover letter, a CV and certificates.</p><p class="tip">A German CV (<i>Lebenslauf</i>) is a table, newest entry first, with a photo only if you want. Always sign the cover letter and send it as one PDF.</p>`,
+   [['Ich bewerbe mich um einen Ausbildungsplatz als Mechatroniker.','I am applying for an apprenticeship as a mechatronics technician.'],['Im Anhang finden Sie meinen Lebenslauf und meine Zeugnisse.','Attached you will find my CV and my certificates.'],['Wann kann ich zum Vorstellungsgespräch kommen?','When can I come for the job interview?']], 'B1'),
+  {id:'b1-relativ1', level:'B1', kind:'Grammatik', title:'Das ist der Mann, der …', sub:'Relative clauses 1: who, which, that',
+   intro:`<p>A <b>relative clause</b> tells you more about a noun: <i>Das ist der Mann, <b>der</b> neben mir wohnt.</i> It starts with a <b>relative pronoun</b>, has a comma on both sides, and the <b>verb is at the end</b>.</p>
+<div class="tablewrap"><table class="ct"><tr><th></th><th>der (m)</th><th>die (f)</th><th>das (n)</th><th>die (pl)</th></tr>
+<tr><td>Nominativ</td><td><b>der</b></td><td><b>die</b></td><td><b>das</b></td><td><b>die</b></td></tr>
+<tr><td>Akkusativ</td><td><b>den</b></td><td><b>die</b></td><td><b>das</b></td><td><b>die</b></td></tr></table></div>
+<p>Two questions give you the right word:</p>
+<p><b>1. Gender and number</b> of the noun before the comma → the row (der / die / das / plural).<br><b>2. The job</b> of the pronoun in its own clause → the case. Is it the doer (Nominativ) or the object (Akkusativ)?</p>
+<p class="tip">The pronouns look like the articles. The only differences come later, in the Dativ and Genitiv (next lesson): <i>dem, denen, dessen, deren</i>.</p>`,
+   ex:[['Das ist der Mann, der neben mir wohnt.','That is the man who lives next to me.'],['Die Frau, die ich gestern getroffen habe, ist Ärztin.','The woman I met yesterday is a doctor.'],['Das Buch, das ich lese, ist spannend.','The book I am reading is exciting.'],['Wo sind die Schlüssel, die auf dem Tisch lagen?','Where are the keys that were on the table?']],
+   drills:[['bank',10,{bank:'relativ1'}]]},
+  {id:'b1-relativ2', level:'B1', kind:'Grammatik', title:'Die Firma, in der ich arbeite', sub:'Relative clauses 2: prepositions, Dativ and Genitiv',
+   intro:`<p>When a preposition belongs in the relative clause, it goes <b>in front of the pronoun</b>, and it decides the case: <i>Die Firma, <b>in der</b> ich arbeite, …</i></p>
+<div class="tablewrap"><table class="ct"><tr><th></th><th>m</th><th>f</th><th>n</th><th>pl</th></tr>
+<tr><td>Nominativ</td><td>der</td><td>die</td><td>das</td><td>die</td></tr>
+<tr><td>Akkusativ</td><td>den</td><td>die</td><td>das</td><td>die</td></tr>
+<tr><td>Dativ</td><td>dem</td><td>der</td><td>dem</td><td><b>denen</b></td></tr>
+<tr><td>Genitiv (whose)</td><td><b>dessen</b></td><td><b>deren</b></td><td><b>dessen</b></td><td><b>deren</b></td></tr></table></div>
+<p><b>Step 1:</b> look at the preposition or the verb. <i>mit, von, bei, aus, nach, zu</i> and verbs like <i>helfen</i> always take the Dativ. <i>für, durch, ohne</i> take the Akkusativ. <i>in, an, auf</i> depend: where? = Dativ, where to? = Akkusativ.<br><b>Step 2:</b> take gender and number from the noun before the comma.</p>
+<p class="tip">“Whose” is <b>dessen</b> (masculine/neuter) or <b>deren</b> (feminine/plural), and the noun after it has no article: <i>der Kollege, <b>dessen</b> Auto kaputt ist</i>.</p>`,
+   ex:[['Das ist die Firma, in der ich arbeite.','That is the company where I work.'],['Der Mann, mit dem ich gesprochen habe, ist Lehrer.','The man I spoke to is a teacher.'],['Das ist der Kollege, dessen Auto kaputt ist.','That is the colleague whose car is broken.'],['Die Leute, denen ich geholfen habe, haben sich bedankt.','The people I helped said thank you.']],
+   drills:[['bank',10,{bank:'relativ2'}]]},
+  {id:'b1-zu', level:'B1', kind:'Grammatik', title:'Es ist schön, zu feiern', sub:'The infinitive with zu',
+   intro:`<p>Many verbs, adjectives and nouns are followed by a second verb in the infinitive <b>with zu</b>. The <b>zu-infinitive stands at the end</b> of its clause, after a comma: <i>Ich habe keine Lust, heute <b>zu arbeiten</b>.</i></p>
+<div class="tablewrap"><table class="ct"><tr><th>after</th><th>examples</th></tr>
+<tr><td>verbs</td><td>anfangen, aufhören, versuchen, vergessen, hoffen, vorhaben, beginnen</td></tr>
+<tr><td>adjectives</td><td>Es ist wichtig / schwer / schön / leicht / nicht möglich, …</td></tr>
+<tr><td>nouns</td><td>Lust, Zeit, Angst, Spaß haben · die Möglichkeit, der Plan, die Idee</td></tr></table></div>
+<p><b>Separable verbs</b>: zu goes between the prefix and the verb, and it is written as one word: <i>aufzustehen, anzurufen, umzuziehen</i>.</p>
+<p class="tip">No <b>zu</b> after modal verbs (<i>können, müssen, wollen, dürfen, sollen, möchten</i>) and a few others (<i>gehen, bleiben, lassen</i>): <i>Ich kann schwimmen.</i></p>`,
+   ex:[['Ich habe vergessen, dich anzurufen.','I forgot to call you.'],['Es ist wichtig, pünktlich zu sein.','It is important to be on time.'],['Hast du Lust, ins Kino zu gehen?','Do you feel like going to the cinema?'],['Er versucht, Deutsch zu lernen.','He is trying to learn German.']],
+   drills:[['bank',10,{bank:'zu'}]]},
+  {id:'b1-damit', level:'B1', kind:'Grammatik', title:'Um … zu und damit', sub:'Saying what something is for',
+   intro:`<p>To say <b>why</b> you do something (the purpose) you have two options:</p>
+<div class="tablewrap"><table class="ct"><tr><th>um … zu</th><th>damit</th></tr>
+<tr><td>the <b>same</b> person does both things<br><i>Ich lerne Deutsch, <b>um</b> in Deutschland <b>zu</b> arbeiten.</i></td><td>a <b>different</b> person<br><i>Der Lehrer spricht langsam, <b>damit</b> wir ihn verstehen.</i></td></tr>
+<tr><td>no new subject, infinitive at the end</td><td>a full clause with its own subject, verb at the end</td></tr></table></div>
+<p>With the same subject you can also use damit (<i>Ich schreibe es auf, damit ich es nicht vergesse</i>), but um … zu is shorter and more common.</p>
+<p class="tip">Don’t mix it up with <b>weil</b>: weil answers “why did it happen?” (the reason in the past), um … zu and damit answer “what for?” (the goal).</p>`,
+   ex:[['Ich lerne Deutsch, um in Deutschland zu arbeiten.','I learn German in order to work in Germany.'],['Ich schreibe es auf, damit ich es nicht vergesse.','I write it down so that I don’t forget it.'],['Er spricht langsam, damit wir ihn verstehen.','He speaks slowly so that we understand him.'],['Sie nimmt den Zug, um pünktlich zu sein.','She takes the train to be on time.']],
+   drills:[['bank',10,{bank:'damit'}]]},
+  {id:'b1-temporal', level:'B1', kind:'Grammatik', title:'als, wenn, während, bevor, nachdem', sub:'Time clauses',
+   intro:`<p>These words begin a clause about <b>when</b> something happens. The verb goes to the <b>end</b>.</p>
+<div class="tablewrap"><table class="ct"><tr><th>word</th><th>meaning</th><th>example</th></tr>
+<tr><td><b>als</b></td><td>one time in the past</td><td><i>Als ich 18 war, kam ich nach Deutschland.</i></td></tr>
+<tr><td><b>wenn</b></td><td>repeated, or present/future</td><td><i>Wenn ich Zeit habe, lese ich.</i></td></tr>
+<tr><td><b>während</b></td><td>at the same time</td><td><i>Während ich koche, hört er Musik.</i></td></tr>
+<tr><td><b>bevor</b></td><td>before</td><td><i>Bevor ich gehe, rufe ich an.</i></td></tr>
+<tr><td><b>nachdem</b></td><td>after</td><td><i>Nachdem er gegessen hatte, ging er.</i></td></tr>
+<tr><td><b>seit</b></td><td>since</td><td><i>Seit ich hier wohne, lerne ich Deutsch.</i></td></tr>
+<tr><td><b>bis</b></td><td>until</td><td><i>Warte, bis ich zurückkomme.</i></td></tr></table></div>
+<p class="tip">als or wenn? Past + only once = <b>als</b>. Anything repeated (“whenever”) or in the present/future = <b>wenn</b>. With nachdem the clause usually has the Plusquamperfekt: <i>nachdem ich gegessen <b>hatte</b></i>.</p>`,
+   ex:[['Als ich ein Kind war, wohnte ich in Casablanca.','When I was a child, I lived in Casablanca.'],['Wenn ich Zeit habe, lese ich.','Whenever I have time, I read.'],['Während ich koche, hört er Musik.','While I cook, he listens to music.'],['Nachdem er gegessen hatte, rief er an.','After he had eaten, he called.']],
+   drills:[['bank',10,{bank:'temporal'}]]},
+  vocabLesson('b1-wort-meinung','Meinung & Gefühle','Opinions, arguments and feelings','meinung',
+   `<p>For the Sprechen and Schreiben parts you must give your opinion with reasons. These words and phrases make it sound natural.</p><p class="tip">A simple structure that works every time: <i>Meiner Meinung nach … Das liegt daran, dass … Zum Beispiel … Deshalb bin ich dafür / dagegen.</i></p>`,
+   [['Meiner Meinung nach ist das eine gute Idee.','In my opinion that is a good idea.'],['Einerseits ist es teuer, andererseits spart man Zeit.','On the one hand it is expensive, on the other hand you save time.'],['Ich bin dagegen, weil es zu gefährlich ist.','I am against it because it is too dangerous.']], 'B1'),
+  {id:'b1-konnektoren', level:'B1', kind:'Grammatik', title:'sowohl … als auch, entweder … oder', sub:'Two-part connectors and obwohl',
+   intro:`<p>Two-part connectors link two ideas. The exam loves them, and they make your writing sound much better.</p>
+<div class="tablewrap"><table class="ct"><tr><th>connector</th><th>meaning</th><th>example</th></tr>
+<tr><td><b>sowohl … als auch</b></td><td>both … and</td><td><i>Ich spreche sowohl Arabisch als auch Französisch.</i></td></tr>
+<tr><td><b>nicht nur … sondern auch</b></td><td>not only … but also</td><td><i>Er ist nicht nur freundlich, sondern auch hilfsbereit.</i></td></tr>
+<tr><td><b>entweder … oder</b></td><td>either … or</td><td><i>Wir fahren entweder mit dem Zug oder mit dem Bus.</i></td></tr>
+<tr><td><b>weder … noch</b></td><td>neither … nor</td><td><i>Ich habe weder Zeit noch Geld.</i></td></tr>
+<tr><td><b>zwar … aber</b></td><td>it is true … but</td><td><i>Sie ist zwar jung, aber sehr erfahren.</i></td></tr>
+<tr><td><b>je … desto</b></td><td>the more … the more</td><td><i>Je mehr ich übe, desto besser werde ich.</i></td></tr></table></div>
+<p><b>obwohl</b> (although) starts a clause with the verb at the end: <i>Obwohl es regnet, gehen wir spazieren.</i> <b>trotzdem</b> (nevertheless) is followed directly by the verb: <i>Es regnet. Trotzdem gehen wir spazieren.</i></p>`,
+   ex:[['Ich spreche sowohl Arabisch als auch Französisch.','I speak both Arabic and French.'],['Er ist nicht nur freundlich, sondern auch hilfsbereit.','He is not only friendly but also helpful.'],['Je mehr ich übe, desto besser werde ich.','The more I practise, the better I get.'],['Obwohl es regnet, gehe ich spazieren.','Although it is raining, I go for a walk.']],
+   drills:[['bank',10,{bank:'konnektoren'}]]},
+  {id:'b1-indirekt', level:'B1', kind:'Grammatik', title:'Wissen Sie, ob …?', sub:'Indirect questions: polite and correct',
+   intro:`<p>An <b>indirect question</b> is a question inside another sentence. It sounds more polite, and the verb goes to the <b>end</b>.</p>
+<div class="tablewrap"><table class="ct"><tr><th>direct</th><th>indirect</th></tr>
+<tr><td>Wo ist der Bahnhof?</td><td>Können Sie mir sagen, <b>wo</b> der Bahnhof <b>ist</b>?</td></tr>
+<tr><td>Wann beginnt der Kurs?</td><td>Wissen Sie, <b>wann</b> der Kurs <b>beginnt</b>?</td></tr>
+<tr><td>Kommt er heute?</td><td>Ich weiß nicht, <b>ob</b> er heute <b>kommt</b>.</td></tr></table></div>
+<p><b>W-questions</b> keep their question word (wo, wann, wie, warum, wer, was …). <b>Yes/no questions</b> become <b>ob</b>.</p>
+<p class="tip">Typical openings: <i>Können Sie mir sagen, … · Wissen Sie, … · Ich möchte wissen, … · Ich weiß nicht, … · Ich frage mich, …</i> A separable verb is written together again at the end: <i>wann der Zug <b>abfährt</b></i>.</p>`,
+   ex:[['Können Sie mir sagen, wo der Bahnhof ist?','Can you tell me where the station is?'],['Ich weiß nicht, ob er kommt.','I don’t know whether he is coming.'],['Wissen Sie, wann der Kurs beginnt?','Do you know when the course starts?'],['Sie fragt, wie viel das kostet.','She asks how much that costs.']],
+   drills:[['bank',10,{bank:'indirekt'}]]},
+  {id:'b1-passiv', level:'B1', kind:'Grammatik', title:'Das Auto wird gebaut', sub:'The Passiv: the action matters, not the doer',
+   intro:`<p>In the <b>Passiv</b> the action is in the focus, not who does it. You build it with <b>werden + Partizip II</b>.</p>
+<div class="tablewrap"><table class="ct"><tr><th>Aktiv</th><th>Passiv</th></tr>
+<tr><td>Der Mechaniker repariert das Auto.</td><td>Das Auto <b>wird</b> (vom Mechaniker) <b>repariert</b>.</td></tr>
+<tr><td>Man spricht hier Deutsch.</td><td>Hier <b>wird</b> Deutsch <b>gesprochen</b>.</td></tr></table></div>
+<div class="tablewrap"><table class="ct"><tr><td>ich</td><td>werde</td><td>wir</td><td>werden</td></tr><tr><td>du</td><td>wirst</td><td>ihr</td><td>werdet</td></tr><tr><td>er / sie / es</td><td>wird</td><td>sie / Sie</td><td>werden</td></tr></table></div>
+<p>The object of the active sentence (Akkusativ) becomes the <b>subject</b> of the passive sentence. The doer is often left out. If you name it, use <b>von + Dativ</b>.</p>
+<p class="tip">You find the Passiv in instructions, news and official texts: <i>Das Formular wird per Post geschickt. Die Tür wird um 18 Uhr geschlossen.</i></p>`,
+   ex:[['Hier wird Deutsch gesprochen.','German is spoken here.'],['Das Auto wird repariert.','The car is being repaired.'],['Die Rechnung wird per Post geschickt.','The invoice is sent by post.'],['Die Tür wird um 18 Uhr geschlossen.','The door is closed at 6 pm.']],
+   drills:[['bank',10,{bank:'passiv'}]]},
+  {id:'b1-passiv2', level:'B1', kind:'Grammatik', title:'Wann wurde der Dom gebaut?', sub:'The Passiv in the past and with modal verbs',
+   intro:`<p>Same idea, other tenses. <b>werden</b> changes, the <b>Partizip II</b> stays.</p>
+<div class="tablewrap"><table class="ct"><tr><th>tense</th><th>form</th><th>example</th></tr>
+<tr><td>Präsens</td><td>wird + Partizip II</td><td><i>Das Haus wird gebaut.</i></td></tr>
+<tr><td>Präteritum</td><td><b>wurde</b> + Partizip II</td><td><i>Das Haus <b>wurde</b> gebaut.</i></td></tr>
+<tr><td>Perfekt</td><td>ist + Partizip II + <b>worden</b></td><td><i>Das Haus ist gebaut <b>worden</b>.</i></td></tr>
+<tr><td>with modal verb</td><td>modal + Partizip II + <b>werden</b></td><td><i>Das Formular muss ausgefüllt <b>werden</b>.</i></td></tr></table></div>
+<p>Plural: <i>wurden</i>. In the Perfekt it is <b>worden</b>, not geworden (that is a different werden).</p>
+<p class="tip">Official letters use it all the time: <i>Ihr Antrag wurde bearbeitet. Die Unterlagen müssen bis Freitag abgegeben werden.</i></p>`,
+   ex:[['Der Kölner Dom wurde im Mittelalter gebaut.','Cologne Cathedral was built in the Middle Ages.'],['Das Paket ist gestern geliefert worden.','The parcel was delivered yesterday.'],['Das Formular muss ausgefüllt werden.','The form must be filled in.'],['Die Kinder wurden nach Hause geschickt.','The children were sent home.']],
+   drills:[['bank',10,{bank:'passiv2'}]]},
+  vocabLesson('b1-wort-vertrag','Arbeitsvertrag & Gehalt','Contract, pay and working conditions','vertrag',
+   `<p>Before you sign anything: these are the words in a German employment contract and on your payslip.</p><p class="tip"><b>Brutto</b> is what is written in your contract. <b>Netto</b> is what arrives in your account after tax and insurance. Ask: <i>Ist das Gehalt brutto oder netto?</i></p>`,
+   [['Der Vertrag ist auf zwei Jahre befristet.','The contract is limited to two years.'],['Die Kündigungsfrist beträgt vier Wochen.','The notice period is four weeks.'],['Wie viele Urlaubstage habe ich im Jahr?','How many days of holiday do I have a year?']], 'B1'),
+  {id:'b1-genitiv', level:'B1', kind:'Grammatik', title:'Das Auto meines Vaters', sub:'The Genitiv and wegen, trotz, während',
+   intro:`<p>The <b>Genitiv</b> shows who something belongs to (<i>das Auto meines Vaters</i>) and follows some prepositions.</p>
+<div class="tablewrap"><table class="ct"><tr><th></th><th>m</th><th>f</th><th>n</th><th>pl</th></tr>
+<tr><td>Genitiv</td><td><b>des</b> Mann<b>es</b></td><td><b>der</b> Frau</td><td><b>des</b> Kind<b>es</b></td><td><b>der</b> Kinder</td></tr></table></div>
+<p>Masculine and neuter nouns add <b>-s</b> or <b>-es</b> (<i>des Chefs, des Hauses</i>). Feminine and plural nouns stay the same.</p>
+<p><b>Prepositions with the Genitiv:</b> <b>wegen</b> (because of) · <b>trotz</b> (in spite of) · <b>während</b> (during) · <b>innerhalb</b> (within) · <b>außerhalb</b> (outside).</p>
+<p class="tip">In speech people often say <i>von + Dativ</i> instead: <i>das Auto von meinem Vater</i>. Both are fine in everyday life. In writing and in the exam, show that you know the Genitiv.</p>`,
+   ex:[['Das ist das Auto meines Vaters.','That is my father’s car.'],['Wegen des Wetters bleiben wir zu Hause.','Because of the weather we are staying at home.'],['Trotz der Kälte gehen wir spazieren.','In spite of the cold we are going for a walk.'],['Während des Kurses darf man nicht telefonieren.','During the course you may not use the phone.']],
+   drills:[['bank',10,{bank:'genitiv'}]]},
+  {id:'b1-ndekl', level:'B1', kind:'Grammatik', title:'Kennen Sie den Herrn?', sub:'The N-declension: a few masculine nouns',
+   intro:`<p>A group of <b>masculine nouns</b> take <b>-n or -en</b> in every case except the Nominativ singular.</p>
+<div class="tablewrap"><table class="ct"><tr><th>Nominativ</th><th>Akkusativ</th><th>Dativ</th><th>Genitiv</th></tr>
+<tr><td>der Student</td><td>den Student<b>en</b></td><td>dem Student<b>en</b></td><td>des Student<b>en</b></td></tr>
+<tr><td>der Kollege</td><td>den Kollege<b>n</b></td><td>dem Kollege<b>n</b></td><td>des Kollege<b>n</b></td></tr>
+<tr><td>der Herr</td><td>den Herr<b>n</b></td><td>dem Herr<b>n</b></td><td>des Herr<b>n</b></td></tr></table></div>
+<p><b>Typical N-nouns:</b> people and animals ending in <b>-e</b> (der Kollege, Kunde, Junge, Neffe) · endings <b>-ent, -ant, -ist</b> (der Student, Praktikant, Polizist) · and <b>der Herr, der Mensch, der Nachbar</b>.</p>
+<p class="tip">You need this at work every day: <i>Ich frage den Kollegen. Ich helfe dem Kunden. Das ist das Auto des Nachbarn.</i></p>`,
+   ex:[['Ich kenne den Studenten.','I know the student.'],['Wir fragen den Kollegen.','We ask the colleague.'],['Das ist das Auto des Nachbarn.','That is the neighbour’s car.'],['Er hilft dem Patienten.','He helps the patient.']],
+   drills:[['bank',10,{bank:'ndekl'}]]},
+  {id:'b1-futur', level:'B1', kind:'Grammatik', title:'Der Präsident wird kommen', sub:'The Futur I and guessing with wohl',
+   intro:`<p>The <b>Futur I</b> is <b>werden + infinitive</b>, and the infinitive goes to the end.</p>
+<div class="tablewrap"><table class="ct"><tr><td>ich</td><td>werde</td><td>wir</td><td>werden</td></tr><tr><td>du</td><td>wirst</td><td>ihr</td><td>werdet</td></tr><tr><td>er / sie / es</td><td>wird</td><td>sie / Sie</td><td>werden</td></tr></table></div>
+<p><i>Es wird morgen regnen. Ich werde dir helfen.</i> Use it for <b>predictions</b> and <b>promises</b>. For plans with a time word the normal present tense is enough and more common: <i>Morgen fahre ich nach Köln.</i></p>
+<p><b>Assumption:</b> werden + infinitive + <i>wohl</i> or <i>bestimmt</i> means “probably”: <i>Er wird wohl krank sein.</i> (He is probably ill.)</p>
+<p class="tip">With a modal verb there are two infinitives at the end: <i>Sie wird morgen nicht kommen können.</i> The finite werden stays in position 2.</p>`,
+   ex:[['Ich werde dir morgen helfen.','I will help you tomorrow.'],['Es wird morgen regnen.','It will rain tomorrow.'],['Er wird wohl krank sein.','He is probably ill.'],['Wir werden nächstes Jahr umziehen.','We will move next year.']],
+   drills:[['bank',10,{bank:'futur'}]]},
+  vocabLesson('b1-wort-berufe','Berufe & Branchen','Trades and training occupations','berufe',
+   `<p>Ausbildung occupations and the fields they belong to. In Germany there are about 320 recognised training occupations.</p><p class="tip">Many job titles have a male and a female form: <i>der Pfleger / die Pflegerin, der Koch / die Köchin</i>. Job adverts now often write <i>(m/w/d)</i>: male, female, diverse.</p>`,
+   [['Ich möchte eine Ausbildung als Pflegefachfrau machen.','I would like to do an apprenticeship as a nurse.'],['Im Handwerk gibt es viele freie Ausbildungsplätze.','There are many free apprenticeship places in the trades.'],['Nach der Gesellenprüfung kann man den Meister machen.','After the journeyman exam you can train as a master craftsman.']], 'B1'),
+  vocabLesson('b1-wort-gesundheit','Gesundheit & Versicherung','Doctor, hospital and health insurance','gesundheit2',
+   `<p>In Germany almost everyone must have health insurance. These words help at the doctor, at the pharmacy and with your insurer.</p><p class="tip">You show your insurance card (<i>Versichertenkarte</i>) at every doctor’s appointment. For a specialist you often need a <i>Überweisung</i> from your <i>Hausarzt</i> first.</p>`,
+   [['Ich brauche einen Termin beim Hausarzt.','I need an appointment with the family doctor.'],['Der Arzt hat mir ein Rezept gegeben.','The doctor gave me a prescription.'],['Meine Krankenkasse übernimmt die Kosten.','My health insurer covers the costs.']], 'B1'),
+  vocabLesson('b1-wort-geld','Bank, Post & Geld','Bank account, bills and parcels','geld',
+   `<p>Opening an account, paying a bill, posting a parcel: the everyday words of money and mail.</p><p class="tip">Most landlords and employers need an IBAN. A <i>Girokonto</i> is a normal current account. Compare the <i>Gebühren</i> before you choose a bank.</p>`,
+   [['Ich möchte ein Girokonto eröffnen.','I would like to open a current account.'],['Die Miete wird per Dauerauftrag bezahlt.','The rent is paid by standing order.'],['Ich möchte dieses Paket als Einschreiben schicken.','I would like to send this parcel by registered post.']], 'B1'),
+  vocabLesson('b1-wort-medien','Medien & Technik','Media, internet and devices','medien',
+   `<p>News, apps and e-mail: the words for the digital part of daily life and a frequent topic in the Goethe B1 exam.</p><p class="tip">Many computer words are English, but they get German articles and verb endings: <i>die App, die Datei, herunterladen → ich lade die Datei herunter</i> (separable verb).</p>`,
+   [['Ich habe die Datei im Anhang geschickt.','I sent the file as an attachment.'],['Das WLAN-Passwort steht auf dem Zettel.','The Wi-Fi password is on the note.'],['Man sollte seine Daten gut schützen.','You should protect your data well.']], 'B1'),
+  vocabLesson('b1-wort-umwelt','Umwelt & Verkehr','Environment, rubbish and transport','umwelt',
+   `<p>Germany takes recycling seriously, and the environment is a favourite exam topic for opinion texts.</p><p class="tip">Rubbish is sorted into several bins: <i>Papier, Verpackungen (gelber Sack), Bio, Restmüll</i>, and glass goes to the container. On many bottles you pay a <i>Pfand</i> that you get back.</p>`,
+   [['Wir trennen den Müll zu Hause.','We separate our rubbish at home.'],['Ich fahre mit dem Fahrrad, um die Umwelt zu schützen.','I cycle to protect the environment.'],['Die Monatskarte ist günstiger als einzelne Tickets.','The monthly pass is cheaper than single tickets.']], 'B1'),
+  vocabLesson('b1-wort-bildung','Schule & Weiterbildung','School, study and further training','bildung',
+   `<p>The German school system, university and courses for adults. Useful for forms, for talking about your own education, and for the Sprechen topic “Ausbildung oder Studium”.</p><p class="tip">After the Hauptschule or Realschule most young people do an Ausbildung. The Abitur leads to university. Adults learn at the <i>Volkshochschule</i> (VHS).</p>`,
+   [['Ich habe in Marokko das Abitur gemacht.','I took my school-leaving exam in Morocco.'],['Die Vorlesung beginnt um neun Uhr.','The lecture starts at nine.'],['Ich besuche einen Integrationskurs an der Volkshochschule.','I attend an integration course at the adult education centre.']], 'B1'),
 );
 
 // Kurzgeschichten: short everyday stories with questions and a word list
@@ -2108,7 +2492,7 @@ Auf der Party öffnet die Oma das Album. Sie sieht ihre Hochzeit, ihre Kinder un
 ];
 const LIBRARY = READING.concat(STORIES);
 // The one phrase that sums up each lesson, shown as its cover
-const COVERS = {aussprache:'sch · ie · ü', hallo:'Guten Tag!', verben:'ich lerne, du lernst', genus:'der, die, das', familie:'die Familie', akkusativ:'den Mann', essen:'das Brötchen',
+const COVERS = {aussprache:'sch · ie · ü','b1-praeteritum':'ging, kam, sah','b1-plusquam':'hatte gemacht','b1-wort-bewerbung':'der Lebenslauf','b1-relativ1':'der Mann, der …','b1-relativ2':'in der ich arbeite','b1-zu':'Lust, zu feiern','b1-damit':'um … zu','b1-temporal':'als · wenn · bevor','b1-wort-meinung':'meiner Meinung nach','b1-konnektoren':'sowohl … als auch','b1-indirekt':'Wissen Sie, ob …?','b1-passiv':'wird gebaut','b1-passiv2':'wurde gebaut','b1-wort-vertrag':'das Gehalt','b1-genitiv':'des Vaters','b1-ndekl':'den Studenten','b1-futur':'wird kommen','b1-wort-berufe':'der Mechatroniker','b1-wort-gesundheit':'die Krankenkasse','b1-wort-geld':'das Girokonto','b1-wort-medien':'die Datei','b1-wort-umwelt':'die Mülltrennung','b1-wort-bildung':'das Abitur', hallo:'Guten Tag!', verben:'ich lerne, du lernst', genus:'der, die, das', familie:'die Familie', akkusativ:'den Mann', essen:'das Brötchen',
   akkpron:'mich, dich, ihn', wohnung:'die Wohnung', dativ:'dem Kind', datpron:'mir, dir, ihm', arbeit:'die Ausbildung', praep:'mit dem Bus', stadt:'der Bahnhof',
   wechsel:'Wo? Wohin?', possessiv:'meinen Vater', zeit:'am Montag', 'a2-satzbau':'Heute gehe ich', 'a2-negation':'kein Problem', 'a2-modal':'Ich kann das',
   freizeit:'Hast du Lust?', 'a2-trennbar':'Ich stehe auf', 'a2-perfekt':'habe gespielt', 'a2-perfekt-sein':'bin gefahren', gesundheit:'Gute Besserung!',
@@ -2124,6 +2508,10 @@ const STAGES = [
   {name:'Alltag', can:'Build real sentences: ask questions, say “not”, use can and must, and talk about the past.', ids:['a2-satzbau','a2-negation','a2-modal','freizeit','a2-trennbar','a2-perfekt','a2-perfekt-sein','gesundheit']},
   {name:'Erzählen und begründen', can:'Tell what happened, give reasons, describe things and compare them.', ids:['a2-praeteritum','a2-weil','kleidung','a2-adjektiv','a2-komparativ','reisen']},
   {name:'Auf dem Weg zur B1', can:'Handle offices, work and polite requests, and use longer sentences.', ids:['a2-reflexiv','a2-imperativ','a2-wenn-ob','behoerden','a2-konjunktiv','a2-verbprep','betrieb']},
+  {name:'Texte verstehen', can:'Tell a story in the past, apply for a job, and add detail with relative clauses.', ids:['b1-praeteritum','b1-plusquam','b1-wort-bewerbung','b1-relativ1','b1-relativ2']},
+  {name:'Begründen und verbinden', can:'Give reasons, purposes and opinions with longer, linked sentences.', ids:['b1-zu','b1-damit','b1-temporal','b1-wort-meinung','b1-konnektoren','b1-indirekt']},
+  {name:'Formelles Deutsch', can:'Read official texts and contracts: the passive, the genitive, and polite formal language.', ids:['b1-passiv','b1-passiv2','b1-wort-vertrag','b1-genitiv','b1-ndekl','b1-futur']},
+  {name:'Wortschatz für Beruf und Alltag', can:'Talk about professions, health, money, the internet, the environment and education.', ids:['b1-wort-berufe','b1-wort-gesundheit','b1-wort-geld','b1-wort-medien','b1-wort-umwelt','b1-wort-bildung']},
 ];
 const stageOf = l => STAGES.find(st => st.ids.includes(l.id));
 // ---- the study plan: a day made of blocks that add up to 30, 60 or 120 minutes ----
@@ -2164,10 +2552,21 @@ const minutesOn = (s, k) => Math.floor(((s.secs || {})[k] || 0) / 60) + ((s.cred
 // ---- search: lessons, grammar table, words, examples, sentences from the texts, book pages, videos ----
 const fold = t => String(t).toLowerCase().normalize('NFD').replace(/\p{M}/gu, '').replace(/ß/g, 'ss');
 const plainText = h => String(h).replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+// German grammar terms, so a search for "Relativsatz" finds the lesson even though its title is English
+const SEARCH_TERMS = {
+  genus:'Genus Artikel Geschlecht', akkusativ:'Akkusativ Fall Objekt', dativ:'Dativ Fall', praep:'Präpositionen', wechsel:'Wechselpräpositionen',
+  'a2-satzbau':'Satzbau Wortstellung Satzstellung word order', 'a2-negation':'Negation verneinen', 'a2-modal':'Modalverben', 'a2-trennbar':'trennbare Verben Präfix',
+  'a2-perfekt':'Perfekt Partizip Vergangenheit', 'a2-perfekt-sein':'Perfekt Partizip Vergangenheit', 'a2-weil':'Nebensatz Konjunktion Satzverbindung', 'a2-adjektiv':'Adjektivdeklination Adjektivendung',
+  'a2-komparativ':'Komparativ Superlativ steigern', 'a2-reflexiv':'reflexive Verben Reflexivpronomen', 'a2-imperativ':'Imperativ Befehl Aufforderung', 'a2-wenn-ob':'Nebensatz Konjunktion',
+  'a2-konjunktiv':'Konjunktiv höflich Wunsch', 'a2-verbprep':'Verben mit Präposition',
+  'b1-praeteritum':'Präteritum Imperfekt Vergangenheit simple past', 'b1-plusquam':'Plusquamperfekt Vorvergangenheit past perfect', 'b1-relativ1':'Relativsatz Relativpronomen relative clause',
+  'b1-relativ2':'Relativsatz Relativpronomen relative clause Genitiv', 'b1-zu':'Infinitiv mit zu zu-Infinitiv', 'b1-damit':'Finalsatz Absicht Zweck um zu damit purpose',
+  'b1-temporal':'Temporalsatz Nebensatz Zeit als wenn', 'b1-konnektoren':'Konnektor Doppelkonnektor Konzessivsatz', 'b1-indirekt':'indirekte Frage Fragesatz', 'b1-passiv':'Passiv werden passive voice',
+  'b1-passiv2':'Passiv Präteritum Perfekt Modalverb passive voice', 'b1-genitiv':'Genitiv Besitz possession', 'b1-ndekl':'N-Deklination schwache Nomen weak noun', 'b1-futur':'Futur werden Vermutung future'};
 function buildSearchIndex(extra){
   const docs = [], add = d => { d.ft = fold(d.title); d.words = ' ' + fold(d.title + ' ' + (d.sub || '') + ' ' + (d.text || '')).replace(/[^a-z0-9]+/g, ' '); docs.push(d); };
   for (const l of LESSONS){
-    add({type:'lesson', id:l.id, title:l.title, sub:l.sub, text:plainText(l.intro)});
+    add({type:'lesson', id:l.id, title:l.title, sub:l.sub, text:plainText(l.intro) + ' ' + (SEARCH_TERMS[l.id] || '')});
     l.ex.forEach(([de, en]) => add({type:'example', title:de, sub:en, id:l.id}));
     for (const [b, ch, sec, p] of (RES[l.id] || {b:[]}).b) add({type:'book', title:`${BOOKS[b].name} · ${BOOKS[b].ch} ${ch}`, sub:`${sec} · p. ${p} (PDF ${p + BOOKS[b].pdf})`, text:l.title, id:l.id});
     for (const [vid, title, ch] of (RES[l.id] || {v:[]}).v) add({type:'video', title, sub:ch, text:l.title, vid, id:l.id});
@@ -2179,7 +2578,7 @@ function buildSearchIndex(extra){
 }
 const SEARCH_ORDER = [['lesson', 4], ['table', 4], ['word', 8], ['example', 6], ['sentence', 6], ['book', 5], ['video', 4]];
 function searchIndex(docs, q){
-  const toks = fold(q).split(/\s+/).filter(Boolean);
+  const toks = fold(q).split(/[^a-z0-9]+/).filter(Boolean);   // same word splitting as the stored text, so N-Deklination matches
   if (!toks.length || fold(q).trim().length < 2) return [];
   const tw = d => ' ' + d.ft.replace(/[^a-z0-9]+/g, ' ');
   const score = d => toks.reduce((a, t) => a + (d.ft.startsWith(t) ? 4 : tw(d).includes(' ' + t) ? 3 : d.ft.includes(t) ? 2 : 1), 0);
@@ -2199,6 +2598,29 @@ const BOOKS = {
   men: {name:'Menschen A2.1', short:'Menschen', ch:'Lektion', pdf:0, pages:97},
 };
 const RES = {
+  'b1-praeteritum': {b:[['ga','49','Präteritum',118]], v:[['PLHxKBjqfBE', 'How to use and build the Präteritum', 'YourGermanTeacher'], ['fB12-T5jC30', 'Verbs that always use the simple past', 'Easy German']]},
+  'b1-plusquam': {b:[['ga','50','Plusquamperfekt',120]], v:[['nkagdTprcHU', 'The German past perfect (Plusquamperfekt)', 'YourGermanTeacher'], ['l5-E_TqF2a8', 'Plusquamperfekt: the past perfect tense', 'Learn German']]},
+  'b1-wort-bewerbung': {b:[], v:[['jTkRk_ihYBw', 'Anschreiben für die Ausbildung (cover letter)', 'Studyflix'], ['9QgO9mIeC8o', 'Lebenslauf schreiben (CV)', 'StepUp! Coaching & Karrieretipps']]},
+  'b1-relativ1': {b:[['ga','70','Relativsätze 1',164]], v:[['sHtLxUax7Qc', 'Relative clauses: Nominativ', 'YourGermanTeacher'], ['XchW3E0kTPk', 'Longer sentences with relative clauses', 'Easy German']]},
+  'b1-relativ2': {b:[['ga','71','Relativsätze 2',166]], v:[['apc6LqSQU-4', 'Relative clauses with prepositions', 'YourGermanTeacher'], ['HH-5c2WMjM8', 'Relative clauses: the Dativ', 'German Lessons with Herr Ferguson']]},
+  'b1-zu': {b:[['ga','68','Infinitiv mit zu',160]], v:[['cNUXmcmRE6Y', 'Infinitiv mit zu', 'YourGermanTeacher'], ['etk128eW_84', 'Verbs with zu and um … zu', 'Easy German']]},
+  'b1-damit': {b:[['ga','74','Finalsätze: um … zu und damit',172]], v:[['QeNzj72acE4', 'damit and um … zu (Finalsätze)', 'Learn German'], ['9gMJsudejc0', 'um … zu or damit?', 'Karina Multilingual']]},
+  'b1-temporal': {b:[['ga','72','Temporale Nebensätze mit wenn und als',168],['ga','73','Temporale Nebensätze: während, bevor, nachdem, seit',170]], v:[['wIxV8sk1zag', 'als or wenn?', 'YourGermanTeacher'], ['vQXxjNb7pHA', '5 temporal conjunctions', 'Easy German']]},
+  'b1-wort-meinung': {b:[], v:[['RvYpx7eFTlo', 'Expressing your opinion (B1)', 'Learn German'], ['N2ewxhDUbBQ', 'Opinion phrases for the exam', 'Studi-Deutsch - Deutsch für Studium und Beruf']]},
+  'b1-konnektoren': {b:[['ga','75','Doppelkonnektoren',174]], v:[['UEYP6GCxr0k', 'Two-part conjunctions', 'Easy German'], ['y_cxgBBE6iA', 'Zweiteilige Konnektoren (all of them)', 'YourGermanTeacher']]},
+  'b1-indirekt': {b:[['ga','67','Indirekte Fragen',158]], v:[['vY7WCRyG-n8', 'Polite indirect questions', 'Easy German'], ['Rl1f9qLfob4', 'Indirekte Fragesätze with ob', 'Learn German']]},
+  'b1-passiv': {b:[['ga','57','Passiv Teil 1',134]], v:[['62OnWM8PmOU', 'The Passiv in the present tense', 'German Lessons with Herr Ferguson'], ['89PRXLuGySQ', 'Everything about the Passiv', 'Dein Sprachcoach']]},
+  'b1-passiv2': {b:[['ga','58','Passiv Teil 2',136]], v:[['i34ICN0PzJY', 'Passiv in the past and Perfekt', 'YourGermanTeacher'], ['e6Cb0lArbr4', 'The Passiv with modal verbs', 'Deutsch Akademie']]},
+  'b1-wort-vertrag': {b:[], v:[['aNJhzq0Fl4A', '45 words about work and jobs (B1)', 'ROOM 17 | Learn German Podcast'], ['1zm2FekPTHs', 'Understanding an Arbeitsvertrag', 'Deutsch Sendung']]},
+  'b1-genitiv': {b:[['ga','63','Genitiv',148],['ga','77','Präpositionen mit Genitiv',180]], v:[['oskcXcv3_1w', 'Prepositions with the Genitiv', 'Learn German'], ['tdIarhdlFsU', 'The Genitiv case', 'Easy German']]},
+  'b1-ndekl': {b:[['ga','64','N-Deklination',150]], v:[['9iR3puB9ay0', 'N-Deklination (weak nouns)', 'Learn German'], ['MGn56Qj9h2w', 'German weak nouns', 'Learn German with Anja']]},
+  'b1-futur': {b:[['ga','59','Vermutung und Zukunft mit Futur 1',138]], v:[['IGC-ciq2yso', 'Futur I', 'Learn German'], ['4hzoxQbpZbg', 'Talking about the future', 'Easy German']]},
+  'b1-wort-berufe': {b:[], v:[['7-cT0rcCY0o', 'Professions and occupations', 'Learn German'], ['TYpNKgbiw88', 'German job names with pictures', 'Deutsch Spark']]},
+  'b1-wort-gesundheit': {b:[], v:[['1VLCmbdMghc', 'Healthcare and insurance vocabulary', 'Kato Easy German Stories'], ['jUhxhXacyRs', 'Health insurance in Germany', 'Learn German']]},
+  'b1-wort-geld': {b:[], v:[['Jzpy9pnpz9k', 'Opening a bank account', 'Guten Tag! — Learn German with Conversations'], ['C-kBvEKBzXA', 'Essential bank vocabulary', 'LETS GET GERMANIZED (LGG) CLASSES']]},
+  'b1-wort-medien': {b:[], v:[['GG5HjY1Fe2M', 'Computer and internet vocabulary', 'Learn German'], ['ZO-YzGuEVms', 'Presentation topic: the internet', 'German with Nilufa']]},
+  'b1-wort-umwelt': {b:[], v:[['8etayvawQmg', 'Environment and Umweltschutz', 'Learn German'], ['pw_OFrku4u0', 'Waste separation in Germany', 'Easy German']]},
+  'b1-wort-bildung': {b:[], v:[['k2HCSyOmNAg', 'School vocabulary', 'Easy German'], ['BODXFjTb3UY', 'Weiterbildung (further education)', 'Bhasker Kumar']]},
   aussprache:      {b:[['beg','1A','Das Alphabet',10]], v:[['nI77g2VWysE', 'German pronunciation basics for beginners', 'YourGermanTeacher'], ['hAkxKMlYUI4', 'German alphabet and pronunciation: full guide', 'Easy German']]},
   hallo:           {b:[['beg','1A','Sich vorstellen',8],['ga','1','Personalpronomen',8]], v:[['iB_sassbnOw', 'German greetings for beginners', 'Learn German with Anja'], ['dC6ZGLzdaTs', 'Nicos Weg A1 · Folge 1: Hallo!', 'Deutsch lernen mit der DW']]},
   verben:          {b:[['ga','2','Konjugation Präsens',10],['ga','3','sein, haben und besondere Verben',12],['beg','1C','Personalpronomen und Verben im Präsens',25]], v:[['Ya-3_64snmo', 'The German present tense explained', 'YourGermanTeacher'], ['Q7ECRAQrzFc', 'Nicos Weg A1 · Folge 7: Woher kommst du?', 'Deutsch lernen mit der DW']]},
@@ -2293,7 +2715,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = '1e94de9';  // build.py puts the build number here
+const APP_VERSION = 'b69cc91';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -2302,10 +2724,16 @@ const today = () => dayKey(new Date());
 
 // ---- state + sync ----
 const LS = 'wegzurb1';
-function fresh(){ return {v:1, lscore:{}, xp:0, days:{}, met:{}, done:{}, cards:{}, best:{blitz:0}, read:{}, writing:{}, exams:[], stats:{}, lastLevel:'A1', goal:60, secs:{}, credit:{}, planMin:120, plan:null, sound:true, updatedAt:0}; }
+function fresh(){ return {v:1, lscore:{}, xp:0, days:{}, met:{}, done:{}, cards:{}, best:{blitz:0}, read:{}, writing:{}, exams:[], stats:{}, lastLevel:'A1', goal:60, secs:{}, credit:{}, planMin:120, plan:null, myWords:[], sound:true, updatedAt:0}; }
 const normalize = s => Object.assign(fresh(), s || {});
 let state = fresh();
 try { state = normalize(JSON.parse(localStorage.getItem(LS))); } catch(e) {}
+// the learner's own words live in state.myWords and are mirrored into the word list under the theme 'mine'
+function registerMyWords(){
+  for (let i = VOCAB.length - 1; i >= 0; i--) if (VOCAB[i].th === 'mine'){ delete VBYID[VOCAB[i].id]; VOCAB.splice(i, 1); }
+  for (const w of (Array.isArray(state.myWords) ? state.myWords : [])){ if (!w || !w.id || !w.de || !w.en) continue; const v = {id:w.id, de:w.de, en:w.en, g:w.g, th:'mine'}; VOCAB.push(v); VBYID[v.id] = v; }
+}
+registerMyWords();
 let view = 'heute', activity = false, keyHandler = null;
 
 function save(){
@@ -2665,7 +3093,7 @@ function vPfad(){
     <div class="road">
       <div class="${dn('A1') < cnt('A1').length ? 'on' : ''}"><b>A1</b><small>${dn('A1')} of ${cnt('A1').length} lessons</small></div>
       <div class="${dn('A1') === cnt('A1').length && dn('A2') < cnt('A2').length ? 'on' : ''}"><b>A2</b><small>${dn('A2')} of ${cnt('A2').length} lessons</small></div>
-      <div><b>B1</b><small>Goethe-Zertifikat</small></div>
+      <div class="${dn('A2') === cnt('A2').length && dn('B1') < cnt('B1').length ? 'on' : ''}"><b>B1</b><small>${dn('B1')} of ${cnt('B1').length} lessons</small></div>
     </div>
     <p style="margin:14px 0 0">${left ? `<b>${left} lessons to go.</b> One a day: done by <b>${fmt(left)}</b>. Two a day: <b>${fmt(Math.ceil(left / 2))}</b>.` : '<b>All lessons done.</b> Keep up your flashcards and practise for the B1 exam.'}</p>
     <p class="muted" style="margin:6px 0 0;font-size:.88rem">Work through the stages from top to bottom. Already know a topic? Open the lesson and test out.</p>
@@ -2818,7 +3246,7 @@ function runCards(ids, {onDone, extra = false}){
 function vKarten(){
   const ids = Object.keys(state.cards).filter(id => VBYID[id]), due = dueCards();
   const st = [0,0,0,0]; ids.forEach(id => { const b = state.cards[id].b; st[b === 0 ? 0 : b <= 2 ? 1 : b <= 4 ? 2 : 3]++; });
-  const learned = new Set(ids.map(id => VBYID[id].th));
+  const learned = new Set(ids.map(id => VBYID[id].th)), my = Array.isArray(state.myWords) ? state.myWords : [];
   $main.innerHTML = `${backTo('Üben','ueben')}
   <section class="card stack">
     <div class="row" style="justify-content:space-between"><h2>Karten</h2><span class="tag">${ids.length} words</span></div>
@@ -2827,13 +3255,35 @@ function vKarten(){
     <button class="btn big" id="rev" ${due.length ? '' : 'disabled'}>${due.length ? `Review ${due.length} due card${due.length===1?'':'s'}` : 'Nothing due. Come back tomorrow.'}</button>
     ${ids.length ? '<button class="btn ghost" id="extra">Extra practice · 15 random words (doesn’t change the schedule)</button>' : ''}
   </section>
-  ${Object.keys(THEMES).map(th => {
+  <section class="card stack">
+    <div class="row" style="justify-content:space-between"><h3>Meine Wörter</h3><span class="tag">${my.length} words</span></div>
+    <p class="muted" style="margin:0">Found a new word in a video or your book? Add it here. It joins your flashcards today.</p>
+    <div class="formrow">
+      <label for="mw-de">German<input type="text" id="mw-de" placeholder="Kündigung" autocomplete="off" autocapitalize="none" spellcheck="false"></label>
+      <label for="mw-en">English<input type="text" id="mw-en" placeholder="notice, termination" autocomplete="off"></label>
+      <label for="mw-g">Article<select id="mw-g"><option value="">none</option><option value="m">der</option><option value="f">die</option><option value="n">das</option><option value="pl">die (plural)</option></select></label>
+      <button class="btn" id="mw-add">Add</button></div>
+    ${my.length ? `<div class="words">${my.map(w => `<span>${w.g ? gspan(w.g, G[w.g]) + ' ' : ''}${esc(w.de)} <span class="muted">· ${esc(w.en)}</span> <button class="x" data-del="${esc(w.id)}" aria-label="Remove ${esc(w.de)}">×</button></span>`).join('')}</div>` : ''}
+  </section>
+  ${Object.keys(THEMES).filter(th => th !== 'mine').map(th => {
     const l = LESSONS.find(x => x.th === th);
     return `<section class="card"><div class="row" style="justify-content:space-between"><h3>${THEMES[th]}</h3><span class="tag">${learned.has(th) ? 'in deck' : `unlocks with lesson ${LESSONS.indexOf(l)+1}`}</span></div>
     ${learned.has(th) ? `<div class="words" style="margin-top:10px">${VOCAB.filter(v => v.th === th).map(v => `<span>${v.g ? gspan(v.g, G[v.g])+' ' : ''}${v.de}</span>`).join('')}</div>` : ''}</section>`;
   }).join('')}`;
   document.getElementById('rev').onclick = () => runCards(shuffle(due), {onDone: render});
   const ex = document.getElementById('extra'); if (ex) ex.onclick = () => runCards(shuffle(ids).slice(0,15), {onDone: render, extra:true});
+  document.getElementById('mw-add').onclick = () => {
+    const de = document.getElementById('mw-de').value.trim(), en = document.getElementById('mw-en').value.trim(), g = document.getElementById('mw-g').value;
+    if (!de || !en){ toast('Write the German word and its meaning.'); return; }
+    if (de.length > 60 || en.length > 80){ toast('That is too long for a flashcard.'); return; }
+    const id = 'mine:' + de;
+    if (VBYID[id]){ toast('That word is already in your list.'); return; }
+    state.myWords.push({id, de, en, g}); registerMyWords(); state.cards[id] = {b:0, d:today()}; searchIdx = null; save();
+    toast(`“${de}” is in your flashcards.`); vKarten();
+  };
+  $main.querySelectorAll('[data-del]').forEach(b => b.onclick = () => {
+    const id = b.dataset.del; state.myWords = state.myWords.filter(w => w.id !== id); delete state.cards[id]; registerMyWords(); searchIdx = null; save(); vKarten();
+  });
 }
 
 // ---- practice hub ----
@@ -3205,7 +3655,7 @@ function vDaten(){
       <p class="tip" style="margin:0">Loading it <b>replaces</b> the progress on this device (${sum(me)}).${it.at && it.at < me.at ? ' The code is older than the progress on this device.' : ''}</p>
       <div class="row"><button class="btn" id="pload">Replace this device’s progress</button></div></div>`;
     document.getElementById('pload').onclick = () => {
-      state = normalize(s); save();
+      state = normalize(s); registerMyWords(); searchIdx = null; save();
       toast(`Progress loaded: ${it.xp} XP, ${it.lessons} lessons.`);
       view = 'heute'; render(); toTop();
     };
