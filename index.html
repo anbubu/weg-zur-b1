@@ -2854,6 +2854,226 @@ const RES = {
   'a2-verbprep':   {b:[['ga','53','Verben mit Präpositionen',126]], v:[['qeWlOQ7Dd6s', 'Verben mit festen Präpositionen', 'Deutsch Flicks'], ['X4nzqZK3QJ8', '20 verb + preposition combinations', 'Bausteine eins']]},
   betrieb:         {b:[], v:[['koIblhg4Ucs', '25 German workplace words', 'German with a German'], ['2itTid0YMtw', 'Nicos Weg B1 · Folge 3: Bei der Arbeit', 'Deutsch lernen mit der DW']]},
 };
+// ---- Beruf: Call-Center and job applications (added 2026-10-03 for Mehdi's goal: a call centre job after B1) ----
+Object.assign(THEMES, {cctelefon:'Am Telefon', ccsaetze:'Sätze am Telefon', cckunde:'Kundendaten & Vertrag', ccrechnung:'Rechnung & Zahlung',
+  ccbeschwerde:'Beschwerden & Lieferung', cctechnik:'Technischer Support', ccjob:'Arbeiten im Call-Center'});
+const VOCAB_JOB = {
+  cctelefon:['Anruf|call|m','Anrufer|caller|m','Anruferin|caller (female)|f','Telefonat|phone call|n','Gespräch|conversation, call|n','Hotline|hotline|f','Kundenservice|customer service|m',
+    'Rufnummer|phone number|f','Durchwahl|direct extension|f','Vorwahl|dialling code|f','Warteschleife|hold queue|f','Wartezeit|waiting time|f','Verbindung|connection|f','Leitung|(phone) line|f',
+    'besetzt|busy, engaged|','Rückruf|call back|m','anrufen|to call|','zurückrufen|to call back|','weiterleiten|to forward, to pass on|','verbinden|to put through|','auflegen|to hang up|',
+    'abheben|to pick up (the phone)|','erreichen|to reach (someone)|','erreichbar|reachable, available|','Mailbox|voicemail|f','Headset|headset|n','Lautstärke|volume|f','buchstabieren|to spell|',
+    'wiederholen|to repeat|','notieren|to note down|','Anliegen|concern, request|n','Ansprechpartner|contact person|m','Fachabteilung|specialist department|f','Zentrale|switchboard, head office|f'],
+  ccsaetze:['Guten Tag, Sie sprechen mit … von der Firma …|Good day, you’re speaking with … from …|','Was kann ich für Sie tun?|What can I do for you?|','Wie kann ich Ihnen helfen?|How can I help you?|',
+    'Worum geht es?|What is it about?|','Mit wem spreche ich, bitte?|Who am I speaking to, please?|','Können Sie mir bitte Ihre Kundennummer nennen?|Can you please tell me your customer number?|',
+    'Könnten Sie das bitte buchstabieren?|Could you spell that, please?|','Könnten Sie das bitte wiederholen?|Could you repeat that, please?|','Einen Moment, bitte.|One moment, please.|',
+    'Bleiben Sie bitte am Apparat.|Please hold the line.|','Darf ich Sie kurz in die Warteschleife legen?|May I put you on hold for a moment?|','Ich schaue kurz nach.|I’ll have a quick look.|',
+    'Danke für Ihre Geduld.|Thank you for your patience.|','Entschuldigen Sie bitte die Wartezeit.|Sorry to keep you waiting.|','Das tut mir leid.|I’m sorry about that.|',
+    'Ich verstehe Ihren Ärger.|I understand your annoyance.|','Ich kümmere mich darum.|I’ll take care of it.|','Ich verbinde Sie mit der zuständigen Abteilung.|I’ll put you through to the right department.|',
+    'Ich leite das an die Fachabteilung weiter.|I’ll pass this on to the specialist department.|','Dafür bin ich leider nicht zuständig.|Unfortunately I’m not responsible for that.|',
+    'Das kann ich leider nicht entscheiden.|Unfortunately I can’t decide that.|','Wir rufen Sie zurück.|We’ll call you back.|','Wann sind Sie am besten erreichbar?|When is the best time to reach you?|',
+    'Die Verbindung ist leider sehr schlecht.|Unfortunately the line is very bad.|','Ich höre Sie leider nicht.|Unfortunately I can’t hear you.|',
+    'Habe ich Sie richtig verstanden, dass …?|Have I understood you correctly that …?|','Ich fasse kurz zusammen: …|Let me briefly sum up: …|',
+    'Aus Datenschutzgründen brauche ich noch Ihr Geburtsdatum.|For data protection reasons I also need your date of birth.|','Ich gebe Ihnen die Vorgangsnummer.|I’ll give you the reference number.|',
+    'Sie bekommen eine Bestätigung per E-Mail.|You’ll get a confirmation by e-mail.|','Das Problem ist jetzt gelöst.|The problem is now solved.|',
+    'Kann ich sonst noch etwas für Sie tun?|Is there anything else I can do for you?|','Haben Sie noch Fragen?|Do you have any other questions?|',
+    'Vielen Dank für Ihren Anruf.|Thank you for your call.|','Ich wünsche Ihnen noch einen schönen Tag.|Have a nice day.|','Auf Wiederhören!|Goodbye! (on the phone)|'],
+  cckunde:['Kunde|customer|m','Kundin|customer (female)|f','Kundennummer|customer number|f','Vertragsnummer|contract number|f','Kundenkonto|customer account|n','Vorname|first name|m',
+    'Nachname|surname|m','Geburtsdatum|date of birth|n','Anschrift|address|f','Postleitzahl|postcode|f','Hausnummer|house number|f','E-Mail-Adresse|e-mail address|f','Datenschutz|data protection|m',
+    'Daten|data|pl','ändern|to change|','Änderung|change|f','speichern|to save|','Vertrag|contract|m','Tarif|plan, tariff|m','Laufzeit|term (of a contract)|f','Mindestlaufzeit|minimum term|f',
+    'Verlängerung|renewal, extension|f','kündigen|to cancel (a contract)|','Kündigungsbestätigung|cancellation confirmation|f','Widerruf|withdrawal (from a contract)|m','Bestellung|order|f',
+    'bestellen|to order|','Auftrag|order, job|m','Angebot|offer|n','Bestätigung|confirmation|f','Unterschrift|signature|f','Vorgangsnummer|reference number|f','Kundenzufriedenheit|customer satisfaction|f'],
+  ccrechnung:['Rechnung|bill, invoice|f','Rechnungsbetrag|invoice amount|m','Betrag|amount|m','Gebühr|fee|f','Kosten|costs|pl','Grundgebühr|basic monthly fee|f','Zahlung|payment|f',
+    'Zahlungsart|payment method|f','Bankverbindung|bank details|f','IBAN|IBAN|f','Lastschrift|direct debit|f','abbuchen|to debit|','Abbuchung|debit (from an account)|f','überweisen|to transfer (money)|',
+    'Gutschrift|credit (note)|f','Rückerstattung|refund|f','erstatten|to refund|','Mahnung|reminder (for an unpaid bill)|f','Zahlungserinnerung|payment reminder|f','Frist|deadline|f','fällig|due|',
+    'offen|outstanding, unpaid|','Ratenzahlung|payment in instalments|f','Rabatt|discount|m','Mehrwertsteuer|VAT|f','Preiserhöhung|price increase|f','Zeitraum|period|m','Guthaben|credit balance|n',
+    'Verbrauch|usage, consumption|m'],
+  ccbeschwerde:['Beschwerde|complaint|f','sich beschweren|to complain|','Reklamation|complaint (about a product)|f','reklamieren|to complain about (a product)|','Mangel|defect|m','defekt|faulty|',
+    'beschädigt|damaged|','Lieferung|delivery|f','liefern|to deliver|','Lieferzeit|delivery time|f','Sendung|shipment|f','Sendungsnummer|tracking number|f','Paket|parcel|n','Verspätung|delay|f',
+    'Rücksendung|return (of goods)|f','zurückschicken|to send back|','Umtausch|exchange|m','umtauschen|to exchange|','Ersatz|replacement|m','Garantie|guarantee|f',
+    'Gewährleistung|statutory warranty|f','Entschädigung|compensation|f','Kulanz|goodwill|f','Ärger|anger, trouble|m','unzufrieden|dissatisfied|','enttäuscht|disappointed|',
+    'sich entschuldigen|to apologise|','Lösung|solution|f','Missverständnis|misunderstanding|n','Fall|case|m','bearbeiten|to process, to deal with|'],
+  cctechnik:['Störung|fault, outage|f','Ausfall|failure, outage|m','Gerät|device|n','Router|router|m','WLAN|Wi-Fi|n','Internetverbindung|internet connection|f','Kabel|cable|n','Stecker|plug|m',
+    'Steckdose|socket|f','Kontrolllampe|indicator light|f','blinken|to flash|','neu starten|to restart|','ausschalten|to switch off|','einschalten|to switch on|','anschließen|to connect, to plug in|',
+    'einstellen|to set up, to adjust|','Einstellungen|settings|pl','Fehlermeldung|error message|f','Benutzerkonto|user account|n','Passwort|password|n','zurücksetzen|to reset|','sich anmelden|to log in|',
+    'sich abmelden|to log out|','herunterladen|to download|','Update|update|n','Bildschirm|screen|m','Taste|key, button|f','klicken|to click|','Techniker|technician|m','Fernwartung|remote support|f',
+    'Geschwindigkeit|speed|f','Empfang|reception, signal|m','beheben|to fix (a fault)|'],
+  ccjob:['Callcenter|call centre|n','Kundenberater|customer adviser|m','Kundenberaterin|customer adviser (female)|f','Teamleiter|team leader|m','Schicht|shift|f','Frühschicht|early shift|f',
+    'Spätschicht|late shift|f','Schichtplan|shift schedule|m','Arbeitsplatz|workplace, desk|m','Einarbeitung|induction (training for new staff)|f','Schulung|training course|f',
+    'Gesprächsleitfaden|call script|m','Inbound|inbound (incoming calls)|m','Outbound|outbound (calls to customers)|m','Kennzahl|key figure, KPI|f','Bearbeitungszeit|handling time|f',
+    'Erreichbarkeit|availability|f','Ziel|target|n','Qualität|quality|f','Feedback|feedback|n','Pause|break|f','Homeoffice|working from home|n','Wochenendarbeit|weekend work|f','Stundenlohn|hourly wage|m',
+    'Zuschlag|extra pay, bonus|m','mehrsprachig|multilingual|','Geduld|patience|f','freundlich|friendly|','höflich|polite|','belastbar|able to work under pressure|','dokumentieren|to document|',
+    'Ticket|ticket (a case in the system)|n'],
+};
+for (const th in VOCAB_JOB) for (const s of VOCAB_JOB[th]){ const [de, en, g] = s.split('|'), v = {id:th + ':' + de, de, en, g, th}; VOCAB.push(v); VBYID[v.id] = v; }
+const BANK_JOB = {
+  telefon:[
+    '___ Sie mir bitte Ihre Kundennummer nennen?|Könnten|Konnten;Könnte|Konjunktiv II könnten (could) is the polite form for requests on the phone.|Could you please tell me your customer number?',
+    'Ich ___ Sie mit der Buchhaltung.|verbinde|verbindet;verbunden|ich → verbinde. jemanden mit … verbinden = to put someone through to …|I’ll put you through to accounting.',
+    'Bleiben Sie bitte am ___.|Apparat|Telefonat;Anruf|am Apparat bleiben = to hold the line.|Please hold the line.',
+    'Wie ___ man das?|schreibt|schreiben;geschrieben|man takes the er/sie/es form: man schreibt.|How do you spell that?',
+    'Ich rufe Sie morgen ___.|zurück|wieder;nach|zurückrufen is separable: Ich rufe Sie … zurück.|I’ll call you back tomorrow.',
+    'Danke für Ihre ___.|Geduld|Geduldig;Gedanken|die Geduld = patience.|Thank you for your patience.',
+    'Das ___ mir leid.|tut|macht;ist|Das tut mir leid = I’m sorry.|I’m sorry about that.',
+    'Ich kümmere mich ___.|darum|dafür;daran|sich kümmern um → darum.|I’ll take care of it.',
+    'Kann ich sonst noch etwas ___ Sie tun?|für|an;mit|etwas für jemanden tun = to do something for someone.|Is there anything else I can do for you?',
+    'Auf ___!|Wiederhören|Wiedersehen;Wiederkommen|On the phone you say Auf Wiederhören (hear), not Auf Wiedersehen (see).|Goodbye! (on the phone)',
+    'Ich habe Sie leider nicht ___.|verstanden|versteht;verstehen|Perfekt: haben + Partizip II verstanden.|Unfortunately I didn’t understand you.',
+    'Für Rechnungen ist die Buchhaltung ___.|zuständig|zuständige;Zustand|zuständig für = responsible for. After sein no ending.|Accounting is responsible for bills.',
+    'Darf ich Sie kurz in die Warteschleife ___?|legen|liegen;stellen|legen = to put (something somewhere); liegen = to lie.|May I put you on hold for a moment?'],
+  bewerbung:[
+    'Hiermit ___ ich mich um die Stelle als Kundenberater.|bewerbe|bewerben;beworben|sich bewerben um: ich bewerbe mich. Hiermit = herewith, the classic first word.|I hereby apply for the position of customer adviser.',
+    'Ich habe Ihre Stellenanzeige ___ Internet gelesen.|im|in;am|im Internet (in + dem).|I read your job advert on the internet.',
+    'Arabisch ist meine ___.|Muttersprache|Vatersprache;Hauptsprache|die Muttersprache = native language.|Arabic is my native language.',
+    'Ich spreche ___ Französisch.|fließend|fließt;geflossen|fließend = fluent(ly).|I speak fluent French.',
+    'Ich arbeite gern ___ Menschen.|mit|bei;für|mit + Dativ: mit Menschen arbeiten.|I like working with people.',
+    'Ich interessiere mich sehr ___ diese Stelle.|für|an;auf|sich interessieren für + Akkusativ.|I am very interested in this position.',
+    'Über eine Einladung zu einem Vorstellungsgespräch ___ ich mich sehr freuen.|würde|werde;wurde|Konjunktiv II würde + infinitive: the polite standard ending of an Anschreiben.|I would be very happy to be invited to an interview.',
+    'Mit freundlichen ___|Grüßen|Grüße;Gruß|mit + Dativ plural: mit freundlichen Grüßen.|Kind regards',
+    'Sehr ___ Damen und Herren,|geehrte|geehrter;geehrten|Sehr geehrte Damen und Herren: plural, ending -e.|Dear Sir or Madam,',
+    'Sehr ___ Herr Schmidt,|geehrter|geehrte;geehrten|Herr → geehrter. Frau → geehrte.|Dear Mr Schmidt,',
+    'Im ___ finden Sie meinen Lebenslauf.|Anhang|Anfang;Anschluss|der Anhang = attachment.|Please find my CV attached.',
+    'Ich kann ___ 1. März anfangen.|ab dem|seit dem;bis zum|ab = from (a point in the future): ab dem 1. März.|I can start from 1 March.',
+    'Ich ___ zwei Jahre Erfahrung im Verkauf.|habe|bin;mache|Erfahrung haben = to have experience.|I have two years of experience in sales.'],
+  interview:[
+    'Erzählen Sie doch mal etwas über ___.|sich|Sie;ihr|Reflexive in the Sie form: über sich.|Tell us something about yourself.',
+    'Warum ___ Sie bei uns arbeiten?|möchten|möchte;möchtest|Sie → möchten.|Why would you like to work for us?',
+    'Meine Stärke ist, dass ich sehr geduldig ___.|bin|ist;sein|dass-clause: the verb goes to the end.|My strength is that I am very patient.',
+    'Ich bleibe ruhig, auch wenn ein Kunde unfreundlich ___.|ist|sein;bin|wenn-clause: the verb goes to the end.|I stay calm even when a customer is rude.',
+    'Ich habe drei Jahre ___ Kundenberater gearbeitet.|als|wie;für|als = as (a role or job).|I worked as a customer adviser for three years.',
+    'Ich arbeite gern ___ Team.|im|in;am|im Team (in + dem).|I like working in a team.',
+    'Seit wann ___ Sie in Deutschland?|sind|haben;ist|seit + present tense: Seit wann sind Sie …?|How long have you been in Germany?',
+    'Wie sieht die Einarbeitung ___?|aus|an;vor|aussehen is separable: Wie sieht … aus?|What does the induction look like?',
+    'Ich stelle ___ ein Gehalt von 2.400 Euro brutto vor.|mir|mich;ihm|sich (Dativ) etwas vorstellen: ich stelle mir … vor.|I’m thinking of a salary of 2,400 euros gross.',
+    'Ich ___ sofort anfangen.|könnte|konnte;könnten|Konjunktiv II könnte sounds polite and flexible.|I could start straight away.',
+    'Danke für die Einladung ___ Gespräch.|zum|zur;beim|zu + dem = zum (das Gespräch).|Thank you for the invitation to the interview.',
+    'Ich freue mich ___ Ihre Antwort.|auf|über;für|sich freuen auf = to look forward to.|I look forward to your answer.',
+    'Können Sie die Frage bitte ___?|wiederholen|wiederholt;wiederholte|Modal verb können + infinitive at the end.|Could you repeat the question, please?'],
+};
+for (const k in BANK_JOB) BANK[k] = BANK_JOB[k].map(s => { const [q, a, d, why, en, say] = s.split('|'); return {q, a, d:d.split(';'), why, en, say}; });
+Object.assign(KIND_NAME, {'bank:telefon':'Phone phrases','bank:bewerbung':'Cover letter phrases','bank:interview':'Job interview'});
+LESSONS.push(
+  vocabLesson('cc-telefon','Am Telefon','Calling, holding, transferring','cctelefon',
+   `<p>The words of every phone call: calling, holding, transferring and calling back. In a call centre you will use them hundreds of times a day.</p><p class="tip">Many phone verbs are separable: <i>zurückrufen → Ich rufe Sie morgen zurück. weiterleiten → Ich leite Ihre Anfrage weiter.</i> On the phone you end with <i>Auf Wiederhören</i>, not <i>Auf Wiedersehen</i>.</p>`,
+   [['Die Leitung ist leider besetzt.','Unfortunately the line is busy.'],['Ich verbinde Sie mit der Fachabteilung.','I’ll put you through to the specialist department.'],['Könnten Sie Ihren Namen bitte buchstabieren?','Could you spell your name, please?']], 'B1'),
+  {id:'cc-saetze', level:'B1', kind:'Wortschatz', title:'Sätze für jedes Gespräch', sub:'Phrases from hello to goodbye', th:'ccsaetze',
+   intro:`<p>A call centre call has a fixed shape: greet, find out the concern (<i>das Anliegen</i>), check who is calling, solve the problem or pass it on, sum up, say goodbye. These phrases cover every step. Learn them as whole sentences.</p>
+<p class="tip">On the phone, polite means <b>Konjunktiv II</b>: <i>Könnten Sie …? Würden Sie …? Ich hätte noch eine Frage.</i> It sounds softer than <i>Können Sie …?</i>, and customers notice.</p>`,
+   ex:[['Guten Tag, Sie sprechen mit Karim Benali. Was kann ich für Sie tun?','Good day, you’re speaking with Karim Benali. What can I do for you?'],['Habe ich Sie richtig verstanden, dass die Rechnung zu hoch ist?','Have I understood you correctly that the bill is too high?'],['Vielen Dank für Ihren Anruf. Auf Wiederhören!','Thank you for your call. Goodbye!']],
+   drills:[['meaning',5,{th:'ccsaetze'}],['bank',7,{bank:'telefon'}]]},
+  vocabLesson('cc-kunde','Kundendaten & Vertrag','Finding the customer, changing data, contracts','cckunde',
+   `<p>Before you can help, you find the customer in the system and check who is calling. Then you often change their data or talk about the contract.</p><p class="tip">Numbers on the phone: say them one by one or in pairs, and say <i>zwo</i> instead of <i>zwei</i> so it is not confused with <i>drei</i>. For spelling, many people still use the classic alphabet <i>A wie Anton, B wie Berta, C wie Cäsar</i>; the new official one uses cities: <i>A wie Aachen, B wie Berlin</i>.</p>`,
+   [['Wie lautet Ihre Kundennummer?','What is your customer number?'],['Ich habe Ihre neue Anschrift gespeichert.','I have saved your new address.'],['Der Vertrag hat eine Mindestlaufzeit von 24 Monaten.','The contract has a minimum term of 24 months.']], 'B1'),
+  vocabLesson('cc-rechnung','Rechnung & Zahlung','Bills, payments and refunds','ccrechnung',
+   `<p>Many calls are about money: a bill that seems too high, a missing payment, a refund. These words help you explain a bill calmly.</p><p class="tip">Two words customers mix up: a <i>Gutschrift</i> is money credited to the account, for example on the next bill; a <i>Rückerstattung</i> is money paid back to the bank account. A <i>Mahnung</i> comes when a bill was not paid by the <i>Frist</i>.</p>`,
+   [['Der Betrag wird am Monatsanfang abgebucht.','The amount is debited at the start of the month.'],['Sie bekommen eine Gutschrift auf der nächsten Rechnung.','You’ll get a credit on your next bill.'],['Die Rechnung ist am 15. fällig.','The bill is due on the 15th.']], 'B1'),
+  vocabLesson('cc-beschwerde','Beschwerden & Lieferung','Complaints, deliveries and returns','ccbeschwerde',
+   `<p>Angry customers are part of the job. The words for complaints, deliveries and returns help you understand the problem quickly, and the right phrases calm the call down.</p><p class="tip">A good pattern for complaints: <b>listen, apologise, act</b>. <i>Ich verstehe Ihren Ärger. Das tut mir leid. Ich kümmere mich sofort darum.</i> Never say it is the customer’s fault.</p>`,
+   [['Das Paket ist leider beschädigt angekommen.','Unfortunately the parcel arrived damaged.'],['Sie können die Ware innerhalb von 14 Tagen zurückschicken.','You can send the goods back within 14 days.'],['Wir schicken Ihnen kostenlos einen Ersatz.','We’ll send you a replacement free of charge.']], 'B1'),
+  vocabLesson('cc-technik','Technischer Support','Routers, passwords and error messages','cctechnik',
+   `<p>In technical support you guide the customer step by step: unplug, restart, check the lights. Short, clear instructions in the <i>Sie</i> form are what you need.</p><p class="tip">Instructions use the polite imperative, verb first: <i>Schalten Sie den Router bitte aus. Warten Sie 30 Sekunden. Stecken Sie das Kabel wieder ein.</i> Then check: <i>Was sehen Sie jetzt? Blinkt die Lampe noch?</i></p>`,
+   [['Starten Sie den Router bitte neu.','Please restart the router.'],['Welche Fehlermeldung sehen Sie?','Which error message do you see?'],['Ich setze Ihr Passwort zurück.','I’ll reset your password.']], 'B1'),
+  vocabLesson('cc-alltag','Arbeiten im Call-Center','Shifts, team and targets','ccjob',
+   `<p>The words of the job itself: your shifts, your team, your training, and the numbers your work is measured by.</p><p class="tip">Call centres use English words with German articles: <i>das Ticket, das Feedback, der Inbound</i> (customers call you), <i>der Outbound</i> (you call customers). Inbound jobs are usually easier to start with.</p>`,
+   [['Nächste Woche habe ich Spätschicht.','Next week I’m on the late shift.'],['Die Einarbeitung dauert vier Wochen.','The induction lasts four weeks.'],['Jedes Gespräch wird im System dokumentiert.','Every call is documented in the system.']], 'B1'),
+  {id:'job-bewerbung', level:'B1', kind:'Beruf', title:'Anschreiben & Lebenslauf', sub:'Writing your application',
+   intro:`<p>For a job in Germany you send an <b>Anschreiben</b> (cover letter, one page) and a <b>Lebenslauf</b> (CV, set out as a table), usually as one PDF by e-mail or through an online form.</p>
+<h4>The Anschreiben in five parts</h4>
+<ol><li><b>Betreff:</b> <i>Bewerbung als Kundenberater (m/w/d)</i></li>
+<li><b>Anrede:</b> <i>Sehr geehrte Frau Wagner,</i> or, if you don’t know the name, <i>Sehr geehrte Damen und Herren,</i></li>
+<li><b>Why this job:</b> <i>Hiermit bewerbe ich mich um … Ihre Anzeige hat mich sehr interessiert, weil …</i></li>
+<li><b>What you bring:</b> <i>Ich habe … Jahre als … gearbeitet. Ich spreche Arabisch als Muttersprache, Französisch fließend und Deutsch auf dem Niveau B1.</i></li>
+<li><b>End:</b> <i>Ich kann ab dem … anfangen. Über eine Einladung zu einem Vorstellungsgespräch würde ich mich sehr freuen. Mit freundlichen Grüßen</i> and your name.</li></ol>
+<h4>The Lebenslauf</h4><p>A table, newest entry first: <i>Persönliche Daten</i> (name, address, phone, e-mail), <i>Berufserfahrung</i>, <i>Schulbildung</i> or <i>Ausbildung</i>, <i>Sprachkenntnisse</i>, <i>EDV-Kenntnisse</i> (computer skills), and hobbies if you like. A photo is optional.</p>
+<p class="tip">Write your languages the German way: <i>Arabisch: Muttersprache · Französisch: fließend · Deutsch: B1 (Goethe-Zertifikat) · Englisch: gute Kenntnisse</i>. For a call centre your languages are a real advantage. Practise the whole letter in Schreiben: “Bewerbung als Kundenberater”.</p>`,
+   ex:[['Hiermit bewerbe ich mich um die Stelle als Kundenberater.','I hereby apply for the position of customer adviser.'],['Ich spreche Arabisch als Muttersprache und Französisch fließend.','Arabic is my native language and I speak French fluently.'],['Über eine Einladung zu einem Vorstellungsgespräch würde ich mich sehr freuen.','I would be very happy to be invited to an interview.']],
+   drills:[['bank',8,{bank:'bewerbung'}],['meaning',4,{th:'bewerbung'}]]},
+  {id:'job-interview', level:'B1', kind:'Beruf', title:'Das Vorstellungsgespräch', sub:'Questions and good answers',
+   intro:`<p>A German job interview usually follows the same steps: small talk, you introduce yourself, questions about your experience and strengths, the company explains the job, and at the end <b>your</b> questions. You always say <i>Sie</i>.</p>
+<h4>The questions you will hear</h4>
+<div class="tablewrap"><table class="ct"><tr><th>Question</th><th>A good answer starts with</th></tr>
+<tr><td>Erzählen Sie etwas über sich.</td><td>Ich heiße …, ich komme aus … und lebe seit … in Deutschland. Ich habe … als … gearbeitet.</td></tr>
+<tr><td>Warum möchten Sie bei uns arbeiten?</td><td>Ich arbeite gern mit Menschen, und Ihre Firma …</td></tr>
+<tr><td>Was sind Ihre Stärken?</td><td>Ich bin geduldig und bleibe ruhig, auch wenn …</td></tr>
+<tr><td>Was sind Ihre Schwächen?</td><td>Manchmal bin ich zu … Aber ich arbeite daran: …</td></tr>
+<tr><td>Was machen Sie, wenn ein Kunde wütend ist?</td><td>Ich höre zu, entschuldige mich und suche eine Lösung.</td></tr>
+<tr><td>Können Sie im Schichtdienst arbeiten?</td><td>Ja, das ist für mich kein Problem.</td></tr>
+<tr><td>Was sind Ihre Gehaltsvorstellungen?</td><td>Ich stelle mir … Euro brutto im Monat vor.</td></tr>
+<tr><td>Ab wann können Sie anfangen?</td><td>Ab dem … / Ab sofort.</td></tr></table></div>
+<h4>Your questions at the end</h4><p>Always ask one or two: <i>Wie sieht die Einarbeitung aus? Wie sind die Arbeitszeiten? Wann bekomme ich eine Antwort?</i></p>
+<p class="tip">If you don’t understand a question, ask: <i>Können Sie die Frage bitte wiederholen?</i> That is exactly the skill a call centre needs, so it never looks bad. Say clearly which languages you speak and how well.</p>`,
+   ex:[['Ich habe zwei Jahre im Kundenservice gearbeitet.','I worked in customer service for two years.'],['Meine Stärke ist, dass ich auch in stressigen Situationen ruhig bleibe.','My strength is that I stay calm even in stressful situations.'],['Wie sieht die Einarbeitung aus?','What does the induction look like?']],
+   drills:[['bank',10,{bank:'interview'}]]});
+STAGES.push(
+  {name:'Im Call-Center', can:'Handle a customer call in German: greet, check data, explain a bill, take a complaint, give technical help.', ids:['cc-telefon','cc-saetze','cc-kunde','cc-rechnung','cc-beschwerde','cc-technik','cc-alltag']},
+  {name:'Die Bewerbung', can:'Write your Anschreiben and Lebenslauf and answer the usual interview questions.', ids:['job-bewerbung','job-interview']});
+Object.assign(COVERS, {'cc-telefon':'die Warteschleife','cc-saetze':'Wie kann ich helfen?','cc-kunde':'die Kundennummer','cc-rechnung':'die Gutschrift','cc-beschwerde':'die Reklamation',
+  'cc-technik':'neu starten','cc-alltag':'die Spätschicht','job-bewerbung':'das Anschreiben','job-interview':'Erzählen Sie …'});
+Object.assign(SEARCH_TERMS, {'cc-telefon':'Telefon telefonieren Callcenter Call-Center Kundenservice Hotline phone','cc-saetze':'Telefon Redemittel Callcenter Kundenservice phone phrases',
+  'cc-kunde':'Callcenter Kundendaten Vertrag Datenschutz','cc-rechnung':'Callcenter Rechnung Zahlung Mahnung','cc-beschwerde':'Callcenter Beschwerde Reklamation complaint',
+  'cc-technik':'Callcenter Support Technik Router','cc-alltag':'Callcenter Call-Center Schicht Job Arbeit','job-bewerbung':'Bewerbung Anschreiben Lebenslauf cover letter CV job',
+  'job-interview':'Vorstellungsgespräch Bewerbungsgespräch interview Job'});
+Object.assign(RES, {
+  'cc-telefon': {b:[], v:[['96wZCup1-Ws', '20 useful sentences for phone calls', 'Easy German'], ['3e66_1DeDkU', 'Telefonieren auf Deutsch: Tipps und Redemittel', 'Dein Sprachcoach']]},
+  'cc-saetze': {b:[], v:[['ZHv_pPdbsng', 'Ein Telefongespräch mit dem Kundenservice (B1)', 'AlltagsDeutsch'], ['OZ1d1LxhqXs', 'Telefongespräch im Büro: Redemittel und Beispiel', 'Richtig Deutsch sprechen']]},
+  'cc-kunde': {b:[], v:[['O8GdoTbz-dA', 'Verträge kündigen auf Deutsch', 'Dein Sprachcoach'], ['D0jhLavEJbU', 'Briefe schreiben: Kündigung eines Abonnements', 'DeutschCollege']]},
+  'cc-rechnung': {b:[], v:[['YHjKs4RTJWo', 'Rechnung bezahlen: so verstehst du jede Rechnung', 'Deutsch mit Rima'], ['3x7bFMFXZsE', 'Ist das eine echte Mahnung?', 'Handbook Germany']]},
+  'cc-beschwerde': {b:[], v:[['cvS_YPCyLnA', 'Etwas reklamieren (B1)', 'Learn German'], ['aGW9URYStCA', 'Nicos Weg: Reklamation', 'DW Deutsch lernen']]},
+  'cc-technik': {b:[], v:[['WmBMkTOInOE', 'Call centre: technischer Support für WLAN-Probleme', 'Einfach_Deutsch'], ['KiHfHcgIg14', 'Störung selbst beheben', 'Telekom Hilfe-Videos']]},
+  'cc-alltag': {b:[], v:[['hgTRd7tf8jg', '10 Fragen an eine Call-Center-Agentin', 'Galileo'], ['e2QN_KAOqRQ', 'Hinter den Kulissen eines Callcenters', 'DW Deutsch']]},
+  'job-bewerbung': {b:[], v:[['aBZF3fD0mdw', 'Lebenslauf auf Deutsch schreiben', 'Dein Sprachcoach'], ['4SxvnWURWSQ', 'Jobsuche: Lebenslauf (B1)', 'Learn German']]},
+  'job-interview': {b:[], v:[['I1y460_dViU', '12 questions you can hear in a job interview', 'Easy German'], ['dZGD1xemB5I', 'Vorstellungsgespräch: die 10 häufigsten Fragen', 'Dein Sprachcoach']]}});
+const JOBTEXTS = [
+  {id:'j1', level:'B1', title:'Ein Anruf bei der Hotline', texts:[{h:'Ein Anruf bei der Hotline', body:`Kundenberaterin: Guten Tag, Sie sprechen mit Laura Krämer von NetzPlus. Was kann ich für Sie tun?
+Herr Fischer: Guten Tag, Fischer hier. Mein Internet funktioniert seit gestern Abend nicht mehr, und ich arbeite im Homeoffice!
+Kundenberaterin: Oh, das tut mir leid. Ich helfe Ihnen gern. Können Sie mir bitte Ihre Kundennummer nennen?
+Herr Fischer: Ja, das ist die 4 7 1 1 0 9 2.
+Kundenberaterin: Danke. Aus Datenschutzgründen brauche ich noch Ihr Geburtsdatum.
+Herr Fischer: Der 14. Mai 1985.
+Kundenberaterin: Vielen Dank, Herr Fischer. Einen Moment bitte, ich schaue kurz nach. … In Ihrer Straße gibt es zurzeit leider eine Störung. Unsere Techniker arbeiten schon daran.
+Herr Fischer: Und wie lange dauert das noch?
+Kundenberaterin: Die Störung soll bis morgen um 12 Uhr behoben sein. Ich kann Ihnen aber kostenlos 20 Gigabyte mobiles Datenvolumen freischalten. Dann können Sie mit Ihrem Handy weiterarbeiten.
+Herr Fischer: Das wäre super. Und muss ich für die Tage ohne Internet bezahlen?
+Kundenberaterin: Nein, Sie bekommen für jeden Tag eine Gutschrift auf Ihrer nächsten Rechnung. Ich fasse kurz zusammen: Die Störung ist morgen Mittag behoben, Sie bekommen das Datenvolumen sofort und eine Gutschrift auf der Rechnung. Kann ich sonst noch etwas für Sie tun?
+Herr Fischer: Nein, danke, das war sehr hilfreich.
+Kundenberaterin: Gern geschehen. Ich wünsche Ihnen noch einen schönen Tag. Auf Wiederhören!`}],
+   items:[I('Warum ruft Herr Fischer an?',['Sein Internet funktioniert nicht.','Seine Rechnung ist zu hoch.','Er möchte seinen Vertrag kündigen.'],0),
+     I('Die Kundenberaterin fragt nach der Kundennummer und dem Geburtsdatum.','RF',0),
+     I('Was ist das Problem?',['Es gibt eine Störung in seiner Straße.','Sein Router ist kaputt.','Er hat die Rechnung nicht bezahlt.'],0),
+     I('Wann soll das Internet wieder funktionieren?',['morgen um 12 Uhr','heute Abend','in einer Woche'],0),
+     I('Herr Fischer muss für die Tage ohne Internet bezahlen.','RF',1,0,'„Sie bekommen für jeden Tag eine Gutschrift“: he gets a credit instead.'),
+     I('Was bekommt Herr Fischer sofort?',['mobiles Datenvolumen','einen neuen Router','einen Techniker'],0)],
+   glossary:[['die Störung','fault, outage'],['beheben','to fix'],['freischalten','to activate'],['das Datenvolumen','data allowance'],['die Gutschrift','credit'],['zusammenfassen','to sum up'],['aus Datenschutzgründen','for data protection reasons'],['hilfreich','helpful'],['Gern geschehen.','You’re welcome.']]},
+  {id:'j2', level:'A2', title:'Stellenanzeige: Kundenberater (m/w/d)', texts:[{h:'TeleServ GmbH: Kundenberater (m/w/d) in Berlin', body:`Für unser Kundenservice-Team in Berlin suchen wir ab sofort Kundenberater (m/w/d) in Vollzeit oder Teilzeit.
+Ihre Aufgaben:
+• Sie beantworten Anrufe und E-Mails von unseren Kundinnen und Kunden.
+• Sie helfen bei Fragen zu Rechnungen, Verträgen und Tarifen.
+• Sie nehmen Beschwerden an und finden gute Lösungen.
+• Sie dokumentieren jedes Gespräch in unserem System.
+Das bringen Sie mit:
+• Deutsch mindestens auf dem Niveau B1
+• Arabisch, Französisch oder Türkisch sind ein Plus
+• Freundlichkeit, Geduld und Freude am Kontakt mit Menschen
+• gute PC-Kenntnisse
+Erfahrung im Kundenservice ist schön, aber nicht nötig: Wir arbeiten Sie vier Wochen lang ein.
+Wir bieten:
+• einen unbefristeten Arbeitsvertrag
+• 15 Euro pro Stunde, plus Zuschläge für Spätschicht und Wochenende
+• flexible Schichten zwischen 7 und 22 Uhr
+• nach der Einarbeitung zwei Tage Homeoffice pro Woche
+Interessiert? Schicken Sie Ihre Bewerbung mit Anschreiben und Lebenslauf per E-Mail an Frau Wagner.`}],
+   items:[I('Was sucht die Firma?',['Kundenberater','Techniker','Verkäufer'],0),
+     I('Man muss schon Erfahrung im Kundenservice haben.','RF',1,0,'„Erfahrung … ist schön, aber nicht nötig“'),
+     I('Welches Deutschniveau braucht man?',['mindestens B1','A1 reicht','C1'],0),
+     I('Arabisch ist für diese Stelle ein Vorteil.','RF',0,0,'„Arabisch, Französisch oder Türkisch sind ein Plus“'),
+     I('Wie lange dauert die Einarbeitung?',['vier Wochen','zwei Tage','ein Jahr'],0),
+     I('Wann kann man im Homeoffice arbeiten?',['nach der Einarbeitung','ab dem ersten Tag','nie'],0)],
+   glossary:[['die Aufgabe','task'],['beantworten','to answer'],['dokumentieren','to document'],['mindestens','at least'],['das Niveau','level'],['jemanden einarbeiten','to train a new colleague'],['unbefristet','permanent'],['der Zuschlag','extra pay'],['die Schicht','shift']]}];
+LIBRARY.push(...JOBTEXTS);
+WRITING.push(
+  {id:'job-anschreiben', level:'B1', job:1, title:'Bewerbung als Kundenberater', situation:'Sie haben diese Anzeige gelesen: „Kundenberater (m/w/d) für unsere Hotline in Berlin gesucht. Deutsch B1, weitere Sprachen willkommen.“ Schreiben Sie ein kurzes Anschreiben an Frau Wagner von der Firma TeleServ.', points:['Warum Sie sich bewerben','Ihre Erfahrung und Ihre Sprachen','Ihre Stärken im Umgang mit Kunden','Ab wann Sie anfangen können, und Bitte um ein Gespräch'], words:100, letter:1, reg:'Sie',
+   model:'Sehr geehrte Frau Wagner,\nhiermit bewerbe ich mich um die Stelle als Kundenberater in Ihrer Hotline in Berlin. Ich habe Ihre Anzeige im Internet gelesen und bin sehr interessiert, weil ich gern mit Menschen arbeite.\nIch habe zwei Jahre im Kundenservice einer Telefonfirma in Casablanca gearbeitet. Dort habe ich jeden Tag Anrufe angenommen, Fragen zu Rechnungen beantwortet und Beschwerden bearbeitet. Deshalb kenne ich die typischen Fragen von Kunden. Ich spreche Arabisch als Muttersprache, Französisch fließend und Deutsch auf dem Niveau B1.\nIch bin freundlich und geduldig und bleibe auch in schwierigen Gesprächen ruhig. Außerdem arbeite ich gern im Team.\nIch kann ab dem 1. März anfangen. Über eine Einladung zu einem Vorstellungsgespräch würde ich mich sehr freuen.\nMit freundlichen Grüßen\nKarim Benali'},
+  {id:'job-beschwerde', level:'B1', job:1, title:'Antwort auf eine Kundenbeschwerde', situation:'Sie arbeiten im Kundenservice eines Online-Shops. Herr Fischer schreibt: Sein Paket ist nach zwei Wochen noch nicht da, und am Telefon hat ihm niemand geholfen. Antworten Sie Herrn Fischer.', points:['Danken Sie für die Nachricht und entschuldigen Sie sich.','Erklären Sie, was passiert ist.','Sagen Sie, was Sie jetzt tun.','Bieten Sie eine kleine Entschädigung an.'], words:80, letter:1, reg:'Sie',
+   model:'Sehr geehrter Herr Fischer,\nvielen Dank für Ihre Nachricht. Es tut uns sehr leid, dass Ihr Paket noch nicht angekommen ist und dass Sie am Telefon keine Hilfe bekommen haben.\nIch habe die Sendungsnummer geprüft: Das Paket ist leider im Lager liegen geblieben, deshalb ist es nicht bei Ihnen angekommen. Ich habe heute eine neue Lieferung für Sie veranlasst. Sie bekommen das Paket spätestens am Freitag.\nAls kleine Entschuldigung erstatten wir Ihnen die Versandkosten.\nWenn Sie noch Fragen haben, rufen Sie mich gern direkt an.\nMit freundlichen Grüßen\nKarim Benali\nKundenservice'});
 // Progress travels between devices as a text code: "WZB1." + base64 of the saved state as UTF-8 JSON.
 const CODE_PREFIX = 'WZB1.', BAD_CODE = 'The code is incomplete or damaged. Copy it again, all of it, and paste it here.';
 function progressCode(s){
@@ -2909,7 +3129,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = '5271a3a';  // build.py puts the build number here
+const APP_VERSION = 'f5388b3';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -3875,7 +4095,8 @@ function vLesen(){
   $main.innerHTML = `${backTo('Üben','ueben')}
   <section class="card stack"><h2>Lesen</h2><p class="muted" style="margin:0">Read, answer, then press “Vorlesen” to hear the whole text. Reading and listening to the same story is one of the fastest ways to learn. Open the word list under a text if you get stuck.</p></section>
   ${[['Karims Weg', 'A learner from Casablanca on his way to an Ausbildung in Germany. The texts get harder as his German grows.', READING],
-     ['Kurzgeschichten', 'Short stories from everyday life in Germany, each built around the grammar of your A1 and A2 lessons.', STORIES]].map(([h, sub, list]) => `
+     ['Kurzgeschichten', 'Short stories from everyday life in Germany, each built around the grammar of your A1 and A2 lessons.', STORIES],
+     ['Im Job', 'A job advert and a real hotline call. Press “Vorlesen” and listen to the call like a customer adviser would.', JOBTEXTS]].map(([h, sub, list]) => `
   <h3 style="margin-top:4px">${h}</h3><p class="muted" style="margin:-6px 0 0">${sub}</p>
   <section class="stack">${list.map(r => { const d = state.read[r.id], i = LIBRARY.indexOf(r);
     return `<button class="lesson ${d ? 'done' : ''} ${r === nr ? 'next' : ''}" data-r="${i}"><span class="num" style="font-size:.95rem">${r.level}</span>
@@ -3907,8 +4128,8 @@ function startReading(task, id, after){
 
 // ---- Schreiben ----
 function vSchreiben(){
-  const groups = [['A1','A1'],['A2','A2'],['B1','B1 · Goethe exam tasks'],['SP','B1 · Sprechen Teil 2, prepared in writing']];
-  const of = g => WRITING.filter(w => g === 'SP' ? w.speak : w.level === g && !w.speak);
+  const groups = [['A1','A1'],['A2','A2'],['B1','B1 · Goethe exam tasks'],['SP','B1 · Sprechen Teil 2, prepared in writing'],['JOB','Beruf: Bewerbung und Kundenservice']];
+  const of = g => WRITING.filter(w => g === 'JOB' ? w.job : g === 'SP' ? w.speak : w.level === g && !w.speak && !w.job);
   $main.innerHTML = `${backTo('Üben','ueben')}
   <section class="card stack"><h2>Schreiben</h2><p class="muted" style="margin:0">Write first, mistakes and all. Then press “Prüfen”: the app checks length, greeting, closing, du or Sie and your linking words. You tick the task points you covered and compare your text with a model answer.</p></section>
   ${groups.map(([g, label]) => `<h3 style="margin-top:4px">${label}</h3><section class="stack">${of(g).map(w => { const last = state.writing[w.id];
