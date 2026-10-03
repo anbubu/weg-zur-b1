@@ -712,6 +712,8 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 .ring{display:flex;align-items:center;gap:10px;color:var(--muted);font-weight:700}.ring svg.i{color:var(--go)}
 .kcheck{display:flex;flex-wrap:wrap;gap:6px}.kcheck span{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;font-weight:700;font-size:.82rem}
 .kcheck .ok{background:var(--okbg);color:var(--ok)}.kcheck .no{background:var(--badbg);color:var(--bad)}.kcheck svg.i{width:14px;height:14px}
+.repeat{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}.rp{display:flex;align-items:center;gap:8px;background:var(--panel2);border-radius:var(--r-card);padding:8px 10px;flex-wrap:wrap}
+.rp b{font-size:1.05rem}.rpres{flex-basis:100%;font-size:.84rem;color:var(--muted)}.rpres:empty{display:none}.rpres.ok{color:var(--ok);font-weight:700}.rpres.no{color:var(--bad)}.say.rec{background:var(--go);color:var(--on-go)}
 .model{display:flex;gap:12px;align-items:center;justify-content:space-between;background:var(--panel2);border-radius:var(--r-card);padding:12px 14px}
 .model small{font-weight:700;color:var(--muted)}.model p{margin:2px 0 0;font-weight:600}
 /* ---------- motion ---------- */
@@ -1684,6 +1686,58 @@ const geminiMsg = e => GEMINI_MSG[e && e.code] || (e instanceof Error ? GEMINI_M
 
 // Offline writing check: what a program can check reliably. Content and grammar the learner checks against the model answer.
 const LINKERS = ['weil','dass','denn','deshalb','trotzdem','aber','sondern','wenn','ob','obwohl','damit','dann','danach','außerdem','zuerst','zum Beispiel','einerseits','andererseits','nachdem','bevor'];
+// ---- Offline mistake finder for Schreiben: typical learner errors, each with the sentence part it found. ----
+// Kept strict on purpose: check.js runs it over every correct German text in the app and expects zero hits.
+let hintSets = null;
+function hintWords(){
+  if (hintSets) return hintSets;
+  const inf = new Set(Object.keys(VERBS));
+  for (const v of PERFEKT) inf.add(v.inf);
+  for (const v of VOCAB) if (/^to /.test(v.en) && /^[a-zäöüß]+n$/.test(v.de)) inf.add(v.de);
+  const fin = new Set([...AUX.h, ...AUX.s, 'war','warst','waren','wart','hatte','hattest','hatten','wird','wirst','werde','gibt','kann','kannst','muss','musst','will','willst','möchte','möchtest','darf','darfst','soll','sollst','konnte','musste','wollte','durfte','sollte','würde','könnte','hätte','wäre']);
+  for (const k in VERBS) for (const f of VERBS[k].f) if (f !== k) fin.add(f);
+  fin.delete('haben');
+  const stop = new Set(['leid','recht','schuld','morgen','abend','mittag','angst','deutsch','englisch','arabisch','französisch','türkisch','spanisch','italienisch','kosten','paar','laut','fest','klasse','ernst','wert','reich','spitze','weg','schade','gern','gerne','rund','mehr','post','brutto','netto','plus','minus','online','okay','grad','alter','jugendliche','erwachsene','bekannte','verwandte','liebe','laden','viertel']);
+  const nouns = new Set(VOCAB.filter(v => ['m','f','n','pl'].includes(v.g) && /^[A-ZÄÖÜ][a-zäöüß]{3,}$/.test(v.de)).map(v => v.de.toLowerCase()).filter(n => !inf.has(n) && !stop.has(n)));
+  return hintSets = {inf, fin, nouns};
+}
+const SUB_CONJ = 'weil|dass|wenn|ob|obwohl|bevor|nachdem|damit';
+const AFTER_INF = /^\s+(kann|kannst|muss|musst|will|willst|möchte|möchtest|darf|darfst|soll|sollst|werde|wirst|würde|würdest|könnte|könntest|sollte|solltest|konnte|musste|wollte|durfte|lassen|gehen)\b/i;
+const MODAL_BEFORE = /\b(kann|kannst|muss|musst|will|willst|möchte|möchtest|darf|darfst|soll|sollst|werde|wirst|würde|würdest|könnte|könntest|sollte|solltest|konnte|konntest|musste|wollte|habe|hast|bin|bist|lass|lässt)\b/i;
+function grammarHints(text){
+  const t = String(text || ''), {inf, fin, nouns} = hintWords(), out = [], seen = new Set();
+  const add = (frag, msg) => { frag = frag.trim().replace(/\s+/g, ' '); if (!seen.has(frag)){ seen.add(frag); out.push({frag, msg}); } };
+  // 1. ich/du + infinitive: "ich kommen" (fine when a modal follows in a clause: "weil ich kommen kann")
+  for (const m of t.matchAll(/\b([Ii]ch|[Dd]u)\s+([a-zäöüß]+)/g)){
+    const w = m[2], rest = t.slice(m.index + m[0].length), before = t.slice(0, m.index);
+    const clause = before.slice(Math.max(...['.', ',', '!', '?', ';', ':', '\n'].map(c => before.lastIndexOf(c))) + 1);
+    if (inf.has(w) && !AFTER_INF.test(rest) && !MODAL_BEFORE.test(clause)) add(m[0], m[1].toLowerCase() === 'ich' ? `After ich the verb ends in -e: ich ${w.replace(/en$|n$/, 'e')}.` : `After du the verb ends in -st: du ${w.replace(/en$|n$/, 'st')}.`);
+  }
+  for (const m of t.matchAll(/\bich\s+(ist|bist|sind|hat|hast)\b/gi)) add(m[0], `With ich: ich bin, ich habe.`);
+  // 2. weil/dass/wenn …: the finite verb must go to the end of the clause
+  for (const m of t.matchAll(new RegExp(`\\b(${SUB_CONJ})\\s+(ich|du|er|sie|es|wir|ihr|man)\\s+([a-zäöüß]+)\\s+([^.,;:!?\\n]*[a-zäöüß])`, 'gi'))){
+    if (m[3] === m[3].toLowerCase() && fin.has(m[3])) add(m[0].slice(0, 60), `After ${m[1].toLowerCase()} the verb goes to the end: …, ${m[1].toLowerCase()} ${m[2].toLowerCase()} ${m[4].split(' ').slice(0, 4).join(' ')}${m[4].split(' ').length > 4 ? ' …' : ''} ${m[3].toLowerCase()}.`);
+  }
+  // 3. verb in position 2: "Heute ich gehe", "In meiner Freizeit ich spiele"
+  const opener = '(Heute|Morgen|Gestern|Dann|Danach|Jetzt|Später|Abends|Zuerst|Leider|Deshalb|Trotzdem|Außerdem|Am\\s+[A-ZÄÖÜ]\\S+|Im\\s+[A-ZÄÖÜ]\\S+|In\\s+(?:mein|meine|meiner|meinem|der|dem|einem|einer|diesem|dieser|unserer|unserem|deiner|deinem)\\s+[A-ZÄÖÜ]\\S+)';
+  for (const m of t.matchAll(new RegExp(`(?:^|[.!?]\\s+|\\n)${opener}\\s+(ich|du|er|sie|es|wir|ihr)\\s+([a-zäöüß]+)`, 'g')))
+    add(`${m[1]} ${m[2]} ${m[3]}`, `When “${m[1]}” comes first, the verb comes next and then the subject: ${m[1]} ${m[3]} ${m[2].toLowerCase()} …`);
+  // 4. nouns need a capital letter
+  for (const m of t.matchAll(/(^|[^A-Za-zÄÖÜäöüß])([a-zäöüß]{4,})(?![A-Za-zÄÖÜäöüß])/g)){
+    const w = m[2];
+    const afterSubject = /\b(ich|du|er|sie|es|wir|ihr|man)\s+$/i.test(t.slice(0, m.index + m[1].length));
+    if (nouns.has(w) && !afterSubject && !inf.has(w + 'n') && !inf.has(w + 'en')) add(w, `Nouns start with a capital letter: ${w[0].toUpperCase() + w.slice(1)}.`);
+  }
+  // 5. Perfekt with sein for movement and change
+  for (const m of t.matchAll(/\b(habe|hast|hat|haben|habt)\b([^.,;:!?\n]{0,40}?)\b(gegangen|gefahren|gekommen|geflogen|gelaufen|geblieben|gewesen|passiert|aufgestanden|umgezogen|angekommen|geworden|gestorben|eingeschlafen)\b/gi))
+    add(m[0], `${m[3]} takes sein in the Perfekt: ich bin ${m[3]}, er ist ${m[3]}.`);
+  // 6. a comma before weil, dass, obwohl
+  for (const m of t.matchAll(/([A-Za-zÄÖÜäöüß]+)\s+(weil|dass|obwohl)\b/g))
+    if (!/^(und|oder|aber|sondern|so|ohne|also|nur|auch|gerade|vor|allem|nicht)$/i.test(m[1])) add(m[0], `Put a comma before ${m[2]}: …${m[1]}, ${m[2]} …`);
+  // 7. Jahre alt
+  for (const m of t.matchAll(/\b(\d+)\s+Jahr\s+alt\b/g)) if (m[1] !== '1') add(m[0], `More than one year: ${m[1]} Jahre alt.`);
+  return out.slice(0, 10);
+}
 function writingChecks(w, text){
   const t = String(text || ''), low = t.toLowerCase(), words = wordCount(t), first = (low.trim().split('\n')[0] || '');
   const out = [];
@@ -1708,6 +1762,9 @@ function writingChecks(w, text){
     const used = LINKERS.filter(k => new RegExp(`(^|[^a-zäöüß])${k}(?![a-zäöüß])`, 'i').test(t));
     out.push({ok:used.length >= need, label:`Linking words: ${used.length ? used.join(', ') : 'none yet'}`, note: used.length >= need ? '' : `Use at least ${need}: weil, dass, deshalb, aber, trotzdem, wenn …`});
   }
+  const hints = grammarHints(t);
+  for (const h of hints) out.push({ok:false, label:`Check: “${h.frag}”`, note:h.msg});
+  if (!hints.length && words >= 10) out.push({ok:true, label:'No typical mistakes found', note:'Checked: verb endings after ich and du, the verb in position 2, the verb at the end after weil and dass, capital nouns, haben or sein in the Perfekt, commas. It can’t find every mistake.'});
   return out;
 }
 // Half from the automatic checks, half from the task points the learner ticks as covered.
@@ -2750,10 +2807,11 @@ function planBlocks(size, c){
     writing:  () => c.writing ? {t:'app', act:'writing', id:c.writing.id, title:`Write: ${c.writing.title}`, sub:'Write first, then check your text'}
                               : {t:'app', act:'goto', id:'schreiben', title:'Writing', sub:'Pick a task in Schreiben'},
   };
+  // first week (c.early): no reading or writing yet; their minutes go to watching and practice
+  const extra = {practice:(c.due ? 0 : m.cards || 0) + (c.early ? m.writing || 0 : 0), video:c.early ? m.reading || 0 : 0};
   for (const key of PLAN_ORDER){
-    if (!m[key] || (key === 'cards' && !c.due)) continue;
-    // with nothing to review, the flashcard minutes go to practice
-    out.push(Object.assign({key, min: m[key] + (key === 'practice' && !c.due ? m.cards : 0)}, make[key]()));
+    if (!m[key] || (key === 'cards' && !c.due) || (c.early && (key === 'reading' || key === 'writing'))) continue;
+    out.push(Object.assign({key, min: m[key] + (extra[key] || 0)}, make[key]()));
   }
   return out;
 }
@@ -3085,6 +3143,387 @@ Interessiert? Schicken Sie Ihre Bewerbung mit Anschreiben und Lebenslauf per E-M
      I('Wann kann man im Homeoffice arbeiten?',['nach der Einarbeitung','ab dem ersten Tag','nie'],0)],
    glossary:[['die Aufgabe','task'],['beantworten','to answer'],['dokumentieren','to document'],['mindestens','at least'],['das Niveau','level'],['jemanden einarbeiten','to train a new colleague'],['unbefristet','permanent'],['der Zuschlag','extra pay'],['die Schicht','shift']]}];
 LIBRARY.push(...JOBTEXTS);
+// ---- More words toward the ~2,400 of B1: verbs, adjectives, small words and everyday topics (added 2026-10-03). ----
+// Each list becomes a Wortschatz lesson placed next to a related lesson; words the app already has are skipped.
+const VOCAB_W = {
+  wzeit:['Kalender|calendar|m','Datum|date|n','Uhrzeit|time (of day)|f','Vormittag|morning (before noon)|m','Mittag|midday|m','Nachmittag|afternoon|m','Mitternacht|midnight|f','Wochentag|weekday|m',
+    'Feiertag|public holiday|m','Ferien|school holidays|pl','Januar|January|m','Februar|February|m','März|March|m','April|April|m','Mai|May|m','Juni|June|m','Juli|July|m','August|August|m',
+    'September|September|m','Oktober|October|m','November|November|m','Dezember|December|m','Sommer|summer|m','Herbst|autumn|m','Winter|winter|m','Jahrhundert|century|n','Zukunft|future|f',
+    'Vergangenheit|past|f','Weihnachten|Christmas|n','Ostern|Easter|n','Silvester|New Year’s Eve|n','Ramadan|Ramadan|m','Zuckerfest|Eid al-Fitr|n','Verabredung|date, meeting (private)|f',
+    'rechtzeitig|in time|','verspätet|late, delayed|','täglich|daily|','wöchentlich|weekly|','monatlich|monthly|','jährlich|yearly|'],
+  wzahl:['zwanzig|twenty|','dreißig|thirty|','hundert|a hundred|','tausend|a thousand|','Million|million|f','Hälfte|half|f','Viertel|quarter|n','Drittel|third|n','Prozent|percent|n','Kilo|kilo|n',
+    'Gramm|gram|n','Liter|litre|m','Meter|metre|m','Kilometer|kilometre|m','Zentimeter|centimetre|m','Stück|piece|n','Packung|packet|f','Flasche|bottle|f','Dose|can, tin|f','Glas|glass, jar|n',
+    'Tasse|cup|f','Becher|tub, mug|m','Scheibe|slice|f','Dutzend|dozen|n','Nummer|number|f','Zahl|number, figure|f','Anzahl|number (of)|f','Menge|amount, quantity|f','Gewicht|weight|n',
+    'genug|enough|','wenig|little, not much|','viel|much, a lot|','weniger|less, fewer|','einige|some, a few|','mehrere|several|','ungefähr|about, approximately|','doppelt|double|',
+    'einmal|once|','zweimal|twice|','messen|to measure|','wiegen|to weigh|','zählen|to count|'],
+  wklein:['immer|always|','oft|often|','manchmal|sometimes|','selten|rarely|','nie|never|','meistens|mostly|','normalerweise|usually|','schon|already|','noch|still|','noch nicht|not yet|',
+    'nicht mehr|no longer|','bald|soon|','sofort|immediately|','jetzt|now|','damals|back then|','früher|in the past|','später|later|','vorher|before, beforehand|','nachher|afterwards|',
+    'zuerst|first|','dann|then|','danach|after that|','zum Schluss|at the end|','endlich|at last|','plötzlich|suddenly|','sehr|very|','ziemlich|quite, rather|','fast|almost|','nur|only|',
+    'auch|also, too|','sogar|even|','genau|exactly|','wirklich|really|','vielleicht|maybe|','wahrscheinlich|probably|','leider|unfortunately|','zum Glück|luckily|','lieber|rather, preferably|',
+    'am liebsten|most of all|','überall|everywhere|','irgendwo|somewhere|','nirgends|nowhere|','hier|here|','dort|there|','oben|up, upstairs|','unten|down, downstairs|','draußen|outside|',
+    'drinnen|inside|','zusammen|together|','allein|alone|'],
+  wverb1:['aufstehen|to get up|','aufwachen|to wake up|','schlafen|to sleep|','einschlafen|to fall asleep|','sich waschen|to wash (yourself)|','duschen|to shower|','sich anziehen|to get dressed|',
+    'sich ausziehen|to get undressed|','frühstücken|to have breakfast|','kochen|to cook|','backen|to bake|','putzen|to clean|','aufräumen|to tidy up|','spülen|to wash up|','waschen|to wash|',
+    'bügeln|to iron|','einkaufen|to go shopping|','kaufen|to buy|','verkaufen|to sell|','kosten|to cost|','brauchen|to need|','suchen|to look for|','finden|to find|','verlieren|to lose|',
+    'nehmen|to take|','geben|to give|','bekommen|to get, to receive|','holen|to fetch|','bringen|to bring|','tragen|to carry, to wear|','öffnen|to open|','schließen|to close|',
+    'anmachen|to switch on|','ausmachen|to switch off|','benutzen|to use|','reparieren|to repair|','leben|to live|','warten|to wait|','sich ausruhen|to rest|','fernsehen|to watch TV|',
+    'lesen|to read|','schreiben|to write|','hören|to hear, to listen|','sehen|to see|'],
+  wverb2:['gehen|to go, to walk|','kommen|to come|','fahren|to go (by vehicle), to drive|','fliegen|to fly|','laufen|to run, to walk|','rennen|to run fast|','springen|to jump|','steigen|to climb|',
+    'einsteigen|to get on, to get in|','aussteigen|to get off, to get out|','umsteigen|to change (trains, buses)|','abfahren|to depart|','ankommen|to arrive|','abholen|to pick up|','besuchen|to visit|',
+    'mitkommen|to come along|','zurückkommen|to come back|','weggehen|to go away, to go out|','spazieren gehen|to go for a walk|','umziehen|to move (house)|','bleiben|to stay|','sitzen|to sit|',
+    'sich setzen|to sit down|','stehen|to stand|','liegen|to lie|','legen|to lay, to put (flat)|','stellen|to put (upright)|','hängen|to hang|','stecken|to put (into)|','ziehen|to pull|',
+    'drücken|to push, to press|','halten|to hold, to stop|','folgen|to follow|','überqueren|to cross|','abbiegen|to turn (left, right)|','parken|to park|','reisen|to travel|',
+    'übernachten|to stay the night|','packen|to pack|','verreisen|to go away (on a trip)|','verpassen|to miss (a train)|'],
+  wessen:['Lebensmittel|food, groceries|pl','Mahlzeit|meal|f','Mittagessen|lunch|n','Abendessen|dinner|n','Nachtisch|dessert|m','Vorspeise|starter|f','Hauptgericht|main course|n','Speisekarte|menu|f',
+    'Kellner|waiter|m','Trinkgeld|tip|n','Gabel|fork|f','Messer|knife|n','Löffel|spoon|m','Teller|plate|m','Schüssel|bowl|f','Topf|pot|m','Pfanne|frying pan|f','Herd|cooker, stove|m',
+    'Backofen|oven|m','Zutat|ingredient|f','Salz|salt|n','Pfeffer|pepper|m','Zucker|sugar|m','Öl|oil|n','Mehl|flour|n','Nudeln|pasta|pl','Hähnchen|chicken|n','Rindfleisch|beef|n',
+    'Wurst|sausage|f','Tomate|tomato|f','Zwiebel|onion|f','Knoblauch|garlic|m','Salat|salad, lettuce|m','Gurke|cucumber|f','Karotte|carrot|f','Erdbeere|strawberry|f','Zitrone|lemon|f',
+    'Joghurt|yoghurt|m','Sahne|cream|f','Getränk|drink|n','vegetarisch|vegetarian|','scharf|spicy, sharp|','süß|sweet|','salzig|salty|','lecker|tasty|','schneiden|to cut|','braten|to fry|'],
+  wkoerper:['Gesicht|face|n','Haar|hair|n','Nase|nose|f','Mund|mouth|m','Lippe|lip|f','Zunge|tongue|f','Schulter|shoulder|f','Brust|chest|f','Finger|finger|m','Daumen|thumb|m','Knie|knee|n',
+    'Fuß|foot|m','Haut|skin|f','Herz|heart|n','Magen|stomach|m','Blut|blood|n','Knochen|bone|m','Bart|beard|m','Aussehen|appearance|n','Schmerz|pain|m','Wunde|wound|f','Verletzung|injury|f',
+    'Husten|cough|m','Schnupfen|runny nose, cold|m','Grippe|flu|f','Verband|bandage|m','Pflaster|plaster|n','Salbe|ointment|f','wehtun|to hurt|','sich verletzen|to hurt yourself|',
+    'husten|to cough|','bluten|to bleed|','atmen|to breathe|'],
+  wadj1:['nett|nice|','sympathisch|likeable|','unsympathisch|unpleasant|','unhöflich|rude|','ehrlich|honest|','fleißig|hard-working|','faul|lazy|','zuverlässig|reliable|','geduldig|patient|',
+    'ungeduldig|impatient|','ruhig|calm, quiet|','nervös|nervous|','lustig|funny|','ernst|serious|','klug|clever|','dumm|stupid|','intelligent|intelligent|','neugierig|curious|','schüchtern|shy|',
+    'offen|open|','hilfsbereit|helpful|','großzügig|generous|','ordentlich|tidy|','chaotisch|chaotic|','selbstständig|independent|','ehrgeizig|ambitious|','kreativ|creative|','fröhlich|cheerful|',
+    'traurig|sad|','glücklich|happy|','müde|tired|','wach|awake|','böse|angry, nasty|','wütend|furious|','stolz|proud|','eifersüchtig|jealous|','einsam|lonely|','jung|young|','alt|old|',
+    'schlank|slim|','dick|fat, thick|','hübsch|pretty|','hässlich|ugly|','blond|blond|','lockig|curly|'],
+  wadj2:['neu|new|','groß|big, tall|','klein|small|','lang|long|','kurz|short|','breit|wide|','schmal|narrow|','hoch|high|','niedrig|low|','schwer|heavy, difficult|','leicht|light, easy|',
+    'einfach|simple|','schwierig|difficult|','wichtig|important|','richtig|right, correct|','falsch|wrong|','möglich|possible|','unmöglich|impossible|','nötig|necessary|','sicher|safe, sure|',
+    'gefährlich|dangerous|','sauber|clean|','schmutzig|dirty|','voll|full|','leer|empty|','geschlossen|closed|','kaputt|broken|','teuer|expensive|','billig|cheap|','günstig|good value|',
+    'kostenlos|free of charge|','schnell|fast|','langsam|slow|','früh|early|','spät|late|','laut|loud|','leise|quiet|','hell|bright|','dunkel|dark|','warm|warm|','kalt|cold|','heiß|hot|',
+    'frisch|fresh|','modern|modern|','praktisch|practical|','bekannt|well-known|','fremd|foreign, strange|','gleich|the same|','verschieden|different|','ähnlich|similar|'],
+  weinkauf:['Geschäft|shop|n','Laden|shop|m','Kaufhaus|department store|n','Markt|market|m','Kiosk|kiosk|m','Metzgerei|butcher’s|f','Drogerie|chemist’s (toiletries)|f','Buchhandlung|bookshop|f',
+    'Einkaufszentrum|shopping centre|n','Öffnungszeiten|opening hours|pl','Verkäuferin|sales assistant (female)|f','Kassenzettel|receipt|m','Sonderangebot|special offer|n','Einkaufswagen|shopping trolley|m',
+    'Tüte|bag (paper, plastic)|f','Bargeld|cash|n','Kreditkarte|credit card|f','Wechselgeld|change (money)|n','Münze|coin|f','Schein|banknote|m','Umkleidekabine|changing room|f','Marke|brand|f',
+    'Auswahl|choice, selection|f','Ware|goods|f','Warenkorb|shopping basket (online)|m','anprobieren|to try on|','passen|to fit, to suit|','zurückgeben|to give back, to return|','ausverkauft|sold out|',
+    'geöffnet|open|'],
+  wverkehr:['Verkehr|traffic|m','Auto|car|n','Fahrer|driver|m','Führerschein|driving licence|m','Tankstelle|petrol station|f','Benzin|petrol|n','Parkplatz|parking space|m','Parkhaus|car park|n',
+    'Unfall|accident|m','Polizei|police|f','Straßenbahn|tram|f','Taxi|taxi|n','Schiff|ship|n','Fähre|ferry|f','Abfahrt|departure|f','Ankunft|arrival|f','Fahrplan|timetable|m','Anschluss|connection|m',
+    'Bahnsteig|platform|m','Ausgang|exit|m','Eingang|entrance|m','Gepäck|luggage|n','Rucksack|rucksack|m','Rückfahrkarte|return ticket|f','Sitzplatz|seat|m','Reservierung|reservation|f',
+    'Grenze|border|f','Ausland|abroad, foreign countries|n','Unterkunft|accommodation|f','Jugendherberge|youth hostel|f','Ferienwohnung|holiday flat|f','Rezeption|reception (desk)|f',
+    'Doppelzimmer|double room|n','Einzelzimmer|single room|n','Sehenswürdigkeit|sight, attraction|f','Stadtplan|city map|m','Richtung|direction|f','Umleitung|diversion|f','direkt|direct|',
+    'links|left|','rechts|right|'],
+  wmenschen:['Mensch|person, human being|m','Leute|people|pl','Erwachsene|adult|m','Jugendliche|teenager|m','Ehemann|husband|m','Ehefrau|wife|f','Partner|partner|m','Partnerin|partner (female)|f',
+    'Paar|couple|n','Hochzeit|wedding|f','Ehe|marriage|f','Scheidung|divorce|f','geschieden|divorced|','verlobt|engaged|','Geburt|birth|f','Geburtstag|birthday|m','Kindheit|childhood|f',
+    'Jugend|youth|f','Alter|age, old age|n','Tod|death|m','Enkel|grandson|m','Enkelin|granddaughter|f','Cousin|cousin (male)|m','Cousine|cousin (female)|f','Neffe|nephew|m','Nichte|niece|f',
+    'Schwiegermutter|mother-in-law|f','Verwandte|relative|m','Bekannte|acquaintance|m','Gast|guest|m','Gastgeber|host|m','Beziehung|relationship|f','Freundschaft|friendship|f','Liebe|love|f',
+    'Streit|argument, quarrel|m','sich streiten|to argue|','sich verstehen|to get on (with)|','heiraten|to marry|','sich trennen|to split up|','kennenlernen|to get to know|','Vertrauen|trust|n',
+    'Respekt|respect|m','Feier|celebration, party|f','Geschenk|present|n'],
+  whaushalt:['Haushalt|household|m','Möbel|furniture|pl','Teppich|carpet, rug|m','Vorhang|curtain|m','Spiegel|mirror|m','Kissen|cushion, pillow|n','Decke|blanket, ceiling|f','Wand|wall|f',
+    'Boden|floor|m','Keller|cellar, basement|m','Dach|roof|n','Garten|garden|m','Garage|garage|f','Flur|hall, corridor|m','Toilette|toilet|f','Dusche|shower|f','Badewanne|bath tub|f',
+    'Waschbecken|washbasin|n','Waschmaschine|washing machine|f','Spülmaschine|dishwasher|f','Mikrowelle|microwave|f','Staubsauger|vacuum cleaner|m','Heizung|heating|f','Licht|light|n',
+    'Stockwerk|floor, storey|n','Erdgeschoss|ground floor|n','Aufzug|lift|m','Hausmeister|caretaker|m','Nachbar|neighbour|m','Nachbarin|neighbour (female)|f','Mieter|tenant|m',
+    'Hausordnung|house rules|f','Mülltonne|bin|f','Klingel|doorbell|f','Briefkasten|letterbox|m','Umzug|move (house)|m','Kaltmiete|rent without heating and bills|f','Warmmiete|rent including heating|f',
+    'möbliert|furnished|','gemütlich|cosy|'],
+  wverb3:['sagen|to say|','sprechen|to speak|','reden|to talk|','erzählen|to tell|','fragen|to ask|','antworten|to answer|','erklären|to explain|','beschreiben|to describe|','berichten|to report|',
+    'diskutieren|to discuss|','vorschlagen|to suggest|','empfehlen|to recommend|','versprechen|to promise|','bitten|to ask (for), to request|','danken|to thank|','grüßen|to greet|','rufen|to call, to shout|',
+    'lachen|to laugh|','weinen|to cry|','lächeln|to smile|','denken|to think|','glauben|to believe, to think|','meinen|to mean, to think|','wissen|to know (a fact)|','kennen|to know (a person, a place)|',
+    'verstehen|to understand|','vergessen|to forget|','sich erinnern|to remember|','hoffen|to hope|','wünschen|to wish|','mögen|to like|','lieben|to love|','hassen|to hate|','gefallen|to be liked, to please|',
+    'sich fühlen|to feel|','sich freuen|to be happy|','sich ärgern|to be annoyed|','sich wundern|to be surprised|','zustimmen|to agree|','widersprechen|to contradict|','entscheiden|to decide|',
+    'überlegen|to think about, to consider|','vergleichen|to compare|'],
+  wverbprep:['warten auf + Akk.|to wait for|','sich freuen auf + Akk.|to look forward to|','sich freuen über + Akk.|to be happy about|','denken an + Akk.|to think of|','sich erinnern an + Akk.|to remember|',
+    'sich interessieren für + Akk.|to be interested in|','sich kümmern um + Akk.|to take care of|','sich bewerben um + Akk.|to apply for|','bitten um + Akk.|to ask for|','sich ärgern über + Akk.|to be annoyed about|',
+    'sich beschweren über + Akk.|to complain about|','sprechen über + Akk.|to talk about|','sprechen mit + Dat.|to talk to|','sich unterhalten mit + Dat.|to chat with|','telefonieren mit + Dat.|to be on the phone with|',
+    'anfangen mit + Dat.|to start with|','aufhören mit + Dat.|to stop (doing)|','helfen bei + Dat.|to help with|','sich bedanken bei + Dat.|to thank (someone)|','sich entschuldigen bei + Dat.|to apologise to|',
+    'teilnehmen an + Dat.|to take part in|','arbeiten an + Dat.|to work on|','Angst haben vor + Dat.|to be afraid of|','träumen von + Dat.|to dream of|','erzählen von + Dat.|to tell about|',
+    'abhängen von + Dat.|to depend on|','sich verabschieden von + Dat.|to say goodbye to|','einladen zu + Dat.|to invite to|','gratulieren zu + Dat.|to congratulate on|','passen zu + Dat.|to go with, to suit|',
+    'sich gewöhnen an + Akk.|to get used to|','sich verlassen auf + Akk.|to rely on|','sich vorbereiten auf + Akk.|to prepare for|','achten auf + Akk.|to pay attention to|',
+    'sich konzentrieren auf + Akk.|to concentrate on|','reagieren auf + Akk.|to react to|','sich verlieben in + Akk.|to fall in love with|','glauben an + Akk.|to believe in|'],
+  wverb4:['anfangen|to begin|','beginnen|to begin, to start|','aufhören|to stop|','beenden|to end, to finish|','erledigen|to get done|','organisieren|to organise|','planen|to plan|','vorbereiten|to prepare|',
+    'kontrollieren|to check|','prüfen|to check, to test|','verbessern|to improve|','entwickeln|to develop|','herstellen|to produce|','verdienen|to earn|','ausgeben|to spend (money)|','leihen|to lend, to borrow|',
+    'mieten|to rent|','vermieten|to let, to rent out|','verbieten|to forbid|','erlauben|to allow|','schaffen|to manage (to do)|','versuchen|to try|','gewinnen|to win|','teilnehmen|to take part|',
+    'abgeben|to hand in|','unterstützen|to support|','helfen|to help|','zeigen|to show|','üben|to practise|','informieren|to inform|','einladen|to invite|','absagen|to cancel (a meeting)|',
+    'verschieben|to postpone|','vereinbaren|to arrange, to agree on|','besprechen|to discuss|','verhandeln|to negotiate|','schicken|to send|','ausdrucken|to print out|','kopieren|to copy|','erfahren|to find out|'],
+  wnatur:['Himmel|sky|m','Wolke|cloud|f','Gewitter|thunderstorm|n','Blitz|lightning|m','Nebel|fog|m','Eis|ice, ice cream|n','Temperatur|temperature|f','Grad|degree|n','Wetterbericht|weather forecast|m',
+    'Hitze|heat|f','Kälte|cold|f','bewölkt|cloudy|','windig|windy|','nass|wet|','trocken|dry|','Fluss|river|m','See|lake|m','Insel|island|f','Küste|coast|f','Wüste|desert|f','Tal|valley|n',
+    'Hügel|hill|m','Feld|field|n','Wiese|meadow|f','Baum|tree|m','Blume|flower|f','Gras|grass|n','Stein|stone|m','Erde|earth, soil|f','Landschaft|landscape|f','Hund|dog|m','Katze|cat|f',
+    'Vogel|bird|m','Pferd|horse|n','Kuh|cow|f','Schaf|sheep|n','Huhn|chicken (animal)|n','Insekt|insect|n','Haustier|pet|n','Bauernhof|farm|m'],
+  wfreizeit:['Theater|theatre|n','Oper|opera|f','Ausstellung|exhibition|f','Eintritt|admission|m','Eintrittskarte|ticket (admission)|f','Vorstellung|performance|f','Film|film|m','Schauspieler|actor|m',
+    'Sänger|singer|m','Lied|song|n','Bild|picture|n','Foto|photo|n','Kunst|art|f','Künstler|artist|m','Roman|novel|m','Gedicht|poem|n','Festival|festival|n','Veranstaltung|event|f','Spieler|player|m',
+    'Trainer|coach|m','Training|training|n','Tor|goal, gate|n','Sieg|victory|m','Niederlage|defeat|f','Ergebnis|result|n','Wettbewerb|competition|m','Fußball|football|m','Mitglied|member|n',
+    'Kurs|course|m','Spaziergang|walk|m','Picknick|picnic|n','malen|to paint|','singen|to sing|','tanzen|to dance|','fotografieren|to take photos|','trainieren|to train|','schwimmen|to swim|'],
+  wgesell:['Gesellschaft|society|f','Politik|politics|f','Regierung|government|f','Staat|state|m','Land|country, countryside|n','Bundesland|federal state|n','Hauptstadt|capital|f','Bürger|citizen|m',
+    'Einwohner|inhabitant|m','Bevölkerung|population|f','Wahl|election, choice|f','wählen|to vote, to choose|','Partei|political party|f','Gesetz|law|n','Recht|right, law|n','Pflicht|duty|f',
+    'Demokratie|democracy|f','Gleichberechtigung|equal rights|f','Integration|integration|f','Einwanderer|immigrant|m','Ausländer|foreigner|m','Staatsangehörigkeit|citizenship|f','Kultur|culture|f',
+    'Religion|religion|f','Tradition|tradition|f','Sprache|language|f','Armut|poverty|f','Arbeitslosigkeit|unemployment|f','arbeitslos|unemployed|','Rente|pension|f','Krieg|war|m','Frieden|peace|m',
+    'Flüchtling|refugee|m','Hilfe|help|f','Spende|donation|f','Ehrenamt|voluntary work|n','Verantwortung|responsibility|f','Entwicklung|development|f'],
+};
+const W_LESSONS = [
+  // [id, after, theme, title, sub, intro, examples]
+  ['w-zeit', 'zeit', 'wzeit', 'Monate, Feste & Termine', 'Months, seasons, holidays, how often',
+   `<p>The months, the seasons and the words for “when”. With a date you say <i>am</i>: <i>am 3. Mai</i> (am dritten Mai). With a month or a season you say <i>im</i>: <i>im Mai, im Sommer</i>.</p><p class="tip">All months, seasons and times of day are masculine except <i>die Nacht</i> and <i>die Mitternacht</i>: <i>der Mai, der Sommer, der Abend</i>.</p>`,
+   [['Mein Geburtstag ist im Juni.','My birthday is in June.'],['Am Feiertag sind die Geschäfte geschlossen.','On the public holiday the shops are closed.']]],
+  ['w-zahl', 'w-zeit', 'wzahl', 'Zahlen, Mengen & Maße', 'Numbers, amounts, packets and kilos',
+   `<p>How much and how many: numbers, weights and the packaging words you need in the supermarket.</p><p class="tip">After a number, measures stay singular: <i>zwei Kilo Äpfel, drei Liter Milch</i>. Containers get a plural: <i>zwei Flaschen Wasser, drei Dosen</i>.</p>`,
+   [['Ich hätte gern ein Kilo Tomaten und zwei Flaschen Wasser.','I’d like a kilo of tomatoes and two bottles of water.'],['Die Hälfte der Klasse ist krank.','Half of the class is ill.']]],
+  ['w-klein', 'a2-negation', 'wklein', 'Kleine Wörter: wann, wie oft, wie', 'Adverbs you need in every sentence',
+   `<p>Small words make your German sound natural: how often (<i>immer, oft, nie</i>), when (<i>jetzt, später, damals</i>) and how sure you are (<i>vielleicht, wahrscheinlich, sicher</i>).</p><p class="tip">An adverb at the start takes position 1, so the verb comes next: <i>Manchmal <b>gehe</b> ich joggen. Leider <b>habe</b> ich keine Zeit.</i></p>`,
+   [['Ich trinke morgens immer Tee.','I always drink tea in the morning.'],['Leider habe ich heute keine Zeit.','Unfortunately I don’t have time today.']]],
+  ['w-verb1', 'a2-modal', 'wverb1', 'Verben 1: Mein Alltag', 'Getting up, cooking, shopping, cleaning',
+   `<p>The verbs of an ordinary day, from <i>aufstehen</i> to <i>einschlafen</i>. Many are separable: the first part goes to the end.</p><p class="tip"><i>aufstehen → Ich stehe um 7 Uhr auf. einkaufen → Wir kaufen am Samstag ein.</i> Reflexive verbs take a pronoun: <i>Ich ziehe mich an.</i></p>`,
+   [['Ich stehe um sechs Uhr auf und dusche.','I get up at six and have a shower.'],['Am Samstag räumen wir die Wohnung auf.','On Saturday we tidy the flat.']]],
+  ['w-verb2', 'a2-trennbar', 'wverb2', 'Verben 2: Unterwegs', 'Going, arriving, putting things somewhere',
+   `<p>Moving around and putting things in place. <i>gehen</i> is on foot; with a bus, a train or a car you say <i>fahren</i>.</p><p class="tip">Two pairs that learners mix up: <i>stellen</i> (put upright) and <i>legen</i> (put flat) answer “wohin?” with the Akkusativ; <i>stehen</i> and <i>liegen</i> answer “wo?” with the Dativ: <i>Ich lege das Buch auf den Tisch. Das Buch liegt auf dem Tisch.</i></p>`,
+   [['In Köln muss ich umsteigen.','I have to change trains in Cologne.'],['Ich lege den Schlüssel auf den Tisch.','I put the key on the table.']]],
+  ['w-essen', 'freizeit', 'wessen', 'Kochen & Restaurant', 'In the kitchen and at the restaurant',
+   `<p>Cooking at home and ordering in a restaurant. In Germany you usually pay at the table and give about 5 to 10 percent <i>Trinkgeld</i>.</p><p class="tip">To order politely: <i>Ich hätte gern …</i> or <i>Ich nehme …</i> To pay: <i>Die Rechnung, bitte!</i> or <i>Zahlen, bitte!</i></p>`,
+   [['Ich hätte gern die Speisekarte, bitte.','I’d like the menu, please.'],['Zuerst schneidest du die Zwiebeln.','First you cut the onions.']]],
+  ['w-koerper', 'gesundheit', 'wkoerper', 'Körper & Verletzungen', 'More body parts, injuries and colds',
+   `<p>More of the body, and what to say when something hurts. <i>wehtun</i> works like this: <i>Mein Knie tut weh. Meine Füße tun weh.</i></p><p class="tip">With body parts German often uses the Dativ instead of “my”: <i>Ich habe mir das Bein verletzt.</i> (I hurt my leg.)</p>`,
+   [['Mein Rücken tut seit gestern weh.','My back has been hurting since yesterday.'],['Ich habe mir in den Finger geschnitten.','I cut my finger.']]],
+  ['w-adj1', 'a2-adjektiv', 'wadj1', 'Adjektive 1: Menschen', 'Character, feelings and looks',
+   `<p>Words to describe people: character, mood and appearance. You need them for job interviews (<i>zuverlässig, geduldig, fleißig</i>) and for talking about friends.</p><p class="tip">Many have an opposite with <i>un-</i>: <i>geduldig – ungeduldig, höflich – unhöflich, sympathisch – unsympathisch</i>.</p>`,
+   [['Meine Kollegin ist sehr hilfsbereit.','My colleague is very helpful.'],['Ich bin zuverlässig und arbeite gern im Team.','I am reliable and like working in a team.']]],
+  ['w-adj2', 'a2-komparativ', 'wadj2', 'Adjektive 2: Dinge & Situationen', 'Big or small, easy or hard, cheap or expensive',
+   `<p>The adjectives you use every day for things and situations, best learned in pairs of opposites: <i>teuer – billig, schwer – leicht, laut – leise</i>.</p><p class="tip">Before a noun they take an ending, after <i>sein</i> they don’t: <i>ein schweres Problem</i> but <i>Das Problem ist schwer.</i></p>`,
+   [['Die Wohnung ist hell, aber leider sehr teuer.','The flat is bright, but unfortunately very expensive.'],['Ist das wirklich nötig?','Is that really necessary?']]],
+  ['w-einkauf', 'kleidung', 'weinkauf', 'Einkaufen & Geschäfte', 'Shops, paying, returning things',
+   `<p>Where to buy what, and the words at the checkout. Many shops in Germany close on Sundays.</p><p class="tip">Keep the <i>Kassenzettel</i>: without it you usually can’t return or exchange something.</p>`,
+   [['Kann ich mit Karte bezahlen?','Can I pay by card?'],['Die Schuhe passen leider nicht.','Unfortunately the shoes don’t fit.']]],
+  ['w-verkehr', 'reisen', 'wverkehr', 'Verkehr & Unterwegs', 'Cars, trains, hotels and directions',
+   `<p>Getting around: by car, train, tram or ferry, and finding a place to sleep.</p><p class="tip">The station words you hear in every announcement: <i>Abfahrt, Ankunft, Gleis, Bahnsteig, Anschluss, Verspätung</i>.</p>`,
+   [['Wo ist die nächste Tankstelle?','Where is the nearest petrol station?'],['Haben Sie noch ein Einzelzimmer frei?','Do you still have a single room available?']]],
+  ['w-menschen', 'a2-reflexiv', 'wmenschen', 'Menschen & Beziehungen', 'Family, friends, love and life events',
+   `<p>People in your life and the big events: birth, wedding, birthdays, and also arguments and making up.</p><p class="tip">Words like <i>der/die Verwandte, der/die Bekannte, der/die Erwachsene</i> are adjectives used as nouns, so they take adjective endings: <i>ein Verwandter, eine Verwandte, meine Verwandten</i>.</p>`,
+   [['Meine Cousine heiratet im Sommer.','My cousin is getting married in the summer.'],['Wir verstehen uns sehr gut.','We get on very well.']]],
+  ['w-haushalt', 'behoerden', 'whaushalt', 'Haushalt & Haus', 'Rooms, appliances, neighbours, rent',
+   `<p>The words for your flat and your building. When you look for a flat, check if the price is <i>Kaltmiete</i> or <i>Warmmiete</i>.</p><p class="tip">Every building has a <i>Hausordnung</i>: quiet hours (<i>Ruhezeit</i>) are usually from 22 to 6 o’clock and often at lunchtime on Sundays.</p>`,
+   [['Die Waschmaschine ist im Keller.','The washing machine is in the basement.'],['Die Kaltmiete beträgt 450 Euro.','The rent without bills is 450 euros.']]],
+  ['w-verb3', 'a2-wenn-ob', 'wverb3', 'Verben 3: Sprechen, Denken, Fühlen', 'Say, explain, believe, remember',
+   `<p>Verbs for talking, thinking and feeling. Important pair: <i>wissen</i> is to know a fact, <i>kennen</i> is to know a person or a place: <i>Ich weiß, wo er wohnt. Ich kenne ihn.</i></p><p class="tip"><i>gefallen</i> works the other way round from “like”: the thing is the subject, the person is in the Dativ. <i>Die Stadt gefällt mir.</i> (I like the city.)</p>`,
+   [['Kannst du mir das bitte erklären?','Can you explain that to me, please?'],['Ich erinnere mich gern an meine Kindheit.','I like remembering my childhood.']]],
+  ['w-verbprep', 'a2-verbprep', 'wverbprep', 'Verben mit Präposition', 'The 38 you hear most',
+   `<p>Many verbs come with a fixed preposition, and the preposition decides the case. Learn them as one block: <i>warten auf + Akkusativ, Angst haben vor + Dativ</i>.</p><p class="tip">To ask about a thing, use <i>wo(r) + preposition</i>: <i>Worauf wartest du? Wovor hast du Angst?</i> To refer back to it, use <i>da(r) +</i>: <i>Ich warte darauf.</i></p>`,
+   [['Ich warte auf den Bus.','I’m waiting for the bus.'],['Sie interessiert sich für Politik.','She’s interested in politics.']]],
+  ['w-verb4', 'betrieb', 'wverb4', 'Verben 4: Arbeit & Erledigungen', 'Plan, check, send, earn',
+   `<p>Verbs for work and for getting things done: plan, prepare, check, send, earn and spend.</p><p class="tip">Many verbs with <i>ver-</i>, <i>be-</i>, <i>er-</i> and <i>ent-</i> never separate and take no <i>ge-</i> in the Perfekt: <i>verdienen → hat verdient, besprechen → hat besprochen, erledigen → hat erledigt</i>.</p>`,
+   [['Ich habe alles erledigt.','I’ve got everything done.'],['Können wir den Termin auf Freitag verschieben?','Can we move the appointment to Friday?']]],
+  ['w-natur', 'b1-wort-bildung', 'wnatur', 'Natur, Wetter & Tiere', 'Landscape, weather report, animals',
+   `<p>Nature, the weather report and animals: a frequent topic in Goethe B1 listening texts (weather reports, announcements) and in small talk.</p><p class="tip">Weather sentences often start with <i>es</i>: <i>Es regnet. Es ist windig. Es gibt Gewitter.</i></p>`,
+   [['Morgen wird es bewölkt und windig.','Tomorrow it will be cloudy and windy.'],['Am Wochenende fahren wir an einen See.','At the weekend we’re going to a lake.']]],
+  ['w-freizeit', 'w-natur', 'wfreizeit', 'Freizeit, Sport & Kultur', 'Theatre, music, football, clubs',
+   `<p>Culture and sport: a typical topic for the B1 exam (Sprechen Teil 1 often plans an outing) and for your free time.</p><p class="tip">In Germany many people do sport in a <i>Verein</i> (club). Becoming a <i>Mitglied</i> is a great way to speak German every week.</p>`,
+   [['Hast du Lust, am Samstag ins Theater zu gehen?','Do you fancy going to the theatre on Saturday?'],['Unsere Mannschaft hat das Spiel gewonnen.','Our team won the match.']]],
+  ['w-gesell', 'w-freizeit', 'wgesell', 'Gesellschaft & Politik', 'State, elections, integration',
+   `<p>The words for society and politics that appear in newspaper texts in the B1 reading exam and in the Orientierungskurs.</p><p class="tip">Germany has 16 <i>Bundesländer</i>. The capital is Berlin. Citizens vote for the Bundestag every four years.</p>`,
+   [['In Deutschland gibt es 16 Bundesländer.','There are 16 federal states in Germany.'],['Viele Menschen machen ein Ehrenamt.','Many people do voluntary work.']]],
+];
+{
+  const have = new Set(VOCAB.map(v => v.de.toLowerCase()));
+  for (const th in VOCAB_W) for (const s of VOCAB_W[th]){
+    const [de, en, g] = s.split('|');
+    if (have.has(de.toLowerCase())) continue;
+    have.add(de.toLowerCase());
+    const v = {id:th + ':' + de, de, en, g, th}; VOCAB.push(v); VBYID[v.id] = v;
+  }
+  Object.assign(THEMES, {wzeit:'Monate, Feste & Termine', wzahl:'Zahlen, Mengen & Maße', wklein:'Kleine Wörter', wverb1:'Verben: Alltag', wverb2:'Verben: Unterwegs', wessen:'Kochen & Restaurant',
+    wkoerper:'Körper & Verletzungen', wadj1:'Adjektive: Menschen', wadj2:'Adjektive: Dinge', weinkauf:'Einkaufen & Geschäfte', wverkehr:'Verkehr & Unterwegs', wmenschen:'Menschen & Beziehungen',
+    whaushalt:'Haushalt & Haus', wverb3:'Verben: Sprechen & Denken', wverbprep:'Verben mit Präposition', wverb4:'Verben: Arbeit', wnatur:'Natur, Wetter & Tiere', wfreizeit:'Freizeit, Sport & Kultur', wgesell:'Gesellschaft & Politik'});
+  for (const [id, after, th, title, sub, intro, ex] of W_LESSONS){
+    const anchor = LESSONS.find(l => l.id === after), nouns = VOCAB.filter(v => v.th === th && ['m','f','n'].includes(v.g)).length;
+    const l = {id, level:anchor.level, kind:'Wortschatz', title, sub, th, intro, ex, drills: nouns >= 8 ? [['meaning',6,{th}],['gender',4,{th}]] : [['meaning',10,{th}]]};
+    LESSONS.splice(LESSONS.indexOf(anchor) + 1, 0, l);
+    const st = STAGES.find(s => s.ids.includes(after)); st.ids.splice(st.ids.indexOf(after) + 1, 0, id);
+  }
+}
+Object.assign(RES, {
+  'w-zeit': {b:[], v:[['dx_oH72IQHY', 'Months, days of the week and seasons', 'Deutsch mit Esther'], ['b4ki5lMyd4Q', 'Nicos Weg: Jahreszeiten', 'DW Deutsch lernen']]},
+  'w-zahl': {b:[], v:[['N41zEuOOnRM', 'Lebensmittel und Verpackungen', 'Benjamin – Der Deutschlehrer'], ['jVD23_LF5lw', 'Vocabulary: Lebensmittel', 'Learn German with Pictures']]},
+  'w-klein': {b:[], v:[['bgntEB5I5fI', 'nie, selten, manchmal, oft, immer', 'YourGermanTeacher'], ['nFBOwzDCzrg', 'Zeitadverbien (A1)', 'Learn German']]},
+  'w-verb1': {b:[], v:[['YwRv9SQNi3c', 'Tagesablauf: daily routine', 'Learn German'], ['ZGaDIykqmwQ', 'Tagesablauf', 'Learn German with Anja']]},
+  'w-verb2': {b:[], v:[['J4Y5os6gHxI', 'German verbs: gehen', 'Easy German'], ['PamWWiDNAJQ', 'laufen or gehen?', 'lingoni GERMAN']]},
+  'w-essen': {b:[], v:[['TJHUJqS5rtw', 'Wortschatz: in der Küche', 'Learn German with Pictures'], ['PjsAl-sE9g0', 'Küchen-Wortschatz', 'Dein Sprachcoach']]},
+  'w-koerper': {b:[], v:[['Ete-ii0Flkw', 'Die Körperteile', 'Learn German'], ['6lrzsRqsr9w', 'Körperteile', 'Andrea Thionville']]},
+  'w-adj1': {b:[], v:[['CRH-du5d4Qc', 'Charaktereigenschaften (A2–B1)', 'Benjamin – Der Deutschlehrer'], ['eGjhpdELULw', '30+ Adjektive für den Charakter', 'Deutsch mit Laura und Theresa']]},
+  'w-adj2': {b:[], v:[['u3X3D9T_jAc', '50 adjectives and opposites (A2)', 'lingoni GERMAN'], ['PARun113NuA', 'Adjektive und Gegenteile', 'Learn German']]},
+  'w-einkauf': {b:[], v:[['D91icSuPYQ4', 'Supermarket in slow German', 'Easy German'], ['dOYXFvBRP5M', 'Einkaufen gehen: Vokabeln', 'Karina Multilingual']]},
+  'w-verkehr': {b:[], v:[['GntiesUnVp8', 'Public transport in German', 'Learn German with Anja'], ['zMAaMpmLqs0', 'Verkehrsmittel', 'Learn German']]},
+  'w-menschen': {b:[], v:[['47CVuWmpKjw', 'B1: Beziehungen, Freunde, Familie', 'DeutschTurbo'], ['BFBsBKUapEI', 'Über Familie und Beziehungen sprechen', 'einfach Deutsch mit Flora']]},
+  'w-haushalt': {b:[], v:[['PKK476h0xEw', '60 words for cleaning the house', 'Easy German'], ['Dx5cB5F47jo', 'Haushalt und Hausarbeit', 'Super Deutsch']]},
+  'w-verb3': {b:[], v:[['4UGzdOMbcYA', 'sprechen, sagen, reden und mehr', 'Andrea Thionville'], ['Mt7J94wuYz0', 'sagen, reden, sprechen, erzählen', 'Learn German Relaxed with Gabriel']]},
+  'w-verbprep': {b:[], v:[['Hjiy_ogekcw', '14 verb + preposition combinations (B1)', 'Easy German'], ['IgpcecscR6M', 'Verben mit Präpositionen', 'Benjamin – Der Deutschlehrer']]},
+  'w-verb4': {b:[], v:[['63HM0fvtbm4', '100 essential words for the B1 exam', 'Deutsch mit Mira'], ['s2u6k8mJN90', 'B1 words you should know', 'ExpertlyGerman']]},
+  'w-natur': {b:[], v:[['N7Wsu29tPi0', '50+ Alltagswörter über die Natur', 'Deutsch mit Spass'], ['e8x3B6Ac8qQ', 'Wortschatz: Haustiere', 'Learn German with Pictures']]},
+  'w-freizeit': {b:[], v:[['nuGpXkhxx6o', 'How Germans spend their free time', 'Easy German'], ['p3CTSPJ9IM4', 'Hobbys und Sport (A2 podcast)', 'Deutsch Doppel']]},
+  'w-gesell': {b:[], v:[['mLlApx5s3IM', 'Politik und Wahlen: Wortschatz', 'Deutsch plus'], ['VrsS38OWC-g', 'B1 politics vocabulary', 'Germantoon']]}});
+Object.assign(SEARCH_TERMS, {'w-zeit':'Monate Jahreszeiten Datum Feiertag months', 'w-zahl':'Zahlen Mengen Maße numbers', 'w-klein':'Adverbien Häufigkeit adverbs', 'w-verb1':'Verben Alltag Tagesablauf verbs',
+  'w-verb2':'Verben Bewegung stellen legen verbs', 'w-essen':'Kochen Restaurant Küche', 'w-koerper':'Körper Verletzung body', 'w-adj1':'Adjektive Charakter adjectives', 'w-adj2':'Adjektive Gegenteile adjectives',
+  'w-einkauf':'Einkaufen Geschäft shopping', 'w-verkehr':'Verkehr Bahn Hotel', 'w-menschen':'Beziehungen Familie Hochzeit', 'w-haushalt':'Haushalt Wohnung Miete', 'w-verb3':'Verben sprechen denken verbs',
+  'w-verbprep':'Verben mit Präposition verbs prepositions', 'w-verb4':'Verben Arbeit verbs', 'w-natur':'Natur Wetter Tiere weather', 'w-freizeit':'Freizeit Sport Kultur', 'w-gesell':'Gesellschaft Politik politics'});
+// ---- Four B1 grammar topics that were missing (added 2026-10-03) ----
+const BANK_G4 = {
+  konj2past:[
+    'Wenn ich mehr gelernt ___, hätte ich die Prüfung bestanden.|hätte|habe;wäre|Unreal past: hätte + Partizip II. lernen takes haben.|If I had studied more, I would have passed the exam.',
+    'Wenn du früher gekommen ___, hättest du Ali gesehen.|wärst|hättest;bist|kommen takes sein, so: wärst … gekommen.|If you had come earlier, you would have seen Ali.',
+    'Ich ___ dir gern geholfen, aber ich hatte keine Zeit.|hätte|habe;wäre|hätte + Partizip II: something that did not happen.|I would gladly have helped you, but I had no time.',
+    'Wir wären gern länger ___.|geblieben|bleiben;bleibt|wären + Partizip II at the end.|We would have liked to stay longer.',
+    'Das ___ ich nicht gedacht!|hätte|wäre;habe|denken takes haben: hätte gedacht.|I wouldn’t have thought that!',
+    'Fast ___ ich den Bus verpasst.|hätte|wäre;habe|fast + Konjunktiv II: it almost happened, but it didn’t.|I almost missed the bus.',
+    'Ohne deine Hilfe ___ ich das nicht geschafft.|hätte|wäre;habe|schaffen takes haben.|Without your help I wouldn’t have managed it.',
+    'Du hättest mich anrufen ___.|sollen|gesollt;soll|With a modal verb: hätte + infinitive + modal infinitive.|You should have called me.',
+    'Ich hätte früher aufstehen ___.|müssen|gemusst;muss|hätte … müssen = should have, would have had to.|I should have got up earlier.',
+    'Wenn es nicht geregnet hätte, ___ wir an den See gefahren.|wären|hätten;sind|fahren (movement) takes sein: wären gefahren.|If it hadn’t rained, we would have driven to the lake.',
+    'An deiner Stelle ___ ich das nicht gesagt.|hätte|wäre;habe|An deiner Stelle = in your place. hätte gesagt.|If I were you, I wouldn’t have said that.',
+    'Wenn ich das gewusst ___, wäre ich nicht gekommen.|hätte|wäre;hatte|wissen takes haben. hatte is the real past, hätte the unreal one.|If I had known that, I wouldn’t have come.'],
+  ohnestatt:[
+    'Er ist gegangen, ohne sich ___ verabschieden.|zu|um;dass|ohne … zu + infinitive at the end.|He left without saying goodbye.',
+    '___ zu lernen, hat er die ganze Nacht gespielt.|Statt|Ohne;Um|statt … zu = instead of doing something.|Instead of studying, he played all night.',
+    'Sie hat das Formular unterschrieben, ohne es zu ___.|lesen|liest;gelesen|ohne … zu + infinitive.|She signed the form without reading it.',
+    'Er hat mein Fahrrad genommen, ohne ___ ich es wusste.|dass|zu;ob|Two different subjects (er … ich): ohne dass + verb at the end.|He took my bike without me knowing.',
+    'Statt mit dem Auto zu fahren, ___ ich mit dem Fahrrad.|fahre|fahren;zu fahren|The statt-part is position 1, so the verb of the main clause comes next.|Instead of going by car, I go by bike.',
+    'Man kann nicht gut Deutsch lernen, ohne viel ___ sprechen.|zu|um;dass|ohne … zu.|You can’t learn German well without speaking a lot.',
+    'Er hat angerufen, statt eine E-Mail zu ___.|schreiben|schreibt;geschrieben|statt … zu + infinitive.|He phoned instead of writing an e-mail.',
+    'Ich bin ins Bett gegangen, ohne zu ___.|essen|esse;gegessen|ohne zu + infinitive.|I went to bed without eating.',
+    'Wir sind losgefahren, ___ auf Tom zu warten.|ohne|um;dass|ohne … zu = without doing something.|We drove off without waiting for Tom.',
+    '___ ich etwas sagen konnte, hat er aufgelegt.|Ohne dass|Ohne;Statt|Two different subjects (ich … er): ohne dass.|He hung up before I could say anything.',
+    'Sie sieht fern, ___ ihre Hausaufgaben zu machen.|statt|ohne dass;dass|statt … zu: instead of doing her homework.|She watches TV instead of doing her homework.',
+    'Er hat die Prüfung bestanden, ohne viel ___ haben.|gelernt zu|zu gelernt;lernen zu|For an earlier action: ohne + Partizip II + zu haben.|He passed the exam without having studied much.'],
+  lassen:[
+    'Ich ___ mein Auto reparieren.|lasse|lässt;lassen|ich → lasse. lassen + infinitive = to have something done.|I’m having my car repaired.',
+    'Er ___ sich die Haare schneiden.|lässt|lasst;lasse|er → lässt (a becomes ä).|He’s having his hair cut.',
+    'Meine Eltern ___ mich nicht allein reisen.|lassen|lässt;lasst|sie (they) → lassen. Here lassen = to allow.|My parents don’t let me travel alone.',
+    'Ich habe meinen Pass verlängern ___.|lassen|gelassen;lässt|Perfekt with another verb: haben + infinitive + lassen, not gelassen.|I’ve had my passport renewed.',
+    '___ Sie mich bitte ausreden!|Lassen|Lässt;Lass|Sie-imperative: Lassen Sie …|Please let me finish!',
+    '___ uns ins Kino gehen!|Lass|Lasst;Lassen|Lass uns … = let’s … (to one friend).|Let’s go to the cinema!',
+    'Wo ___ du deine Schuhe reparieren?|lässt|lasst;lasse|du → lässt.|Where do you have your shoes repaired?',
+    'Ich habe meinen Schlüssel zu Hause ___.|gelassen|lassen;lässt|Without another verb the Partizip is gelassen (to leave something somewhere).|I left my key at home.',
+    'Das Fenster lässt sich nicht ___.|öffnen|geöffnet;öffnet|sich lassen + infinitive = can be done.|The window won’t open.',
+    'Der Chef hat uns früher nach Hause gehen ___.|lassen|gelassen;lässt|Perfekt with another verb: hat … gehen lassen.|The boss let us go home earlier.',
+    'Kannst du mich bitte dein Handy benutzen ___?|lassen|gelassen;lässt|After a modal verb the infinitive lassen goes to the end.|Can you let me use your phone, please?',
+    'Wir ___ die Wohnung renovieren.|lassen|lässt;lasst|wir → lassen.|We’re having the flat renovated.'],
+  refldat:[
+    'Ich wasche ___ die Hände.|mir|mich;mein|There is another object (die Hände), so the reflexive pronoun is Dativ: mir.|I’m washing my hands.',
+    'Ich wasche ___.|mich|mir;sich|No other object: Akkusativ mich.|I’m having a wash.',
+    'Putzt du ___ die Zähne?|dir|dich;sich|Another object (die Zähne) → Dativ dir.|Are you brushing your teeth?',
+    'Ich muss ___ das gut überlegen.|mir|mich;sich|sich (Dat.) etwas überlegen = to think something over.|I have to think that over carefully.',
+    'Kannst du ___ das vorstellen?|dir|dich;sich|sich (Dat.) etwas vorstellen = to imagine something.|Can you imagine that?',
+    'Er hat ___ ein neues Handy gekauft.|sich|ihm;ihn|er → sich, the same in Dativ and Akkusativ.|He bought himself a new phone.',
+    'Ich ziehe ___ die Jacke an.|mir|mich;meine|A piece of clothing as the object → Dativ mir.|I’m putting my jacket on.',
+    'Ich ziehe ___ an.|mich|mir;sich|No other object → Akkusativ mich.|I’m getting dressed.',
+    'Das kann ich ___ nicht leisten.|mir|mich;sich|sich (Dat.) etwas leisten = to afford something.|I can’t afford that.',
+    'Was wünschst du ___ zum Geburtstag?|dir|dich;sich|sich (Dat.) etwas wünschen.|What would you like for your birthday?',
+    'Ich habe ___ den Arm gebrochen.|mir|mich;meinen|A body part as the object → Dativ mir, not mein.|I broke my arm.',
+    'Merk ___ bitte die Nummer!|dir|dich;sich|sich (Dat.) etwas merken = to keep something in mind.|Please remember the number!'],
+};
+for (const k in BANK_G4) BANK[k] = BANK_G4[k].map(s => { const [q, a, d, why, en, say] = s.split('|'); return {q, a, d:d.split(';'), why, en, say}; });
+Object.assign(KIND_NAME, {'bank:konj2past':'hätte gemacht, wäre gegangen','bank:ohnestatt':'ohne … zu, statt … zu','bank:lassen':'lassen + verb','bank:refldat':'Reflexive pronoun in the Dativ'});
+for (const [after, l] of [
+  ['b1-futur', {id:'b1-konj2-past', level:'B1', kind:'Grammatik', title:'Ich hätte das gemacht', sub:'Konjunktiv II of the past: regrets and “if only”',
+   intro:`<p>To talk about something in the past that <b>did not happen</b>, use <b>hätte</b> or <b>wäre</b> + Partizip II. It is the past of <i>würde</i>: regrets, missed chances, unreal conditions.</p>
+<div class="tablewrap"><table class="ct"><tr><th>real past</th><th>unreal past</th></tr>
+<tr><td>Ich habe gelernt.</td><td>Ich <b>hätte</b> mehr <b>gelernt</b>. (I would have studied more.)</td></tr>
+<tr><td>Er ist gekommen.</td><td>Er <b>wäre</b> gern <b>gekommen</b>. (He would have liked to come.)</td></tr></table></div>
+<p>The choice between hätte and wäre is the same as in the Perfekt: verbs with <i>sein</i> (gehen, fahren, kommen, bleiben) take <b>wäre</b>, all others <b>hätte</b>.</p>
+<h4>Wenn-sentences about the past</h4><p><i>Wenn ich das gewusst <b>hätte</b>, <b>wäre</b> ich nicht gekommen.</i> Both parts use the Konjunktiv II.</p>
+<p class="tip">With a modal verb there are two infinitives at the end: <i>Du <b>hättest</b> mich anrufen <b>sollen</b>.</i> (You should have called me.) <i>Ich <b>hätte</b> früher aufstehen <b>müssen</b>.</i></p>`,
+   ex:[['Wenn ich mehr gelernt hätte, hätte ich die Prüfung bestanden.','If I had studied more, I would have passed the exam.'],['Ich wäre gern mitgekommen.','I would have liked to come along.'],['Du hättest mich anrufen sollen.','You should have called me.']],
+   drills:[['bank',10,{bank:'konj2past'}]]}],
+  ['b1-damit', {id:'b1-ohne-statt', level:'B1', kind:'Grammatik', title:'ohne … zu, statt … zu', sub:'Without doing, instead of doing',
+   intro:`<p>Like <i>um … zu</i>, these two build a short clause with <b>zu + infinitive</b> at the end:</p>
+<div class="tablewrap"><table class="ct"><tr><th></th><th>meaning</th><th>example</th></tr>
+<tr><td><b>ohne … zu</b></td><td>without doing</td><td><i>Er ging, <b>ohne</b> sich <b>zu</b> verabschieden.</i></td></tr>
+<tr><td><b>statt … zu</b></td><td>instead of doing</td><td><i><b>Statt</b> zu lernen, hat er gespielt.</i></td></tr></table></div>
+<p>With a separable verb, <i>zu</i> goes in the middle: <i>ohne an<b>zu</b>rufen</i>.</p>
+<p class="tip">When the two parts have <b>different subjects</b>, you need <b>ohne dass</b> or <b>statt dass</b> with a full clause: <i>Er nahm mein Fahrrad, <b>ohne dass ich</b> es <b>wusste</b>.</i></p>`,
+   ex:[['Sie hat unterschrieben, ohne den Vertrag zu lesen.','She signed without reading the contract.'],['Statt mit dem Auto zu fahren, nehme ich das Fahrrad.','Instead of going by car, I take the bike.'],['Er ist gegangen, ohne dass wir es gemerkt haben.','He left without us noticing.']],
+   drills:[['bank',10,{bank:'ohnestatt'}]]}],
+  ['b1-passiv2', {id:'b1-lassen', level:'B1', kind:'Grammatik', title:'Ich lasse mein Auto reparieren', sub:'lassen + infinitive',
+   intro:`<p><b>lassen</b> + infinitive means two things:</p>
+<ul><li><b>have something done</b> by someone else: <i>Ich <b>lasse</b> mein Auto <b>reparieren</b>.</i> (I don’t repair it myself.)</li>
+<li><b>let, allow</b>: <i>Meine Eltern <b>lassen</b> mich allein <b>reisen</b>.</i></li></ul>
+<div class="tablewrap"><table class="ct"><tr><td>ich lasse</td><td>wir lassen</td></tr><tr><td>du <b>lässt</b></td><td>ihr lasst</td></tr><tr><td>er/sie/es <b>lässt</b></td><td>sie/Sie lassen</td></tr></table></div>
+<p>Also useful: <i>Lass uns gehen!</i> (Let’s go!) and <i>Das Fenster lässt sich nicht öffnen.</i> (It can’t be opened.)</p>
+<p class="tip">In the Perfekt with a second verb you use the infinitive <b>lassen</b>, not <i>gelassen</i>: <i>Ich habe meinen Pass verlängern <b>lassen</b>.</i> On its own it is <i>gelassen</i>: <i>Ich habe den Schlüssel zu Hause gelassen.</i></p>`,
+   ex:[['Ich lasse mir die Haare schneiden.','I’m having my hair cut.'],['Lass uns morgen telefonieren!','Let’s talk on the phone tomorrow!'],['Ich habe meinen Pass verlängern lassen.','I’ve had my passport renewed.']],
+   drills:[['bank',10,{bank:'lassen'}]]}],
+  ['b1-zu', {id:'b1-refl-dativ', level:'B1', kind:'Grammatik', title:'Ich wasche mir die Hände', sub:'Reflexive pronouns in the Dativ',
+   intro:`<p>A reflexive pronoun is usually Akkusativ: <i>Ich wasche <b>mich</b>.</i> But when the sentence has <b>another object</b>, the reflexive pronoun moves to the <b>Dativ</b>: <i>Ich wasche <b>mir</b> die Hände.</i></p>
+<div class="tablewrap"><table class="ct"><tr><th></th><th>Akkusativ</th><th>Dativ</th></tr>
+<tr><td>ich</td><td>mich</td><td><b>mir</b></td></tr><tr><td>du</td><td>dich</td><td><b>dir</b></td></tr><tr><td>er/sie/es, sie, Sie</td><td>sich</td><td>sich</td></tr>
+<tr><td>wir</td><td>uns</td><td>uns</td></tr><tr><td>ihr</td><td>euch</td><td>euch</td></tr></table></div>
+<p>Only <i>ich</i> and <i>du</i> change. Common with body parts and clothes (<i>Ich putze mir die Zähne. Zieh dir die Jacke an!</i>) and with these verbs: <i>sich etwas vorstellen, überlegen, merken, leisten, wünschen, ansehen</i>.</p>
+<p class="tip">German says “I wash me the hands”, not “my hands”: <i>Ich habe <b>mir</b> den Arm gebrochen</i>, not <i>meinen Arm</i>.</p>`,
+   ex:[['Ich putze mir die Zähne.','I’m brushing my teeth.'],['Kannst du dir das vorstellen?','Can you imagine that?'],['Das kann ich mir nicht leisten.','I can’t afford that.']],
+   drills:[['bank',10,{bank:'refldat'}]]}]]){
+  const anchor = LESSONS.find(x => x.id === after);
+  LESSONS.splice(LESSONS.indexOf(anchor) + 1, 0, l);
+  const st = STAGES.find(s => s.ids.includes(after)); st.ids.splice(st.ids.indexOf(after) + 1, 0, l.id);
+}
+Object.assign(COVERS, {'b1-konj2-past':'hätte gemacht', 'b1-ohne-statt':'ohne zu fragen', 'b1-lassen':'lassen', 'b1-refl-dativ':'mir die Hände'});
+Object.assign(SEARCH_TERMS, {'b1-konj2-past':'Konjunktiv II Vergangenheit hätte wäre irreal past conditional', 'b1-ohne-statt':'ohne zu statt zu ohne dass instead without',
+  'b1-lassen':'lassen Infinitiv have something done', 'b1-refl-dativ':'Reflexivpronomen Dativ reflexive mir dir'});
+Object.assign(RES, {
+  'b1-konj2-past': {b:[], v:[['rwWEjVxtT-c', 'Konjunktiv II in der Vergangenheit', 'Benjamin – Der Deutschlehrer'], ['G6xWu4tSJ80', 'Konjunktiv 2 (B1, explained in Arabic)', 'Deutsch mit Mira']]},
+  'b1-ohne-statt': {b:[], v:[['fCglk_IxiHk', 'um … zu, ohne … zu, statt … zu', 'Studi-Deutsch'], ['uE6ijEkCheo', 'um zu, ohne zu, statt zu (B1, in Arabic)', 'Shehata Deutsch']]},
+  'b1-lassen': {b:[], v:[['Ree_YclSVTE', 'German verbs: lassen', 'Easy German'], ['d9mFD22RpHE', 'Das Verb lassen (B1, explained in Arabic)', 'Deutsch mit Mira']]},
+  'b1-refl-dativ': {b:[], v:[['ZmIVxarBojo', 'mir or mich with reflexive verbs', 'YourGermanTeacher'], ['ri-mtOHaIPg', 'Reflexivpronomen mit Dativ und Akkusativ', 'Deutsch mit Inga']]}});
+// ---- B1 reading: newspaper, forum, rules, Karim, interview (added 2026-10-03) ----
+const B1TEXTS = [
+  {id:'t1', level:'B1', title:'Zeitung: Eine Familie ohne Auto', texts:[{h:'Leben ohne Auto: Familie Brandt macht es vor', body:`Vor drei Jahren hat Familie Brandt aus Münster ihr Auto verkauft. „Am Anfang hatten wir Angst, dass wir ohne Auto nicht zurechtkommen“, erzählt Sabine Brandt, 41. Heute würde die Familie ihr Auto nicht mehr zurückhaben wollen.
+Zur Arbeit fährt Sabine mit dem Fahrrad, ihr Mann Jens nimmt den Bus. Die beiden Kinder, acht und elf Jahre alt, gehen zu Fuß zur Schule. Für den Wocheneinkauf hat die Familie einen Fahrradanhänger gekauft. „Für größere Sachen leihen wir uns ein Auto beim Carsharing“, sagt Jens. Das kostet die Familie ungefähr 40 Euro im Monat.
+Früher hat das eigene Auto mit Versicherung, Steuer, Benzin und Reparaturen fast 400 Euro im Monat gekostet. Mit dem gesparten Geld fährt die Familie jetzt einmal im Jahr mit dem Zug in den Urlaub.
+Natürlich gibt es auch Nachteile. Wenn es im Winter regnet und kalt ist, ist das Radfahren nicht immer angenehm. Und die Großeltern auf dem Land kann man ohne Auto nur schwer besuchen, weil dort nur zweimal am Tag ein Bus fährt. „In der Stadt geht es sehr gut ohne Auto. Auf dem Land wäre es für uns nicht möglich“, meint Sabine.`}],
+   items:[I('Warum hatte die Familie am Anfang Angst?',['Sie dachte, dass es ohne Auto schwierig wird.','Das Fahrradfahren war gefährlich.','Die Kinder wollten das Auto behalten.'],0,0,'„Angst, dass wir ohne Auto nicht zurechtkommen“'),
+     I('Die Kinder fahren mit dem Bus zur Schule.','RF',1,0,'„Die beiden Kinder … gehen zu Fuß zur Schule.“'),
+     I('Wie viel hat das eigene Auto früher ungefähr pro Monat gekostet?',['fast 400 Euro','ungefähr 40 Euro','ungefähr 100 Euro'],0),
+     I('Was macht die Familie mit dem gesparten Geld?',['Sie macht mit dem Zug Urlaub.','Sie kauft ein Elektroauto.','Sie bezahlt die Schule.'],0),
+     I('Die Großeltern wohnen in einem Ort mit wenig Busverbindungen.','RF',0,0,'„nur zweimal am Tag ein Bus“'),
+     I('Was meint Sabine?',['Ohne Auto geht es gut in der Stadt, aber nicht auf dem Land.','Jeder sollte sein Auto verkaufen.','Carsharing ist zu teuer.'],0)],
+   glossary:[['zurechtkommen','to cope, to manage'],['der Anhänger','trailer'],['leihen','to borrow, to hire'],['das Carsharing','car sharing'],['sparen','to save'],['der Nachteil','disadvantage'],['angenehm','pleasant'],['meinen','to think, to say']]},
+  {id:'t2', level:'B1', title:'Forum: E-Mails im Urlaub lesen?', texts:[
+    {h:'Paula_M fragt', body:`Ich fahre nächste Woche zwei Wochen in Urlaub. Mein Chef hat gesagt, ich soll ab und zu meine E-Mails lesen. Muss ich das? Wie macht ihr das?`},
+    {h:'Tarek antwortet', body:`Urlaub ist Urlaub! Ich lese im Urlaub nie meine E-Mails. Mein Körper und mein Kopf brauchen die Pause. Wenn etwas wirklich wichtig ist, kann mich meine Kollegin anrufen. Das ist in drei Jahren aber nur einmal passiert. Rechtlich musst du übrigens nicht erreichbar sein.`},
+    {h:'Birgit antwortet', body:`Ich sehe das anders. Ich schaue jeden zweiten Tag kurz in mein Postfach, höchstens zehn Minuten. Dann habe ich nach dem Urlaub nicht 500 ungelesene E-Mails und bin viel entspannter. Für mich ist das kein Stress, sondern das Gegenteil.`},
+    {h:'Jonas_K antwortet', body:`Sprich am besten vorher mit deinem Chef und macht eine klare Regel, zum Beispiel: Du bist nur in einem echten Notfall erreichbar, und zwar per Telefon. Und schreib eine Abwesenheitsnotiz, damit die Kunden wissen, wen sie fragen können.`}],
+   items:[I('Was soll Paula nach Meinung ihres Chefs im Urlaub machen?',['ab und zu E-Mails lesen','jeden Tag arbeiten','ihre Kollegin anrufen'],0,0),
+     I('Ist Tarek dafür, im Urlaub E-Mails zu lesen?','JN',1,1,'„Urlaub ist Urlaub!“'),
+     I('Tarek wurde im Urlaub schon oft angerufen.','RF',1,1,'„in drei Jahren aber nur einmal“'),
+     I('Ist Birgit dafür, im Urlaub E-Mails zu lesen?','JN',0,2,'„Ich schaue jeden zweiten Tag kurz in mein Postfach.“'),
+     I('Warum macht Birgit das?',['Nach dem Urlaub hat sie weniger Stress.','Ihr Chef kontrolliert sie.','Sie langweilt sich im Urlaub.'],0,2),
+     I('Was empfiehlt Jonas?',['vorher mit dem Chef eine Regel machen','gar nicht in Urlaub fahren','jeden Tag E-Mails beantworten'],0,3)],
+   glossary:[['ab und zu','now and then'],['rechtlich','legally'],['erreichbar','reachable'],['das Postfach','inbox'],['höchstens','at most'],['entspannt','relaxed'],['das Gegenteil','the opposite'],['der Notfall','emergency'],['die Abwesenheitsnotiz','out-of-office message']]},
+  {id:'t3', level:'B1', title:'Hausordnung: Regeln im Haus', texts:[{h:'Hausordnung für die Lindenstraße 17', body:`Liebe Mieterinnen und Mieter, damit alle gut zusammenleben können, bitten wir Sie, diese Regeln zu beachten.
+Ruhezeiten: Von 22 bis 6 Uhr und sonntags den ganzen Tag ist Ruhe im Haus. In dieser Zeit bitte keine laute Musik und keine Waschmaschine.
+Treppenhaus: Das Treppenhaus wird jede Woche von einer anderen Wohnung geputzt. Den Plan finden Sie neben dem Briefkasten. Fahrräder und Kinderwagen dürfen nicht im Treppenhaus stehen. Bitte benutzen Sie den Fahrradkeller.
+Müll: Bitte trennen Sie den Müll: Papier in die blaue Tonne, Verpackungen in die gelbe Tonne, Bioabfall in die braune Tonne. Glas bringen Sie bitte zum Container an der Ecke.
+Grillen: Auf den Balkonen ist Grillen mit Holzkohle verboten. Elektrogrills sind erlaubt.
+Bei Problemen in der Wohnung (zum Beispiel wenn die Heizung nicht funktioniert) wenden Sie sich bitte an den Hausmeister, Herrn Kaya: Telefon 0221 33 44 10, montags bis freitags von 8 bis 16 Uhr. In Notfällen ist er auch am Wochenende erreichbar.`}],
+   items:[I('Wann darf man die Waschmaschine nicht benutzen?',['am Sonntag','am Samstagvormittag','am Montagabend um 20 Uhr'],0,0,'„sonntags den ganzen Tag“'),
+     I('Jede Wohnung putzt das Treppenhaus jede Woche.','RF',1,0,'„jede Woche von einer anderen Wohnung“'),
+     I('Wo sollen die Fahrräder stehen?',['im Fahrradkeller','im Treppenhaus','auf dem Balkon'],0),
+     I('Wohin gehören Verpackungen?',['in die gelbe Tonne','in die blaue Tonne','in die braune Tonne'],0),
+     I('Mit einem Elektrogrill darf man auf dem Balkon grillen.','RF',0,0,'„Elektrogrills sind erlaubt.“'),
+     I('An wen wendet man sich, wenn die Heizung kaputt ist?',['an den Hausmeister','an die Nachbarn','an die Stadt'],0)],
+   glossary:[['beachten','to observe, to follow'],['die Ruhezeit','quiet hours'],['das Treppenhaus','stairwell'],['der Kinderwagen','pram'],['trennen','to separate'],['die Tonne','bin'],['die Holzkohle','charcoal'],['verboten','forbidden'],['sich wenden an','to contact']]},
+  {id:'t4', level:'B1', title:'Karims Weg: Die Zwischenprüfung', texts:[{h:'Karims Blog: Die Zwischenprüfung', body:`Letzte Woche hatte ich meine Zwischenprüfung. Ehrlich gesagt war ich so nervös wie noch nie. In der Nacht davor konnte ich kaum schlafen, obwohl ich mich wochenlang vorbereitet hatte.
+Die Prüfung bestand aus zwei Teilen. Am Vormittag mussten wir Fragen am Computer beantworten. Einige Fragen waren ziemlich schwierig, weil ich manche Fachwörter nicht kannte. Hätte ich die Fachwörter besser gelernt, wäre es leichter gewesen. Am Nachmittag kam der praktische Teil: Wir sollten in vier Stunden eine elektrische Anlage installieren und prüfen. Das hat mir viel mehr Spaß gemacht, denn das mache ich jeden Tag im Betrieb.
+Gestern kam das Ergebnis: Ich habe bestanden, im praktischen Teil sogar mit „gut“! Mein Ausbilder, Herr Wolf, hat mir als Erster gratuliert. Er hat gesagt: „Siehst du, die Arbeit lohnt sich.“
+Mein Tipp für alle Azubis: Lernt die Fachwörter früh, am besten mit Karteikarten, jeden Tag zehn Minuten. Und lasst euch von Kollegen helfen. Ohne Murat, der mir jeden Freitag Fragen gestellt hat, hätte ich es nicht geschafft.`}],
+   items:[I('Wie hat Karim die Nacht vor der Prüfung geschlafen?',['sehr schlecht','sehr gut','wie immer'],0,0,'„konnte ich kaum schlafen“'),
+     I('Warum war der Teil am Computer schwierig für Karim?',['Er kannte manche Fachwörter nicht.','Der Computer war kaputt.','Er hatte zu wenig Zeit.'],0),
+     I('Der praktische Teil hat Karim besser gefallen.','RF',0,0,'„Das hat mir viel mehr Spaß gemacht“'),
+     I('Karim hat die Prüfung nicht bestanden.','RF',1,0,'„Ich habe bestanden“'),
+     I('Was empfiehlt Karim anderen Azubis?',['jeden Tag kurz Fachwörter lernen','nur am Wochenende lernen','die Prüfung später machen'],0),
+     I('Wer hat Karim beim Lernen geholfen?',['Murat','Herr Wolf','seine Schwester'],0)],
+   glossary:[['die Zwischenprüfung','mid-term exam (in an Ausbildung)'],['ehrlich gesagt','to be honest'],['kaum','hardly'],['das Fachwort','technical term'],['die Anlage','installation, system'],['das Ergebnis','result'],['gratulieren','to congratulate'],['sich lohnen','to be worth it'],['die Karteikarte','index card']]},
+  {id:'t5', level:'B1', title:'Interview: Deutsch lernen im Verein', texts:[{h:'„Im Verein habe ich am meisten gelernt“', body:`Amira Haddad kam vor zwei Jahren aus Syrien nach Leipzig. Heute arbeitet sie als Pflegefachfrau und trainiert eine Volleyballmannschaft. Wir haben mit ihr gesprochen.
+Frau Haddad, wie haben Sie so schnell Deutsch gelernt?
+Natürlich habe ich einen Integrationskurs gemacht. Aber am meisten habe ich im Volleyballverein gelernt. Dort konnte ich nicht einfach Englisch sprechen, weil die meisten Mitglieder kein Englisch können. Am Anfang habe ich wenig verstanden, aber alle waren sehr geduldig.
+Wie haben Sie den Verein gefunden?
+Eine Nachbarin hat mich mitgenommen. Ich hatte zuerst Angst, weil ich dachte, dass mein Deutsch nicht gut genug ist. Aber beim Sport muss man nicht viel sprechen, und nach dem Training sind wir immer zusammen etwas trinken gegangen. So habe ich auch viele Wörter gelernt, die nicht im Lehrbuch stehen.
+Und jetzt sind Sie sogar Trainerin?
+Ja, seit einem halben Jahr trainiere ich die Jugendmannschaft. Das ist ein Ehrenamt, ich bekomme kein Geld dafür. Aber die Kinder machen mir viel Freude, und ich möchte dem Verein etwas zurückgeben.
+Was raten Sie anderen, die nach Deutschland kommen?
+Sucht euch ein Hobby mit Deutschen! Ob Sport, Musik oder Kochen ist egal. Im Kurs lernt man die Grammatik, aber sprechen lernt man im echten Leben.`}],
+   items:[I('Wo hat Amira am meisten Deutsch gelernt?',['im Volleyballverein','im Integrationskurs','bei der Arbeit'],0),
+     I('Im Verein konnte Amira meistens Englisch sprechen.','RF',1,0,'„die meisten Mitglieder können kein Englisch“'),
+     I('Wie ist Amira zum Verein gekommen?',['Eine Nachbarin hat sie mitgenommen.','Sie hat eine Anzeige gelesen.','Ihr Chef hat es ihr empfohlen.'],0),
+     I('Amira bekommt für das Training der Jugendmannschaft Geld.','RF',1,0,'„Das ist ein Ehrenamt, ich bekomme kein Geld dafür.“'),
+     I('Was rät Amira anderen?',['ein Hobby mit Deutschen suchen','nur Grammatik lernen','viel Englisch sprechen'],0)],
+   glossary:[['der Verein','club'],['das Mitglied','member'],['geduldig','patient'],['mitnehmen','to take along'],['das Lehrbuch','textbook'],['das Ehrenamt','voluntary role'],['zurückgeben','to give back'],['raten','to advise'],['echt','real']]}];
+LIBRARY.push(...B1TEXTS);
+LESSONS.find(l => l.id === 'aussprache').repeat = ['Zeit','Bier','heute','Häuser','Schule','spielen','Stadt','ich','nicht','Buch','zehn','Vater','Wasser','Sonne','Straße','über','müde','schön','Käse','Mädchen','Brötchen','Entschuldigung'];
 // ---- Telefon-Training: role-play calls. The app speaks the other person, you answer out loud. ----
 // keys: what a good answer must contain. "a/b" = either one; each one matches at the start of a word, so stems like "entschuldig" work.
 const callNorm = s => ' ' + fold(s).replace(/[^\p{L}\p{N}€%]+/gu, ' ').trim() + ' ';
@@ -3292,6 +3731,65 @@ CALLS.push(
      task:'Say yes, Wednesday at 10 suits you very well. Ask for the address.', model:'Ja, Mittwoch um 10 Uhr passt mir sehr gut. Wie ist die Adresse, bitte?', keys:['mittwoch','10/zehn','passt','adresse']},
     {c:'Wir sind in der Friedrichstraße 120 in Berlin. Ich schicke Ihnen alles noch per E-Mail.', en:'We’re at Friedrichstraße 120 in Berlin. I’ll also send you everything by e-mail.',
      task:'Thank him, say you look forward to the interview, and say goodbye the phone way.', model:'Vielen Dank, Herr Roth. Ich freue mich auf das Gespräch. Auf Wiederhören!', keys:['danke/dank','freue','gespräch','wiederhören']}]});
+// Goethe B1 Sprechen Teil 1 (plan something together) and Teil 3 (react to a presentation, answer a question). The app plays your partner.
+CALLS.push(
+  {id:'s1-feier', part:1, face:1, title:'Teil 1: Eine Abschiedsfeier planen', who:'Lena, Ihre Partnerin', where:'Sprechen Teil 1 · about 3 minutes', lesson:'a2-konjunktiv', steps:[
+    {c:'Hallo! Also, unsere Kursleiterin Frau Weber hört nächsten Monat auf. Wir wollen eine kleine Abschiedsfeier für sie organisieren. Wann sollen wir feiern?', en:'Hi! So, our teacher Frau Weber is leaving next month. We want to organise a small farewell party for her. When should we celebrate?',
+     task:'Suggest a day and time: Friday after the course, at about 6 pm. Give a reason.', model:'Ich schlage vor, dass wir am Freitag nach dem Kurs feiern, so um 18 Uhr. Dann haben alle Zeit, weil am Wochenende niemand arbeiten muss.', keys:['schlage vor/vorschlag/wie wäre/wir könnten','freitag','18/sechs/achtzehn','weil/denn']},
+    {c:'Freitag ist gut. Aber wo? Im Kursraum ist es ein bisschen langweilig, finde ich.', en:'Friday is good. But where? The classroom is a bit boring, I think.',
+     task:'Agree, and suggest a place: the Italian restaurant near the school. Ask what she thinks.', model:'Da hast du recht. Wie wäre es mit dem italienischen Restaurant neben der Schule? Was meinst du?', keys:['recht/stimmt/genau','wie wäre/wir könnten/vorschlag','restaurant','was meinst du/was denkst du/oder']},
+    {c:'Hm, das Restaurant ist ziemlich teuer. Nicht alle im Kurs haben viel Geld.', en:'Hm, the restaurant is quite expensive. Not everyone in the course has a lot of money.',
+     task:'Accept her point and make a new suggestion: everyone brings something to eat, and you celebrate in the park.', model:'Das stimmt, daran habe ich nicht gedacht. Dann machen wir doch ein Picknick im Park, und jeder bringt etwas zum Essen mit.', keys:['stimmt/recht/gute idee','picknick/park','jeder/alle','mitbringen/bringt']},
+    {c:'Super Idee! Und was schenken wir ihr? Hast du eine Idee?', en:'Great idea! And what do we give her? Do you have an idea?',
+     task:'Suggest a present: a book about your countries, and everyone writes a few words in a card. Say how much everyone could pay: 5 euros.', model:'Wir könnten ihr ein schönes Buch schenken und dazu eine Karte, in die jeder ein paar Worte schreibt. Jeder könnte fünf Euro bezahlen.', keys:['könnten/schlage vor/wie wäre','buch','karte','fünf/5','euro']},
+    {c:'Gut. Wer kauft das Buch? Ich habe diese Woche leider kaum Zeit.', en:'Good. Who buys the book? Unfortunately I hardly have any time this week.',
+     task:'Offer to buy the book. Ask her to collect the money and write the invitation to the class.', model:'Kein Problem, ich kaufe das Buch. Kannst du das Geld einsammeln und die Einladung an alle schreiben?', keys:['kein problem/gern/mache ich','kaufe','geld','einladung']},
+    {c:'Ja, das mache ich. Dann haben wir alles, oder?', en:'Yes, I’ll do that. Then we have everything, right?',
+     task:'Sum up the plan in one or two sentences: Friday at 6 pm, picnic in the park, book and card.', model:'Ja, also: Wir feiern am Freitag um 18 Uhr mit einem Picknick im Park. Ich kaufe das Buch, und du schreibst die Einladung. Das wird bestimmt schön!', keys:['also/zusammen/fassen','freitag','park','buch','einladung']}]},
+  {id:'s1-ausflug', part:1, face:1, title:'Teil 1: Einen Kursausflug planen', who:'Jonas, Ihr Partner', where:'Sprechen Teil 1 · about 3 minutes', lesson:'a2-konjunktiv', steps:[
+    {c:'So, wir sollen einen Ausflug für unseren Deutschkurs planen. Wohin könnten wir fahren?', en:'So, we’re supposed to plan a trip for our German course. Where could we go?',
+     task:'Suggest a place: a boat trip on the Rhine. Give a reason.', model:'Ich hätte eine Idee: Wir könnten eine Schifffahrt auf dem Rhein machen. Das ist nicht so teuer, und man sieht viel von der Gegend.', keys:['könnten/schlage vor/wie wäre/idee','schiff','rhein','teuer/schön/weil/denn']},
+    {c:'Das klingt schön. Aber was machen wir, wenn es regnet?', en:'That sounds nice. But what do we do if it rains?',
+     task:'Say that is a good question. Suggest a plan B: a museum in the city.', model:'Das ist eine gute Frage. Wenn es regnet, könnten wir stattdessen ins Museum gehen. Das ist auch interessant.', keys:['gute frage/stimmt/recht','regnet/regen','museum','stattdessen/dann/könnten']},
+    {c:'Gute Idee. Und wie kommen wir dahin? Mit dem Bus oder mit dem Zug?', en:'Good idea. And how do we get there? By bus or by train?',
+     task:'Say you prefer the train, because with a group ticket it is cheap.', model:'Ich finde, mit dem Zug ist es besser. Mit einem Gruppenticket ist es ziemlich günstig.', keys:['zug','gruppenticket/ticket','günstig/billig']},
+    {c:'Einverstanden. Wann treffen wir uns?', en:'Agreed. When do we meet?',
+     task:'Suggest Saturday at 9 am at the main station.', model:'Wie wäre es mit Samstag um 9 Uhr am Hauptbahnhof?', keys:['wie wäre/schlage vor/können/könnten','samstag','9/neun','hauptbahnhof/bahnhof']},
+    {c:'Neun Uhr ist ein bisschen früh, finde ich. Viele arbeiten am Freitagabend.', en:'Nine o’clock is a bit early, I think. Many people work on Friday evening.',
+     task:'Disagree politely, then agree on a compromise: 10 o’clock.', model:'Das verstehe ich. Aber wenn wir zu spät fahren, haben wir wenig Zeit. Wie wäre es mit 10 Uhr? Das ist ein guter Kompromiss.', keys:['verstehe/stimmt','aber','10/zehn','kompromiss/einverstanden']},
+    {c:'Okay, 10 Uhr. Wer kauft die Tickets?', en:'Okay, 10 o’clock. Who buys the tickets?',
+     task:'Say you will buy the tickets online, and he tells the class. Sum up the plan.', model:'Ich kaufe die Tickets online, und du sagst dem Kurs Bescheid. Also: Samstag um 10 Uhr am Hauptbahnhof, mit dem Zug zum Rhein.', keys:['tickets/fahrkarten','online','bescheid/sagst','samstag','10/zehn']}]},
+  {id:'s1-umzug', part:1, face:1, title:'Teil 1: Einer Freundin beim Umzug helfen', who:'Sara, Ihre Partnerin', where:'Sprechen Teil 1 · about 3 minutes', lesson:'a2-konjunktiv', steps:[
+    {c:'Unsere Freundin Amira zieht am Samstag um und braucht Hilfe. Wollen wir ihr zusammen helfen?', en:'Our friend Amira is moving on Saturday and needs help. Shall we help her together?',
+     task:'Say yes, of course. Ask what needs to be organised first.', model:'Ja, natürlich, das machen wir gern. Was müssen wir zuerst organisieren?', keys:['ja/natürlich/gern','was','zuerst/organisieren']},
+    {c:'Sie hat kein Auto. Wir brauchen einen Transporter.', en:'She doesn’t have a car. We need a van.',
+     task:'Suggest renting a van; you can drive and you have a driving licence.', model:'Wir könnten einen Transporter mieten. Ich kann fahren, ich habe einen Führerschein.', keys:['könnten/schlage vor/wie wäre','transporter','mieten','führerschein/fahren']},
+    {c:'Prima. Und wer hilft noch beim Tragen? Wir zwei schaffen das nicht allein.', en:'Great. And who else helps carry things? We two can’t do it alone.',
+     task:'Suggest asking two friends from the course, Ali and Tom.', model:'Wir könnten Ali und Tom aus dem Kurs fragen. Die helfen bestimmt gern.', keys:['könnten/schlage vor/fragen','ali','tom','helfen']},
+    {c:'Gute Idee. Und um wie viel Uhr fangen wir an?', en:'Good idea. And what time do we start?',
+     task:'Suggest starting early, at 8 am, because the van must be back by 6 pm.', model:'Ich würde vorschlagen, dass wir früh anfangen, um 8 Uhr, weil der Transporter um 18 Uhr zurück sein muss.', keys:['vorschlag/würde/könnten','8/acht','weil/denn','18/sechs/achtzehn']},
+    {c:'Und das Essen? Nach so viel Arbeit haben alle Hunger.', en:'And the food? After so much work everyone will be hungry.',
+     task:'Offer to bring sandwiches and drinks. Ask her to order a pizza in the evening.', model:'Ich bringe Brötchen und Getränke mit. Kannst du am Abend eine Pizza für alle bestellen?', keys:['bringe/mitbringen','getränke','pizza','bestellen']},
+    {c:'Klar. Dann sind wir fertig, oder?', en:'Sure. Then we’re done, right?',
+     task:'Sum up who does what, and say you will call Amira today.', model:'Ja. Also: Ich miete den Transporter und bringe Brötchen mit, du bestellst die Pizza, und wir fragen Ali und Tom. Ich rufe Amira heute noch an.', keys:['also/zusammen','transporter','pizza','rufe/anrufen']}]},
+  {id:'s3-homeoffice', part:3, face:1, title:'Teil 3: Feedback und Fragen (Homeoffice)', who:'Lena, Ihre Partnerin', where:'Sprechen Teil 3 · about 2 minutes', lesson:'b1-wort-meinung', steps:[
+    {c:'… und deshalb finde ich, dass Homeoffice viele Vorteile hat: Man spart Zeit, weil man nicht zur Arbeit fahren muss. Aber man ist oft allein. Vielen Dank fürs Zuhören.', en:'… and that’s why I think working from home has many advantages: you save time because you don’t have to travel to work. But you are often alone. Thank you for listening.',
+     task:'Give feedback on her presentation: thank her and say what you liked (her examples were clear).', model:'Vielen Dank für deine Präsentation. Mir hat gut gefallen, dass deine Beispiele so klar waren.', keys:['danke/dank','präsentation/vortrag','gefallen/gut','beispiel']},
+    {c:'Danke schön! Hast du noch eine Frage dazu?', en:'Thank you! Do you have a question about it?',
+     task:'Ask her a question: would she like to work from home every day?', model:'Ja, ich habe eine Frage: Würdest du gern jeden Tag im Homeoffice arbeiten?', keys:['frage','würdest/möchtest','jeden tag','homeoffice']},
+    {c:'Nein, nicht jeden Tag. Zwei Tage pro Woche wären perfekt, sonst fehlen mir die Kollegen. Und jetzt habe ich eine Frage an dich: Du hast über Ausbildung und Studium gesprochen. Was würdest du selbst wählen?', en:'No, not every day. Two days a week would be perfect, otherwise I miss my colleagues. And now I have a question for you: you talked about training and university. What would you choose yourself?',
+     task:'Answer her question about your presentation: you would choose an Ausbildung, because you earn money from the start and learn in practice.', model:'Ich würde eine Ausbildung machen, weil man von Anfang an Geld verdient und viel in der Praxis lernt.', keys:['würde','ausbildung','weil/denn','geld/verdien','praxis']},
+    {c:'Und glaubst du, dass man mit einer Ausbildung später gute Chancen hat?', en:'And do you think you have good chances later with an Ausbildung?',
+     task:'Say yes: in Germany skilled workers are needed, and after the Ausbildung you can do further training (Weiterbildung).', model:'Ja, auf jeden Fall. In Deutschland werden Fachkräfte gesucht, und nach der Ausbildung kann man eine Weiterbildung machen.', keys:['ja/auf jeden fall','fachkräfte','gesucht/braucht','weiterbildung']}]},
+  {id:'s3-medien', part:3, face:1, title:'Teil 3: Feedback und Fragen (Handys für Kinder)', who:'Jonas, Ihr Partner', where:'Sprechen Teil 3 · about 2 minutes', lesson:'b1-wort-meinung', steps:[
+    {c:'… Mein Fazit: Kinder sollten erst mit zwölf Jahren ein eigenes Handy bekommen. Vielen Dank für eure Aufmerksamkeit.', en:'… My conclusion: children should only get their own phone at twelve. Thank you for your attention.',
+     task:'Thank him and say his presentation was interesting, especially the part about his own experience.', model:'Danke für deine Präsentation, Jonas. Sie war sehr interessant, besonders der Teil über deine eigenen Erfahrungen.', keys:['danke/dank','interessant','besonders','erfahrung']},
+    {c:'Danke! Hast du eine Frage?', en:'Thanks! Do you have a question?',
+     task:'Ask him: what can parents do so that children don’t spend too long on their phone?', model:'Ja: Was können Eltern machen, damit Kinder nicht zu lange am Handy sind?', keys:['was','eltern','damit','handy']},
+    {c:'Ich glaube, klare Regeln helfen, zum Beispiel kein Handy beim Essen. Jetzt meine Frage an dich: Du hast über das Leben in der Stadt gesprochen. Wo möchtest du später wohnen?', en:'I think clear rules help, for example no phone during meals. Now my question for you: you talked about life in the city. Where would you like to live later?',
+     task:'Answer: you would like to live in a city, because there are more jobs and better public transport.', model:'Ich möchte später lieber in einer Stadt wohnen, weil es dort mehr Arbeitsplätze gibt und die Verkehrsmittel besser sind.', keys:['stadt','weil/denn','arbeit/job','verkehr/bus/bahn']},
+    {c:'Und was gefällt dir am Leben auf dem Land?', en:'And what do you like about life in the countryside?',
+     task:'Name one advantage: it is quieter, nature is close and the rent is cheaper.', model:'Auf dem Land ist es ruhiger, die Natur ist ganz nah, und die Miete ist billiger.', keys:['ruhig','natur','miete','billig/günstig']}]});
 WRITING.push(
   {id:'job-anschreiben', level:'B1', job:1, title:'Bewerbung als Kundenberater', situation:'Sie haben diese Anzeige gelesen: „Kundenberater (m/w/d) für unsere Hotline in Berlin gesucht. Deutsch B1, weitere Sprachen willkommen.“ Schreiben Sie ein kurzes Anschreiben an Frau Wagner von der Firma TeleServ.', points:['Warum Sie sich bewerben','Ihre Erfahrung und Ihre Sprachen','Ihre Stärken im Umgang mit Kunden','Ab wann Sie anfangen können, und Bitte um ein Gespräch'], words:100, letter:1, reg:'Sie',
    model:'Sehr geehrte Frau Wagner,\nhiermit bewerbe ich mich um die Stelle als Kundenberater in Ihrer Hotline in Berlin. Ich habe Ihre Anzeige im Internet gelesen und bin sehr interessiert, weil ich gern mit Menschen arbeite.\nIch habe zwei Jahre im Kundenservice einer Telefonfirma in Casablanca gearbeitet. Dort habe ich jeden Tag Anrufe angenommen, Fragen zu Rechnungen beantwortet und Beschwerden bearbeitet. Deshalb kenne ich die typischen Fragen von Kunden. Ich spreche Arabisch als Muttersprache, Französisch fließend und Deutsch auf dem Niveau B1.\nIch bin freundlich und geduldig und bleibe auch in schwierigen Gesprächen ruhig. Außerdem arbeite ich gern im Team.\nIch kann ab dem 1. März anfangen. Über eine Einladung zu einem Vorstellungsgespräch würde ich mich sehr freuen.\nMit freundlichen Grüßen\nKarim Benali'},
@@ -3352,7 +3850,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = '04810fa';  // build.py puts the build number here
+const APP_VERSION = '669c31a';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -3466,7 +3964,7 @@ function chips(){
   document.getElementById('chipXp').innerHTML = `${icon('clock')}${minutesOn(state, t)}/${state.planMin} min`;
 }
 const TITLES = {pfad:['Lernpfad','Weg zur B1 / Lernpfad'], ueben:['Üben','Weg zur B1 / Üben'], fortschritt:['Fortschritt','Weg zur B1 / Your progress'], suche:['Nachschlagen','Weg zur B1 / Look something up'], pruefung:['Prüfung','Weg zur B1 / Goethe-Zertifikat B1'],
-  tabelle:['Tabelle','Weg zur B1 / Grammatik auf einen Blick'], karten:['Karten','Üben / Karten'], lesen:['Lesen','Üben / Lesen'], schreiben:['Schreiben','Üben / Schreiben'], telefon:['Telefon-Training','Üben / Telefon-Training'], daten:['Einstellungen','Weg zur B1 / Gemini and your progress']};
+  tabelle:['Tabelle','Weg zur B1 / Grammatik auf einen Blick'], karten:['Karten','Üben / Karten'], lesen:['Lesen','Üben / Lesen'], schreiben:['Schreiben','Üben / Schreiben'], telefon:['Sprechen','Üben / Sprechen'], daten:['Einstellungen','Weg zur B1 / Gemini and your progress']};
 function setHead(t, sub){ document.getElementById('vtitle').textContent = t; document.getElementById('vsub').textContent = sub || ''; }
 function setTitle(){
   const h = new Date().getHours(), [t, sub] = view === 'heute'
@@ -3552,7 +4050,7 @@ function getPlan(){
   if (!state.plan || state.plan.d !== t || state.plan.size !== state.planMin){
     const nl = nextLesson(), lvl = LV[(nl || {level:'B1'}).level];
     state.plan = {d:t, size:state.planMin, done:state.plan && state.plan.d === t ? state.plan.done : {},
-      blocks:planBlocks(state.planMin, {due:dueCards().length, lesson:nl, reading:nextReading(), writing:WRITING.find(w => !w.speak && !state.writing[w.id] && LV[w.level] <= lvl), weak:weakSpots().length > 0})};
+      blocks:planBlocks(state.planMin, {early:Object.values(state.done).filter(Boolean).length < 5, due:dueCards().length, lesson:nl, reading:nextReading(), writing:WRITING.find(w => !w.speak && !state.writing[w.id] && LV[w.level] <= lvl), weak:weakSpots().length > 0})};
     save();
   }
   return state.plan;
@@ -3762,11 +4260,26 @@ function openLesson(l, onDone){
     ${l.intro}
     <h4>Examples · tap to listen</h4>
     ${l.ex.map(([de,en]) => `<div class="ex">${sayBtn(de)}<div><b>${de}</b><span>${en}</span></div></div>`).join('')}
+    ${l.repeat ? `<h4>Listen and repeat</h4><p class="muted" style="margin:0 0 6px">Tap ${icon('say')} to hear the word, then say it out loud.${SpeechRec ? ` Tap ${icon('mic')} and say it: the app tells you if it understood you.` : ''}</p>
+    <div class="repeat">${l.repeat.map((w, k) => `<div class="rp">${sayBtn(w)}<b>${esc(w)}</b>${SpeechRec ? `<button class="say" data-rp="${k}" aria-label="Say ${esc(w)}">${icon('mic')}</button>` : ''}<span class="rpres" id="rp${k}"></span></div>`).join('')}</div>` : ''}
     ${l.th ? `<h4>Words in this lesson (${VOCAB.filter(v => v.th === l.th).length})</h4><div class="words">${VOCAB.filter(v => v.th === l.th).map(v => `<span>${v.g ? gspan(v.g, G[v.g])+' ' : ''}${v.de} <span class="muted">· ${v.en}</span></span>`).join('')}</div>` : ''}
   </section>
   <button class="btn big" id="practice">${state.done[l.id] ? 'Practise again' : 'Start practice'} · ${l.drills.reduce((a,d) => a+d[1], 0)} questions</button>
   ${state.done[l.id] ? '' : '<button class="btn ghost" id="testout">Already know this? Test out: 80% right on the first try completes the lesson</button>'}
   ${resHtml(l)}`;
+  $main.querySelectorAll('[data-rp]').forEach(b => b.onclick = () => {
+    const w = l.repeat[+b.dataset.rp], out = document.getElementById('rp' + b.dataset.rp), norm = x => ' ' + x.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim() + ' ';
+    try { speechSynthesis.cancel(); } catch(e) {}
+    const rec = new SpeechRec(); rec.lang = 'de-DE'; rec.maxAlternatives = 3; ctls.add(rec); let heard = [];
+    rec.onresult = e => { heard = Array.from(e.results[0], a => a.transcript); };
+    rec.onend = () => { ctls.delete(rec); b.classList.remove('rec');
+      if (!heard.length){ out.textContent = 'I didn’t hear anything. Try again.'; out.className = 'rpres'; return; }
+      const ok = heard.some(h => norm(h).includes(norm(w)));
+      out.textContent = ok ? 'Sehr gut!' : `I heard “${heard[0]}”. Listen again and repeat.`; out.className = 'rpres ' + (ok ? 'ok' : 'no');
+      if (ok) addXP(1); };
+    rec.onerror = e => { out.textContent = e.error === 'network' ? 'Needs internet.' : e.error === 'not-allowed' ? 'Allow the microphone first.' : ''; };
+    try { rec.start(); b.classList.add('rec'); out.textContent = 'Listening …'; out.className = 'rpres'; } catch(e) { ctls.delete(rec); }
+  });
   const doneMsg = () => toast(l.th ? `Lesson done · ${VOCAB.filter(v => v.th === l.th).length} words added to your flashcards` : 'Lesson done · +20 XP');
   document.getElementById('back').onclick = () => { stopActivity(); render(); };
   document.getElementById('practice').onclick = () => runQuiz(buildQuiz(l.drills), {title:l.title, onDone: (c, t) => { state.lscore[l.id] = Math.max(state.lscore[l.id] || 0, Math.round(c / t * 100)); if (completeLesson(l)) doneMsg(); onDone(); }});
@@ -3952,7 +4465,7 @@ function vUeben(){
     <button class="tile p-butter" data-goto="karten"><span class="ic">${icon('karten')}</span><b>Karten</b><span>Flashcards · ${due} due today · ${Object.keys(state.cards).length} words in your deck</span></button>
     <button class="tile p-mint" data-goto="lesen"><span class="ic">${icon('lesen')}</span><b>Lesen</b><span>Reading and listening · ${nr ? `Next: ${esc(nr.title)} (${nr.level})` : 'All 20 texts read. Read your favourites again.'}</span></button>
     <button class="tile p-lilac" data-goto="schreiben"><span class="ic">${icon('schreiben')}</span><b>Schreiben</b><span>Check list and model answers · ${wdone ? `${wdone} of ${WRITING.length} tasks written` : `${WRITING.length} tasks from A1 to the B1 exam`}</span></button>
-    <button class="tile p-sky" data-goto="telefon"><span class="ic">${icon('phone')}</span><b>Telefon-Training</b><span>Role-play calls · The app is the customer, you answer out loud · ${CALLS.length} calls</span></button>
+    <button class="tile p-sky" data-goto="telefon"><span class="ic">${icon('phone')}</span><b>Sprechen</b><span>Answer out loud · phone calls, job interviews and the B1 speaking exam · ${CALLS.length} role-plays</span></button>
   </section>
   <div class="lvhead"><h3>Spiele</h3><span>quick rounds</span></div>
   <section class="grid2">
@@ -4318,8 +4831,10 @@ const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
 function vTelefon(){
   const calls = state.calls || {};
   $main.innerHTML = `${backTo('Üben','ueben')}
-  <section class="card stack"><h2>Telefon-Training</h2><p class="muted" style="margin:0">Role-play real calls. The app is the customer and speaks first; you are the customer adviser and answer out loud. ${SpeechRec ? 'Tap the microphone and the app checks the key words of your answer.' : 'Say your answer out loud, then compare it with a good answer.'} Put on headphones if you can.</p></section>
-  ${[['Im Kundenservice', c => c.lesson.startsWith('cc-')], ['Bewerbung', c => !c.lesson.startsWith('cc-')]].map(([h, f]) => `<h3 style="margin-top:4px">${h}</h3>
+  <section class="card stack"><h2>Sprechen</h2><p class="muted" style="margin:0">Role-plays you answer out loud: customer calls, job interviews and the Goethe B1 speaking exam. The app plays the other person and speaks first. ${SpeechRec ? 'Tap the microphone and the app checks the key words of your answer.' : 'Say your answer out loud, then compare it with a good answer.'} Put on headphones if you can.</p></section>
+  ${[['Prüfung: Sprechen Teil 1 und 3', c => c.part, 'The app is your exam partner. Teil 1: make suggestions, react to your partner’s ideas and agree on a plan. Teil 3: give feedback on your partner’s presentation, ask a question, then answer one about yours.'],
+     ['Im Kundenservice', c => !c.part && c.lesson.startsWith('cc-'), 'You are the customer adviser. The customer calls you.'],
+     ['Bewerbung', c => !c.part && !c.lesson.startsWith('cc-'), '']].map(([h, f, sub]) => `<h3 style="margin-top:4px">${h}</h3>${sub ? `<p class="muted" style="margin:-6px 0 0">${sub}</p>` : ''}
   <section class="stack">${CALLS.filter(f).map(c => { const i = CALLS.indexOf(c), best = calls[c.id], l = LESSONS.find(x => x.id === c.lesson);
     return `<button class="lesson ${best >= 80 ? 'done' : ''}" data-call="${i}"><span class="num">${icon(c.face ? 'dialog' : 'phone')}</span>
       <span style="min-width:0"><b>${esc(c.title)}</b><span>${esc(c.who)} · ${esc(c.where)} · ${c.steps.length} turns${l ? ` · words: ${esc(l.title)}` : ''}</span></span>
@@ -4327,7 +4842,7 @@ function vTelefon(){
   $main.querySelectorAll('[data-call]').forEach(b => b.onclick = () => runCall(CALLS[+b.dataset.call], () => { view = 'telefon'; render(); toTop(); }));
 }
 function runCall(sc, onDone){
-  activity = true; nav(); toTop(); keyHandler = null; setHead(sc.title, 'Üben / Telefon-Training');
+  activity = true; nav(); toTop(); keyHandler = null; setHead(sc.title, sc.part ? 'Prüfung / Sprechen' : 'Üben / Sprechen');
   const n = sc.steps.length, scores = [], thread = [];
   let i = 0, best = 0, rec = null, showText = state.callText !== false;
   const bub = (who, text, en) => `<div class="bub ${who}"><p>${esc(text)}</p>${en ? `<small>${esc(en)}</small>` : ''}</div>`;
@@ -4418,6 +4933,7 @@ function vLesen(){
   <section class="card stack"><h2>Lesen</h2><p class="muted" style="margin:0">Read, answer, then press “Vorlesen” to hear the whole text. Reading and listening to the same story is one of the fastest ways to learn. Open the word list under a text if you get stuck.</p></section>
   ${[['Karims Weg', 'A learner from Casablanca on his way to an Ausbildung in Germany. The texts get harder as his German grows.', READING],
      ['Kurzgeschichten', 'Short stories from everyday life in Germany, each built around the grammar of your A1 and A2 lessons.', STORIES],
+     ['B1: Zeitung, Forum, Regeln', 'The text types of the Goethe B1 reading exam: a newspaper article, a forum, house rules, a blog and an interview.', B1TEXTS],
      ['Im Job', 'A job advert and a real hotline call. Press “Vorlesen” and listen to the call like a customer adviser would.', JOBTEXTS]].map(([h, sub, list]) => `
   <h3 style="margin-top:4px">${h}</h3><p class="muted" style="margin:-6px 0 0">${sub}</p>
   <section class="stack">${list.map(r => { const d = state.read[r.id], i = LIBRARY.indexOf(r);
@@ -4582,12 +5098,15 @@ function vPruefung(){
   <section class="card stack">
     <div class="row" style="justify-content:space-between"><h3>Sprechen</h3><span class="tag">15 min · with a partner</span></div>
     <p style="margin:0">Teil 1: plan something together with your partner. Teil 2: present a topic on five slides (about 3 minutes). Teil 3: answer questions about your presentation and react to your partner’s. You get 15 minutes to prepare.</p>
-    <p class="tip" style="margin:0">Write your Teil 2 presentation here, compare it with the model presentation, then say it out loud with a timer. To practise speaking with feedback on what you said, use Üben → Telefon-Training. Teil 1 and Teil 3 are not in the app yet: practise them with a tutor or a tandem partner.</p>
-    <div class="row">${WRITING.filter(w => w.speak).map(w => `<button class="btn ghost" data-sp="${w.id}">${esc(w.title.replace('Sprechen Teil 2: ', ''))}</button>`).join('')}</div>
+    <p class="tip" style="margin:0">Teil 1 and Teil 3: the app plays your partner and you answer out loud. Teil 2: write your presentation, compare it with the model, then say it out loud with a timer.</p>
+    <h4 style="margin:0">Teil 1 · plan something together</h4><div class="row">${CALLS.filter(c => c.part === 1).map(c => `<button class="btn ghost" data-sc1="${CALLS.indexOf(c)}">${icon('dialog')}${esc(c.title.replace('Teil 1: ', ''))}</button>`).join('')}</div>
+    <h4 style="margin:0">Teil 2 · present a topic</h4><div class="row">${WRITING.filter(w => w.speak).map(w => `<button class="btn ghost" data-sp="${w.id}">${esc(w.title.replace('Sprechen Teil 2: ', ''))}</button>`).join('')}</div>
+    <h4 style="margin:0">Teil 3 · feedback and questions</h4><div class="row">${CALLS.filter(c => c.part === 3).map(c => `<button class="btn ghost" data-sc1="${CALLS.indexOf(c)}">${icon('dialog')}${esc(c.title.replace('Teil 3: ', ''))}</button>`).join('')}</div>
   </section>`;
   $main.querySelectorAll('[data-mod]').forEach(b => b.onclick = () => { const [k, si] = b.dataset.mod.split(':'); runModule(k, si === 'ai' ? 'ai' : +si); });
   $main.querySelectorAll('[data-teil]').forEach(b => b.onclick = () => { const [k, i, si] = b.dataset.teil.split(':'); practiceTeil(k, +i, si === 'ai' ? 'ai' : +si); });
   $main.querySelectorAll('[data-sp]').forEach(b => b.onclick = () => openWriting(WRITING.find(w => w.id === b.dataset.sp), 'pruefung'));
+  $main.querySelectorAll('[data-sc1]').forEach(b => b.onclick = () => runCall(CALLS[+b.dataset.sc1], backToExam));
   document.getElementById('wexam').onclick = runWriteExam;
 }
 const examSets = key => [EXAM[key].teile, EXAM[key].teile2].filter(Boolean);
