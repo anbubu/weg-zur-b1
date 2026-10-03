@@ -714,6 +714,9 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 .kcheck .ok{background:var(--okbg);color:var(--ok)}.kcheck .no{background:var(--badbg);color:var(--bad)}.kcheck svg.i{width:14px;height:14px}
 .repeat{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:8px}.rp{display:flex;align-items:center;gap:8px;background:var(--panel2);border-radius:var(--r-card);padding:8px 10px;flex-wrap:wrap}
 .rp b{font-size:1.05rem}.rpres{flex-basis:100%;font-size:.84rem;color:var(--muted)}.rpres:empty{display:none}.rpres.ok{color:var(--ok);font-weight:700}.rpres.no{color:var(--bad)}.say.rec{background:var(--go);color:var(--on-go)}
+.gtnav{display:flex;flex-wrap:wrap;gap:6px}.gtnav button{border:0;background:var(--panel2);color:var(--ink);border-radius:999px;padding:7px 12px;font:600 .82rem var(--f);cursor:pointer}
+.gtch summary{cursor:pointer;list-style:none;display:flex;flex-direction:column;gap:3px}.gtch summary::-webkit-details-marker{display:none}.gtch summary h3{margin:0}.gtch summary h3::after{content:' +';color:var(--muted)}.gtch[open] summary h3::after{content:' −'}
+.gtt{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}.gtread{margin:8px 0;padding-left:18px;color:var(--muted);font-size:.92rem}.gtread li{margin:4px 0}.gtread b{color:var(--ink)}
 .model{display:flex;gap:12px;align-items:center;justify-content:space-between;background:var(--panel2);border-radius:var(--r-card);padding:12px 14px}
 .model small{font-weight:700;color:var(--muted)}.model p{margin:2px 0 0;font-weight:600}
 /* ---------- motion ---------- */
@@ -3523,6 +3526,354 @@ Sucht euch ein Hobby mit Deutschen! Ob Sport, Musik oder Kochen ist egal. Im Kur
      I('Was rät Amira anderen?',['ein Hobby mit Deutschen suchen','nur Grammatik lernen','viel Englisch sprechen'],0)],
    glossary:[['der Verein','club'],['das Mitglied','member'],['geduldig','patient'],['mitnehmen','to take along'],['das Lehrbuch','textbook'],['das Ehrenamt','voluntary role'],['zurückgeben','to give back'],['raten','to advise'],['echt','real']]}];
 LIBRARY.push(...B1TEXTS);
+// ---- Grammar tables (Tabelle): every grammar table of the A1–B1 syllabus, ordered like Grammatik Aktiv, written fresh for this app ----
+// head: "m|…", "f|…", "n|…", "pl|…" colour a column by gender. read: one line per part of the table ("how to read it").
+const GT = [
+ {id:'verben1', ch:'Verben 1: Präsens, Modalverben, Imperativ', intro:'How a verb changes in the present tense, the special verbs, and commands.', tables:[
+  {t:'Personalpronomen', lead:'The words for I, you, he … They decide the verb ending.', head:['person','German','English'],
+   rows:[['1st singular','ich','I'],['2nd singular','du','you (friend, family, child)'],['3rd singular','er · sie · es','he · she · it'],['1st plural','wir','we'],['2nd plural','ihr','you (several friends)'],['3rd plural','sie','they'],['polite (one or many)','Sie','you (formal)']],
+   read:['<b>person</b>: grammar calls ich “1st singular”, du “2nd singular” and so on. Verb tables always use this order.','<b>er · sie · es</b> also stand for things: der Tisch → er, die Lampe → sie, das Buch → es.','<b>Sie</b> with a capital S is the polite “you”. It takes the same verb form as sie (they): <i>Sie kommen.</i>'],
+   tip:'Use du with friends, family and children; Sie with strangers, officials and at work until someone offers du.', ex:[['Woher kommen Sie?','Where are you from? (formal)'],['Woher kommst du?','Where are you from? (friendly)']]},
+  {t:'Präsens: regular verbs', lead:'Take the infinitive, remove -en, add the ending.', head:['','ending','wohnen','arbeiten','heißen'],
+   rows:[['ich','-e','wohn<b>e</b>','arbeit<b>e</b>','heiß<b>e</b>'],['du','-st','wohn<b>st</b>','arbeit<b>est</b>','heiß<b>t</b>'],['er/sie/es','-t','wohn<b>t</b>','arbeit<b>et</b>','heiß<b>t</b>'],['wir','-en','wohn<b>en</b>','arbeit<b>en</b>','heiß<b>en</b>'],['ihr','-t','wohn<b>t</b>','arbeit<b>et</b>','heiß<b>t</b>'],['sie/Sie','-en','wohn<b>en</b>','arbeit<b>en</b>','heiß<b>en</b>']],
+   read:['<b>ending</b>: the same six endings for almost every verb.','<b>arbeiten</b>: when the stem ends in -t or -d (arbeiten, finden, warten), add an extra e: du arbeit<b>e</b>st, er arbeit<b>e</b>t.','<b>heißen</b>: when the stem ends in -s, -ß, -z (heißen, tanzen, reisen), du only adds -t: du heißt, du tanzt.','<b>wir</b> and <b>sie/Sie</b> always look like the infinitive.'],
+   ex:[['Ich wohne in Köln.','I live in Cologne.'],['Er arbeitet bei einer Bank.','He works at a bank.']]},
+  {t:'sein, haben, werden, wissen', lead:'The four most important irregular verbs. Learn them by heart.', head:['','sein','haben','werden','wissen'],
+   rows:[['ich','bin','habe','werde','weiß'],['du','bist','hast','wirst','weißt'],['er/sie/es','ist','hat','wird','weiß'],['wir','sind','haben','werden','wissen'],['ihr','seid','habt','werdet','wisst'],['sie/Sie','sind','haben','werden','wissen']],
+   read:['<b>sein</b> (to be) is irregular in every form.','<b>haben</b> (to have) drops the b with du and er: hast, hat.','<b>werden</b> (to become) has wirst, wird. It also builds the future and the passive.','<b>wissen</b> (to know a fact) has no ending for ich and er: ich weiß, er weiß.'],
+   ex:[['Ich bin müde und habe Hunger.','I’m tired and hungry.'],['Weißt du, wo die Post ist?','Do you know where the post office is?']]},
+  {t:'Verben mit Vokalwechsel', lead:'Some verbs change their vowel, but only with du and er/sie/es.', head:['change','infinitive','du','er/sie/es','more verbs like this'],
+   rows:[['e → i','sprechen','spr<b>i</b>chst','spr<b>i</b>cht','essen (isst), geben, helfen, nehmen (nimmt), treffen, vergessen'],['e → ie','sehen','s<b>ie</b>hst','s<b>ie</b>ht','lesen, empfehlen, stehlen'],['a → ä','fahren','f<b>ä</b>hrst','f<b>ä</b>hrt','schlafen, tragen, waschen, fallen, halten, lassen'],['au → äu','laufen','l<b>äu</b>fst','l<b>äu</b>ft','(only laufen and saufen)']],
+   read:['<b>change</b>: the four possible vowel changes.','<b>du</b> and <b>er/sie/es</b> are the only forms that change. ich and the plural stay regular: ich spreche, wir sprechen.','<b>more verbs</b>: learn new verbs with the er-form: fahren – fährt.'],
+   tip:'nehmen is extra irregular: du nimmst, er nimmt.', ex:[['Sie spricht drei Sprachen.','She speaks three languages.'],['Er fährt mit dem Bus.','He goes by bus.']]},
+  {t:'Modalverben: Formen', lead:'Six verbs that combine with a second verb in the infinitive.', head:['','können','müssen','dürfen','wollen','sollen','möchten'],
+   rows:[['ich','kann','muss','darf','will','soll','möchte'],['du','kannst','musst','darfst','willst','sollst','möchtest'],['er/sie/es','kann','muss','darf','will','soll','möchte'],['wir','können','müssen','dürfen','wollen','sollen','möchten'],['ihr','könnt','müsst','dürft','wollt','sollt','möchtet'],['sie/Sie','können','müssen','dürfen','wollen','sollen','möchten']],
+   read:['<b>ich</b> and <b>er/sie/es</b> are the same and have no ending: ich kann, er kann.','The <b>singular</b> often changes the vowel (können → kann, müssen → muss, dürfen → darf, wollen → will); the plural keeps it.','<b>Position</b>: the modal verb is in position 2, the second verb goes to the end as an infinitive: <i>Ich <b>kann</b> heute nicht <b>kommen</b>.</i>'],
+   ex:[['Ich muss morgen früh aufstehen.','I have to get up early tomorrow.'],['Darf ich hier rauchen?','May I smoke here?']]},
+  {t:'Modalverben: Bedeutung', lead:'What each modal verb means.', head:['verb','meaning','example'],
+   rows:[['können','can: ability, possibility','<i>Ich kann schwimmen.</i>'],['müssen','must, have to: necessity','<i>Ich muss arbeiten.</i>'],['nicht müssen','don’t have to: not necessary','<i>Du musst nicht kommen.</i>'],['dürfen','may, be allowed to: permission','<i>Hier darf man parken.</i>'],['nicht dürfen','must not: forbidden','<i>Hier darf man nicht rauchen.</i>'],['wollen','want to: your own plan','<i>Ich will Mechatroniker werden.</i>'],['sollen','should, be supposed to: someone else wants it','<i>Der Arzt sagt, ich soll mehr schlafen.</i>'],['möchten','would like to: polite wish','<i>Ich möchte einen Kaffee.</i>']],
+   read:['<b>nicht müssen</b> and <b>nicht dürfen</b> are a classic trap: “must not” is <i>nicht dürfen</i>, not <i>nicht müssen</i>.','<b>sollen</b> passes on the wish or order of another person (doctor, boss, parents).','<b>möchten</b> is softer than <i>wollen</i>; use it in shops and offices.'],
+   ex:[['Du musst nicht kommen, aber du darfst gern kommen.','You don’t have to come, but you’re welcome to.']]},
+  {t:'Trennbare und untrennbare Verben', lead:'Some prefixes split off and go to the end of the sentence.', head:['','prefixes','example','Perfekt'],
+   rows:[['separable','ab-, an-, auf-, aus-, ein-, mit-, nach-, vor-, weg-, zu-, zurück-, zusammen-, fern-','<i>Ich <b>stehe</b> um 7 Uhr <b>auf</b>.</i>','auf<b>ge</b>standen'],['inseparable','be-, emp-, ent-, er-, ge-, miss-, ver-, zer-','<i>Ich <b>verstehe</b> das nicht.</i>','verstanden (no ge-)']],
+   read:['<b>separable</b>: the prefix is stressed (AUFstehen). In a main clause it goes to the very end; ge- goes in the middle of the Partizip.','<b>inseparable</b>: the prefix is unstressed (verSTEhen). It never splits and the Partizip has no ge-.','In a <b>subordinate clause</b> the verb goes to the end and joins again: <i>…, weil ich früh <b>aufstehe</b>.</i>'],
+   ex:[['Der Zug fährt um 8 Uhr ab.','The train leaves at 8.'],['Ich habe dich gestern angerufen.','I called you yesterday.']]},
+  {t:'Imperativ', lead:'Commands and requests for du, ihr and Sie.', head:['','kommen','sprechen','fahren','sein'],
+   rows:[['du','Komm!','Sprich!','Fahr!','Sei!'],['ihr','Kommt!','Sprecht!','Fahrt!','Seid!'],['Sie','Kommen Sie!','Sprechen Sie!','Fahren Sie!','Seien Sie!']],
+   read:['<b>du</b>: the du-form without -st and without du: du kommst → Komm! Verbs with e → i keep the i (Sprich!), verbs with a → ä lose the umlaut (Fahr!).','<b>ihr</b>: exactly the ihr-form without ihr: Kommt!','<b>Sie</b>: the verb first, then Sie: Kommen Sie!','<b>sein</b> is irregular: Sei! Seid! Seien Sie!'],
+   tip:'Add bitte and mal to sound friendly: <i>Komm bitte mal her!</i>', ex:[['Sprechen Sie bitte langsam!','Please speak slowly!'],['Sei pünktlich!','Be on time!']]}]},
+ {id:'saetze1', ch:'Sätze und Fragen', intro:'Where the verb goes in statements and questions, and the order of the other parts.', tables:[
+  {t:'W-Fragen', lead:'Question words. The verb comes right after them.', head:['question word','asks for','example'],
+   rows:[['wer · wen · wem · wessen','person: Nom · Akk · Dat · Gen','<i>Wem gehört das?</i>'],['was','thing','<i>Was machst du?</i>'],['wo · wohin · woher','place · direction · origin','<i>Woher kommst du?</i>'],['wann · seit wann · bis wann','time','<i>Seit wann lernst du Deutsch?</i>'],['wie · wie lange · wie oft · wie viel(e)','way · duration · frequency · amount','<i>Wie oft trainierst du?</i>'],['warum · wieso','reason','<i>Warum kommst du nicht?</i>'],['welcher · welche · welches','choice from a group','<i>Welche Jacke nimmst du?</i>'],['was für ein','what kind of','<i>Was für ein Auto hast du?</i>']],
+   read:['<b>wer/wen/wem</b> change with the case: Wer (subject), Wen (Akkusativ), Wem (Dativ).','<b>wo/wohin/woher</b>: Wo bist du? (position) · Wohin gehst du? (direction) · Woher kommst du? (origin).','<b>welcher</b> takes the endings of der/die/das: welchen Film, welche Stadt, welches Buch.','The <b>word order</b>: question word – verb – subject – rest.'],
+   ex:[['Wohin fährst du in den Ferien?','Where are you going in the holidays?']]},
+  {t:'Ja/Nein-Fragen und Antworten', lead:'Questions that start with the verb, and how to answer them.', head:['question','positive answer','negative answer'],
+   rows:[['<i>Kommst du mit?</i>','Ja, ich komme mit.','Nein, ich komme nicht mit.'],['<i>Kommst du <b>nicht</b> mit?</i>','<b>Doch</b>, ich komme mit.','Nein, ich komme nicht mit.']],
+   read:['<b>question</b>: the verb is in position 1, the subject follows.','<b>doch</b> answers a negative question with “yes”. Saying <i>ja</i> here would be wrong.'],
+   ex:[['Hast du keinen Hunger? – Doch!','Aren’t you hungry? – Yes, I am!']]},
+  {t:'Wortstellung im Hauptsatz', lead:'The sentence frame: position 1, verb in position 2, the rest, and the end.', head:['position 1','position 2 (verb)','middle','end'],
+   rows:[['Ich','stehe','jeden Tag um 7 Uhr','auf.'],['Heute','kann','ich leider nicht','kommen.'],['Gestern','habe','ich meine Oma','besucht.'],['Am Montag','wird','das Paket','geliefert.']],
+   read:['<b>position 1</b>: one block only: the subject, a time, a place or an object. Whatever comes first, the verb follows.','<b>position 2</b>: the conjugated verb, always.','<b>middle</b>: the subject (if not in position 1), objects, time, place, nicht.','<b>end</b>: the second part of the verb: separable prefix, infinitive after a modal, Partizip II. Together with position 2 it forms the “Satzklammer” (sentence bracket).'],
+   ex:[['Am Wochenende habe ich lange geschlafen.','At the weekend I slept late.']]},
+  {t:'Die Reihenfolge im Mittelfeld', lead:'The usual order of the parts in the middle of the sentence.', head:['rule','example'],
+   rows:[['time – cause – manner – place (TeKaMoLo)','<i>Ich fahre <b>morgen</b> <b>wegen der Arbeit</b> <b>mit dem Zug</b> <b>nach Berlin</b>.</i>'],['two nouns: Dativ before Akkusativ','<i>Ich gebe <b>dem Kind</b> <b>den Ball</b>.</i>'],['a pronoun comes before nouns','<i>Ich gebe <b>ihm</b> den Ball.</i>'],['two pronouns: Akkusativ before Dativ','<i>Ich gebe <b>ihn</b> <b>ihm</b>.</i>'],['nicht for the whole sentence goes near the end','<i>Ich komme heute <b>nicht</b>.</i>'],['nicht before the part you deny','<i>Ich komme <b>nicht heute</b>, sondern morgen.</i>']],
+   read:['<b>TeKaMoLo</b>: temporal (when), kausal (why), modal (how), lokal (where). A good default, not a strict law.','<b>Dativ before Akkusativ</b> for nouns, but <b>Akkusativ before Dativ</b> for two pronouns.','<b>nicht</b> negating the whole sentence stands before the end part (before the infinitive, Partizip or prefix).'],
+   ex:[['Ich habe ihr das Buch gestern gegeben.','I gave her the book yesterday.']]}]},
+];
+GT.push(
+ {id:'nomen', ch:'Nomen, Artikel, Pronomen', intro:'Plural, the articles in all four cases, possessives and pronouns.', tables:[
+  {t:'Plural', lead:'Five ways to make a plural. The article is always die.', head:['type','singular → plural','typical for'],
+   rows:[['-e (often with umlaut)','der Tag → die Tag<b>e</b> · die Hand → die H<b>ä</b>nd<b>e</b>','many masculine nouns, one-syllable nouns'],['-(e)n','die Lampe → die Lampe<b>n</b> · die Frau → die Frau<b>en</b>','almost all feminine nouns, nouns in -e'],['-er (umlaut if possible)','das Kind → die Kind<b>er</b> · das Buch → die B<b>ü</b>ch<b>er</b>','many short neuter nouns'],['-s','das Auto → die Auto<b>s</b> · das Handy → die Handy<b>s</b>','foreign words, nouns ending in a vowel'],['no ending (sometimes umlaut)','der Lehrer → die Lehrer · der Vater → die V<b>ä</b>ter','nouns in -er, -el, -en, -chen, -lein']],
+   read:['<b>type</b>: the ending the noun gets. Learn the plural with every new noun: <i>der Tisch, die Tische</i>.','<b>Dativ plural</b> adds -n if possible: <i>mit den Kinder<b>n</b></i> (not with -s or -n plurals).'],
+   ex:[['Die Kinder spielen mit den Hunden.','The children play with the dogs.']]},
+  {t:'Artikel in allen Fällen', lead:'der, ein and kein in Nominativ, Akkusativ, Dativ and Genitiv.', head:['','m|masculine','f|feminine','n|neuter','pl|plural'],
+   rows:[['Nominativ','der · ein · kein','die · eine · keine','das · ein · kein','die · – · keine'],['Akkusativ','<b>den · einen · keinen</b>','die · eine · keine','das · ein · kein','die · – · keine'],['Dativ','<b>dem · einem · keinem</b>','<b>der · einer · keiner</b>','<b>dem · einem · keinem</b>','<b>den · – · keinen</b> + n'],['Genitiv','<b>des · eines · keines</b> + (e)s','<b>der · einer · keiner</b>','<b>des · eines · keines</b> + (e)s','<b>der · – · keiner</b>']],
+   read:['<b>Akkusativ</b>: only masculine changes (der → den).','<b>Dativ</b>: -m for masculine and neuter, -r for feminine, -n for plural, and the plural noun gets -n.','<b>Genitiv</b>: masculine and neuter nouns add -s or -es: <i>des Mannes, des Autos</i>.','<b>kein</b> and the possessives (mein, dein …) have the same endings as <b>ein</b>.'],
+   ex:[['Ich gebe dem Kollegen den Schlüssel des Autos.','I give the colleague the key of the car.']]},
+  {t:'Kein Artikel', lead:'When German uses no article at all.', head:['case','example'],
+   rows:[['jobs and nationalities after sein/werden','<i>Ich bin Elektroniker. Sie ist Marokkanerin.</i>'],['uncountable things in general','<i>Ich trinke gern Tee. Hast du Zeit?</i>'],['plural of ein','<i>Ich habe Kinder.</i> (ein Kind → Kinder)'],['names of most cities and countries','<i>Ich wohne in Köln. Er kommt aus Marokko.</i> (but: die Türkei, die Schweiz)'],['many fixed phrases','<i>Ich habe Hunger, Angst, Lust.</i>']],
+   read:['<b>Negation</b> of a noun without an article is <b>kein</b>: <i>Ich habe keine Zeit, keine Kinder.</i>'],
+   ex:[['Ich bin Mechatroniker und habe keine Kinder.','I’m a mechatronics technician and have no children.']]},
+  {t:'nicht oder kein?', lead:'Two words for “not”.', head:['use','when','example'],
+   rows:[['kein','a noun with ein or no article','<i>Ich habe <b>kein</b> Auto. Ich habe <b>keine</b> Zeit.</i>'],['nicht','everything else: verbs, adjectives, nouns with der/die/das or a possessive, names','<i>Ich komme <b>nicht</b>. Das ist <b>nicht</b> mein Auto.</i>']],
+   read:['<b>kein</b> takes the endings of ein: keinen Hund, keiner Frau.','<b>nicht</b> stands before the part it negates, or near the end for the whole sentence.'],
+   ex:[['Das ist nicht der Bus, ich sehe keinen Bus.','That’s not the bus; I don’t see a bus.']]},
+  {t:'Possessivartikel', lead:'my, your, his … They take the endings of ein.', head:['person','possessive','example'],
+   rows:[['ich','mein','<i>mein Bruder, meine Schwester</i>'],['du','dein','<i>dein Handy</i>'],['er / es','sein','<i>sein Auto</i>'],['sie (she)','ihr','<i>ihr Mann</i>'],['wir','unser','<i>unsere Wohnung</i>'],['ihr','euer','<i>eure Eltern</i> (e drops)'],['sie (they) / Sie','ihr / Ihr','<i>ihr Haus · Ihr Ausweis, bitte!</i>']],
+   read:['<b>possessive</b>: choose it by the owner.','<b>ending</b>: choose it by the thing owned, like ein: <i>Ich besuche mein<b>en</b> Bruder</i> (Akk masc.).','<b>euer</b> loses its e with an ending: <i>eure, euren</i>.'],
+   ex:[['Kennst du ihren Freund?','Do you know her boyfriend?']]},
+  {t:'welcher, dieser, jeder', lead:'These words take the endings of der, die, das.', head:['','m|masculine','f|feminine','n|neuter','pl|plural'],
+   rows:[['Nominativ','dies<b>er</b>','dies<b>e</b>','dies<b>es</b>','dies<b>e</b>'],['Akkusativ','dies<b>en</b>','dies<b>e</b>','dies<b>es</b>','dies<b>e</b>'],['Dativ','dies<b>em</b>','dies<b>er</b>','dies<b>em</b>','dies<b>en</b>']],
+   read:['The ending copies the last letter of der/den/dem/die/das: der → dies<b>er</b>, dem → dies<b>em</b>, das → dies<b>es</b>.','<b>jeder</b> (every) has no plural; use <i>alle</i>.'],
+   ex:[['Welchen Film möchtest du sehen? – Diesen hier.','Which film do you want to see? – This one.']]},
+  {t:'Personalpronomen in allen Fällen', lead:'The pronouns for I, me, to me …', head:['Nominativ','Akkusativ','Dativ','reflexive (Akk / Dat)'],
+   rows:[['ich','mich','mir','mich / mir'],['du','dich','dir','dich / dir'],['er','ihn','ihm','sich'],['sie','sie','ihr','sich'],['es','es','ihm','sich'],['wir','uns','uns','uns'],['ihr','euch','euch','euch'],['sie / Sie','sie / Sie','ihnen / Ihnen','sich']],
+   read:['<b>Akkusativ</b>: the direct object. <b>Dativ</b>: the receiver, and after Dativ verbs and prepositions.','<b>reflexive</b>: when subject and object are the same person. Only ich and du have a separate Dativ form.'],
+   ex:[['Ich helfe ihm, und er ruft mich an.','I help him, and he calls me.']]},
+  {t:'Verben mit Dativ', lead:'These verbs take a Dativ object, not an Akkusativ.', head:['verb','example'],
+   rows:[['helfen, danken, antworten','<i>Ich helfe <b>dir</b>. Ich danke <b>Ihnen</b>.</i>'],['gefallen, schmecken, passen, stehen','<i>Die Jacke gefällt <b>mir</b>. Sie steht <b>dir</b> gut.</i>'],['gehören, fehlen, glauben, gratulieren','<i>Das Buch gehört <b>meinem Bruder</b>.</i>'],['zuhören, zustimmen, folgen, begegnen','<i>Hör <b>mir</b> bitte zu!</i>'],['es geht + Dativ','<i>Wie geht es <b>dir</b>?</i>']],
+   read:['With <b>gefallen, schmecken, passen</b> the thing is the subject and the person is Dativ: <i>Mir gefällt die Stadt.</i>'],
+   ex:[['Kann ich Ihnen helfen?','Can I help you?']]},
+  {t:'Genusregeln', lead:'Endings that tell you the gender. Good guesses, with a few exceptions.', head:['article','endings and groups','examples'],
+   rows:[['<span class="f">die</span>','-ung, -heit, -keit, -schaft, -ion, -tät, -ei, -ie, -ik, -ur; most nouns in -e','die Wohnung, die Freiheit, die Information, die Bäckerei'],['<span class="n">das</span>','-chen, -lein, -um, -ment, -ma; infinitives as nouns','das Mädchen, das Museum, das Dokument, das Essen'],['<span class="m">der</span>','-er (people), -ling, -ismus, -ist, -ent; days, months, seasons, weather','der Lehrer, der Frühling, der Tourismus, der Montag, der Regen'],['compound','the <b>last</b> word decides','das Haus + die Tür → die Haustür']],
+   read:['<b>-e</b> words are usually feminine, but people and animals in -e are masculine: der Kollege, der Löwe.','The <b>colours</b> match the app: der blue, die pink, das green.'],
+   ex:[['Die Zeitung liegt auf dem Küchentisch.','The newspaper is on the kitchen table.']]},
+  {t:'Genitiv', lead:'Shows who something belongs to. Common in writing; in speech von + Dativ is normal.', head:['','m|masculine','f|feminine','n|neuter','pl|plural'],
+   rows:[['article','des · eines','der · einer','des · eines','der'],['noun','+ s / + es','no ending','+ s / + es','no ending'],['example','das Auto des Mann<b>es</b>','die Tasche der Frau','der Name des Kind<b>es</b>','die Zimmer der Kinder']],
+   read:['<b>-es</b> after one-syllable nouns and -s/-ß/-z: <i>des Tages, des Hauses</i>.','<b>Names</b>: just add -s: <i>Karims Auto</i>.','<b>Spoken</b>: <i>das Auto von meinem Vater</i> is fine.'],
+   ex:[['Das ist das Auto meines Vaters.','That’s my father’s car.']]},
+  {t:'N-Deklination', lead:'Some masculine nouns add -(e)n in every case except Nominativ singular.', head:['','singular','plural'],
+   rows:[['Nominativ','der Kollege','die Kollegen'],['Akkusativ','den Kollege<b>n</b>','die Kollegen'],['Dativ','dem Kollege<b>n</b>','den Kollegen'],['Genitiv','des Kollege<b>n</b>','der Kollegen']],
+   read:['<b>Which nouns</b>: masculine nouns in -e for people and animals (der Junge, der Kunde, der Löwe), foreign words in -ent, -ant, -ist, -at (der Student, der Praktikant, der Polizist), and der Herr, der Mensch, der Nachbar.','<b>der Herr</b> adds -n in the singular and -en in the plural: <i>Herrn, Herren</i>.'],
+   ex:[['Ich frage den Kunden, und er antwortet dem Polizisten.','I ask the customer, and he answers the police officer.']]},
+  {t:'Adjektive als Nomen', lead:'An adjective with a capital letter becomes a noun and keeps adjective endings.', head:['','after der/die','after ein/eine','plural'],
+   rows:[['a man','der Deutsch<b>e</b>','ein Deutsch<b>er</b>','die Deutsch<b>en</b> · Deutsch<b>e</b>'],['a woman','die Deutsch<b>e</b>','eine Deutsch<b>e</b>','die Deutsch<b>en</b> · Deutsch<b>e</b>'],['more like this','der Erwachsene, der Bekannte, der Verwandte','ein Erwachsener, ein Bekannter','die Bekannten']],
+   read:['The <b>ending</b> changes like an adjective: <i>ein Bekannter, mein Bekannter, mit einem Bekannten</i>.','After <b>etwas, nichts, viel, wenig</b> an adjective becomes a neuter noun with -es: <i>etwas Neues, nichts Gutes</i>. <i>Alles Gute!</i>'],
+   ex:[['Ein Bekannter hat mir etwas Neues erzählt.','An acquaintance told me something new.']]}]},
+ {id:'verben2', ch:'Verben 2: Vergangenheit, Passiv, Konjunktiv', intro:'Past tenses, reflexive verbs, the passive, Konjunktiv II, the future and verbs with zu.', tables:[
+  {t:'Perfekt: haben oder sein?', lead:'The spoken past: haben or sein in position 2, Partizip II at the end.', head:['auxiliary','used with','example'],
+   rows:[['sein','movement from A to B: gehen, fahren, fliegen, kommen, laufen','<i>Ich <b>bin</b> nach Köln <b>gefahren</b>.</i>'],['sein','change of state: aufstehen, einschlafen, werden, sterben','<i>Er <b>ist</b> früh <b>aufgestanden</b>.</i>'],['sein','sein, bleiben, passieren','<i>Was <b>ist</b> <b>passiert</b>?</i>'],['haben','all other verbs, and all verbs with an Akkusativ object','<i>Ich <b>habe</b> Pizza <b>gegessen</b>.</i>']],
+   read:['<b>auxiliary</b>: about 90 % of verbs use haben. Learn the sein verbs as a list.','<b>Position</b>: haben/sein in position 2, Partizip II at the very end.'],
+   ex:[['Wir sind ins Kino gegangen und haben einen Film gesehen.','We went to the cinema and saw a film.']]},
+  {t:'Partizip II', lead:'How to build the Partizip II.', head:['verb type','pattern','examples'],
+   rows:[['regular','ge- + stem + -t','machen → <b>ge</b>mach<b>t</b>, arbeiten → <b>ge</b>arbeit<b>et</b>'],['irregular','ge- + (changed) stem + -en','sehen → <b>ge</b>seh<b>en</b>, gehen → <b>ge</b>gang<b>en</b>'],['mixed','ge- + changed stem + -t','bringen → gebracht, denken → gedacht, wissen → gewusst'],['separable','prefix + ge + …','einkaufen → ein<b>ge</b>kauft, aufstehen → auf<b>ge</b>standen'],['inseparable (be-, ver-, er- …)','no ge-','bezahlen → bezahlt, verstehen → verstanden'],['ending in -ieren','no ge-','telefonieren → telefoniert, studieren → studiert']],
+   read:['<b>irregular</b> verbs often change the vowel too. See the list of irregular verbs at the end of this page.','<b>No ge-</b> when the first syllable is not stressed (be-, ver-, -ieren).'],
+   ex:[['Ich habe gestern eingekauft und die Rechnung bezahlt.','I went shopping yesterday and paid the bill.']]},
+  {t:'Präteritum', lead:'The written past. In speech, use it for sein, haben and the modal verbs.', head:['','sein','haben','können','regular: machen','irregular: gehen'],
+   rows:[['ich','war','hatte','konnte','mach<b>te</b>','ging'],['du','warst','hattest','konntest','mach<b>test</b>','gingst'],['er/sie/es','war','hatte','konnte','mach<b>te</b>','ging'],['wir','waren','hatten','konnten','mach<b>ten</b>','gingen'],['ihr','wart','hattet','konntet','mach<b>tet</b>','gingt'],['sie/Sie','waren','hatten','konnten','mach<b>ten</b>','gingen']],
+   read:['<b>regular</b>: stem + -te: ich machte, wir machten.','<b>irregular</b>: a new stem with no ending for ich and er: ich ging, er kam, sie sah.','<b>Modal verbs</b> lose the umlaut: konnte, musste, durfte, wollte, sollte, mochte.'],
+   ex:[['Als Kind wollte ich Pilot werden.','As a child I wanted to become a pilot.']]},
+  {t:'Plusquamperfekt', lead:'The past before the past: hatte or war + Partizip II.', head:['form','example'],
+   rows:[['hatte + Partizip II','<i>Ich <b>hatte</b> schon <b>gegessen</b>, als er kam.</i>'],['war + Partizip II','<i>Der Zug <b>war</b> schon <b>abgefahren</b>.</i>']],
+   read:['Use it for something that happened <b>before</b> another past event, often with <i>nachdem</i>.','<b>hatte or war</b>: the same choice as in the Perfekt.'],
+   ex:[['Nachdem ich die Prüfung bestanden hatte, habe ich gefeiert.','After I had passed the exam, I celebrated.']]},
+  {t:'Welche Zeit wann?', lead:'Which tense to use.', head:['tense','use','example'],
+   rows:[['Präsens','now, habits, and the future with a time word','<i>Morgen fahre ich nach Berlin.</i>'],['Perfekt','the past when you speak or write informally','<i>Ich habe gut geschlafen.</i>'],['Präteritum','the past in stories, reports, news; always for sein, haben, modal verbs','<i>Es war einmal …</i>'],['Plusquamperfekt','before another past event','<i>…, nachdem er gegessen hatte.</i>'],['Futur I','predictions, promises, assumptions','<i>Es wird regnen. Er wird krank sein.</i>']],
+   read:['In <b>everyday speech</b> you mostly need Präsens and Perfekt, plus war, hatte, konnte.'],
+   ex:[['Gestern war ich müde, deshalb habe ich nicht gekocht.','Yesterday I was tired, so I didn’t cook.']]},
+  {t:'Reflexive Verben', lead:'Verbs with sich: the subject does something to itself.', head:['','sich freuen','sich (Dat.) etwas wünschen'],
+   rows:[['ich','freue <b>mich</b>','wünsche <b>mir</b> etwas'],['du','freust <b>dich</b>','wünschst <b>dir</b> etwas'],['er/sie/es','freut <b>sich</b>','wünscht <b>sich</b> etwas'],['wir','freuen <b>uns</b>','wünschen <b>uns</b> etwas'],['ihr','freut <b>euch</b>','wünscht <b>euch</b> etwas'],['sie/Sie','freuen <b>sich</b>','wünschen <b>sich</b> etwas']],
+   read:['<b>Akkusativ</b> (mich, dich) when there is no other object.','<b>Dativ</b> (mir, dir) when there is another object: <i>Ich wasche mir die Hände.</i>','<b>Reziprok</b> (each other): <i>Wir treffen uns. Sie lieben sich.</i>','Common: sich freuen, sich treffen, sich ärgern, sich beeilen, sich erholen, sich anmelden, sich vorstellen.'],
+   ex:[['Wir treffen uns um acht und ich freue mich schon.','We’re meeting at eight and I’m already looking forward to it.']]},
+  {t:'stellen – stehen, legen – liegen …', lead:'Verbs of placing (where to?) and of position (where?).', head:['wohin? + Akkusativ (action)','wo? + Dativ (state)','example'],
+   rows:[['stellen (upright)','stehen','<i>Ich stelle die Flasche auf den Tisch. Sie steht auf dem Tisch.</i>'],['legen (flat)','liegen','<i>Ich lege das Buch auf das Bett. Es liegt auf dem Bett.</i>'],['setzen','sitzen','<i>Ich setze mich auf den Stuhl. Ich sitze auf dem Stuhl.</i>'],['hängen (regular: hängte)','hängen (irregular: hing)','<i>Ich hänge das Bild an die Wand. Es hängt an der Wand.</i>'],['stecken','stecken','<i>Ich stecke den Schlüssel in die Tasche.</i>']],
+   read:['<b>Left column</b>: you move something, regular verbs, Perfekt with haben.','<b>Middle column</b>: something is somewhere, irregular verbs.'],
+   ex:[['Wo liegt mein Handy? – Du hast es auf das Sofa gelegt.','Where is my phone? – You put it on the sofa.']]},
+  {t:'Konjunktiv II: Formen', lead:'The forms for wishes, politeness and unreal situations.', head:['infinitive','Konjunktiv II','example'],
+   rows:[['sein','wäre','<i>Das wäre schön.</i>'],['haben','hätte','<i>Ich hätte gern einen Tee.</i>'],['werden','würde + infinitive (most verbs)','<i>Ich würde gern reisen.</i>'],['können · müssen · dürfen','könnte · müsste · dürfte','<i>Könnten Sie mir helfen?</i>'],['sollen · wollen','sollte · wollte','<i>Du solltest mehr schlafen.</i>'],['wissen · geben · kommen','wüsste · gäbe · käme','<i>Wenn ich das wüsste …</i>'],['past','hätte / wäre + Partizip II','<i>Ich wäre gern gekommen.</i>']],
+   read:['<b>Most verbs</b> use <i>würde</i> + infinitive.','<b>Endings</b> like the Präteritum: ich wäre, du wärst, er wäre, wir wären.','<b>Past</b>: hätte/wäre + Partizip II for things that did not happen.'],
+   ex:[['Wenn ich Zeit hätte, würde ich mitkommen.','If I had time, I would come along.']]},
+  {t:'Konjunktiv II: Gebrauch', lead:'When to use the Konjunktiv II.', head:['use','example'],
+   rows:[['polite request','<i>Könnten Sie das bitte wiederholen?</i>'],['wish','<i>Ich hätte gern mehr Zeit. Wenn ich nur mehr Zeit hätte!</i>'],['advice','<i>Du solltest zum Arzt gehen. An deiner Stelle würde ich …</i>'],['unreal condition','<i>Wenn ich reich wäre, würde ich reisen.</i>'],['suggestion','<i>Wir könnten ins Kino gehen.</i>']],
+   read:['<b>Polite</b>: in shops, offices and on the phone, always use könnten, würden, hätten.'],
+   ex:[['An deiner Stelle würde ich den Job nehmen.','If I were you, I would take the job.']]},
+  {t:'Passiv', lead:'What happens matters, not who does it: werden + Partizip II.', head:['tense','form','example'],
+   rows:[['Präsens','werden + Partizip II','<i>Das Haus <b>wird</b> gebaut.</i>'],['Präteritum','wurde + Partizip II','<i>Der Dom <b>wurde</b> 1880 fertig gebaut.</i>'],['Perfekt','ist + Partizip II + worden','<i>Das Paket <b>ist</b> geliefert <b>worden</b>.</i>'],['with a modal verb','modal + Partizip II + werden','<i>Der Antrag <b>muss</b> unterschrieben <b>werden</b>.</i>'],['who did it','von + Dativ','<i>Der Brief wurde <b>von der Chefin</b> geschrieben.</i>']],
+   read:['<b>werden</b> in position 2, Partizip II at the end.','In the Perfekt it is <b>worden</b>, not <i>geworden</i>.','Very common in rules, instructions and news.'],
+   ex:[['Hier wird nicht geraucht.','There is no smoking here.']]},
+  {t:'werden: vier Funktionen', lead:'One verb, four jobs.', head:['function','form','example'],
+   rows:[['to become (full verb)','werden + noun / adjective','<i>Er wird Lehrer. Es wird kalt.</i>'],['future','werden + infinitive','<i>Ich werde dir helfen.</i>'],['passive','werden + Partizip II','<i>Das Auto wird repariert.</i>'],['Konjunktiv II','würde + infinitive','<i>Ich würde gern kommen.</i>']],
+   read:['Look at the <b>end of the sentence</b>: an infinitive means future, a Partizip II means passive.'],
+   ex:[['Es wird wohl regnen.','It will probably rain.']]},
+  {t:'Infinitiv mit und ohne zu', lead:'When the second verb needs zu and when it doesn’t.', head:['','after','example'],
+   rows:[['without zu','modal verbs; werden; lassen; gehen, bleiben, lernen; hören, sehen','<i>Ich kann schwimmen. Ich gehe einkaufen.</i>'],['with zu','most other verbs: anfangen, aufhören, versuchen, vergessen, vorhaben, helfen …','<i>Ich versuche, pünktlich <b>zu</b> sein.</i>'],['with zu','Es ist + adjective; Lust/Zeit/Angst haben','<i>Es ist wichtig, Deutsch <b>zu</b> lernen. Hast du Lust, mit<b>zu</b>kommen?</i>'],['um … zu, ohne … zu, statt … zu','purpose, without, instead of','<i>Ich lerne, <b>um</b> in Deutschland <b>zu</b> arbeiten.</i>']],
+   read:['<b>zu</b> goes before the infinitive; with separable verbs in the middle: anzurufen, mitzukommen.'],
+   ex:[['Ich habe vergessen, dich anzurufen.','I forgot to call you.']]},
+  {t:'Präpositionaladverbien: worauf? darauf', lead:'Asking about and referring to things after verbs with prepositions.', head:['','thing','person'],
+   rows:[['question','<b>wo(r)</b> + preposition: <i>Worauf wartest du?</i>','preposition + wen/wem: <i>Auf wen wartest du?</i>'],['answer','<b>da(r)</b> + preposition: <i>Ich warte darauf.</i>','preposition + pronoun: <i>Ich warte auf ihn.</i>']],
+   read:['<b>-r-</b> is added before a vowel: wo<b>r</b>an, da<b>r</b>über, wo<b>r</b>auf.','Only for <b>things</b>. For people use the preposition + pronoun.'],
+   ex:[['Wofür interessierst du dich? – Für Fußball. Ich interessiere mich sehr dafür.','What are you interested in? – Football. I’m very interested in it.']]}]});
+GT.push(
+ {id:'praep', ch:'Präpositionen', intro:'Which case follows which preposition, and the prepositions of time and place.', tables:[
+  {t:'Präpositionen und ihr Kasus', lead:'Every preposition fixes the case of the noun after it.', head:['case','prepositions','example'],
+   rows:[['Akkusativ','durch, für, gegen, ohne, um, bis, entlang','<i>Das ist <b>für meinen</b> Bruder.</i>'],['Dativ','aus, bei, mit, nach, seit, von, zu, gegenüber, ab','<i>Ich fahre <b>mit dem</b> Bus <b>zur</b> Arbeit.</i>'],['Akk or Dat (Wechsel)','an, auf, hinter, in, neben, über, unter, vor, zwischen','<i>Ich gehe <b>in die</b> Stadt. Ich bin <b>in der</b> Stadt.</i>'],['Genitiv','wegen, trotz, während, statt, innerhalb, außerhalb','<i><b>Wegen des</b> Regens bleiben wir zu Hause.</i>']],
+   read:['<b>Akkusativ</b>: learn “durch, für, gegen, ohne, um” as one chain.','<b>Dativ</b>: “aus, bei, mit, nach, seit, von, zu” – always Dativ, even with movement (<i>zu</i>).','<b>Wechsel</b>: see the next table.','<b>Genitiv</b>: in speech many people use the Dativ after wegen and trotz.'],
+   ex:[['Seit einem Jahr wohne ich bei meinem Onkel.','I’ve been living with my uncle for a year.']]},
+  {t:'Wechselpräpositionen: Wo? oder Wohin?', lead:'The nine two-way prepositions take Akkusativ for a direction and Dativ for a position.', head:['question','case','meaning','example'],
+   rows:[['Wohin?','Akkusativ','movement to a new place','<i>Ich lege das Handy <b>auf den</b> Tisch.</i>'],['Wo?','Dativ','a place, no change of place','<i>Das Handy liegt <b>auf dem</b> Tisch.</i>']],
+   read:['<b>an</b> (at, on a vertical surface), <b>auf</b> (on top of), <b>in</b> (in), <b>über</b> (above), <b>unter</b> (under), <b>vor</b> (in front of), <b>hinter</b> (behind), <b>neben</b> (next to), <b>zwischen</b> (between).','The verbs help: stellen/legen/hängen → Wohin; stehen/liegen/hängen → Wo.'],
+   ex:[['Ich hänge das Bild an die Wand. Jetzt hängt es an der Wand.','I hang the picture on the wall. Now it hangs on the wall.']]},
+  {t:'Verschmelzungen', lead:'A preposition and an article often melt into one word.', head:['short form','long form','example'],
+   rows:[['am','an dem','<i>am Montag, am Bahnhof</i>'],['ans','an das','<i>ans Meer</i>'],['im','in dem','<i>im Sommer, im Kino</i>'],['ins','in das','<i>ins Kino</i>'],['beim','bei dem','<i>beim Arzt</i>'],['vom','von dem','<i>vom Bahnhof</i>'],['zum','zu dem','<i>zum Arzt</i>'],['zur','zu der','<i>zur Arbeit, zur Schule</i>']],
+   read:['The <b>short form</b> is normal in speech and writing. The long form stresses “that one”.'],
+   ex:[['Ich gehe zum Arzt und danach ins Kino.','I’m going to the doctor and then to the cinema.']]},
+  {t:'Wo? Wohin? Woher? (Orte)', lead:'Which preposition for which place.', head:['place','Wo? (Dativ)','Wohin?','Woher? (Dativ)'],
+   rows:[['cities, most countries','<b>in</b> Köln','<b>nach</b> Köln','<b>aus</b> Köln'],['countries with an article','<b>in der</b> Türkei','<b>in die</b> Türkei','<b>aus der</b> Türkei'],['buildings, rooms','<b>im</b> Kino, <b>in der</b> Schule','<b>ins</b> Kino, <b>in die</b> Schule','<b>aus dem</b> Kino'],['people, shops, doctors','<b>bei</b> Oma, <b>beim</b> Arzt','<b>zu</b> Oma, <b>zum</b> Arzt','<b>von</b> Oma, <b>vom</b> Arzt'],['open places: sea, square, station','<b>am</b> Meer, <b>am</b> Bahnhof','<b>ans</b> Meer, <b>zum</b> Bahnhof','<b>vom</b> Meer, <b>vom</b> Bahnhof'],['home','<b>zu</b> Hause','<b>nach</b> Hause','<b>von</b> zu Hause']],
+   read:['<b>Wo</b>: where something is. <b>Wohin</b>: where to. <b>Woher</b>: where from.','<b>nach</b> only for cities, countries without an article and <i>nach Hause</i>; for people and places use <b>zu</b>.'],
+   ex:[['Ich komme gerade vom Arzt und gehe jetzt nach Hause.','I’ve just come from the doctor and I’m going home now.']]},
+  {t:'Präpositionen der Zeit', lead:'Prepositions for times, days and periods.', head:['preposition','used for','example'],
+   rows:[['um','clock time','<i>um 8 Uhr</i>'],['am','days, dates, parts of the day','<i>am Montag, am 3. Mai, am Abend</i> (but: <i>in der Nacht</i>)'],['im','months, seasons, years with Jahr','<i>im Mai, im Sommer, im Jahr 2026</i>'],['von … bis','from … to','<i>von 9 bis 17 Uhr</i>'],['seit','since, for (still going on)','<i>seit zwei Jahren</i> (Dativ)'],['vor','ago','<i>vor drei Tagen</i> (Dativ)'],['in','in (future)','<i>in einer Woche</i>'],['ab','from (on)','<i>ab Montag</i>'],['für','for (planned duration)','<i>für zwei Wochen</i>'],['während · innerhalb','during · within','<i>während des Urlaubs, innerhalb einer Woche</i> (Genitiv)']],
+   read:['<b>seit</b> goes with the present tense: <i>Ich wohne seit 2024 hier.</i>','<b>Years</b> alone have no preposition: <i>2024 bin ich umgezogen.</i>'],
+   ex:[['Ich lerne seit einem Jahr Deutsch und mache in drei Monaten die Prüfung.','I’ve been learning German for a year and take the exam in three months.']]},
+  {t:'hier, hierher, oben, nach oben', lead:'Adverbs for position (wo?) and direction (wohin?).', head:['Wo?','Wohin?','Woher?'],
+   rows:[['hier','hierher','von hier'],['dort / da','dorthin / dahin','von dort'],['oben · unten','nach oben · nach unten','von oben · von unten'],['links · rechts','nach links · nach rechts','von links · von rechts'],['drinnen · draußen','rein (hinein) · raus (hinaus)','von drinnen · von draußen'],['vorne · hinten','nach vorne · nach hinten','von vorne · von hinten'],['überall · irgendwo','überallhin · irgendwohin','von überall']],
+   read:['<b>hin</b> = away from the speaker, <b>her</b> = towards the speaker: <i>Komm her! Geh hin!</i>','In speech <b>rein/raus</b> replace herein/hinaus.'],
+   ex:[['Komm bitte nach oben, ich bin oben im Büro.','Please come upstairs; I’m upstairs in the office.']]}]},
+ {id:'adj', ch:'Adjektive', intro:'Adjective endings in all cases, comparison and participles as adjectives.', tables:[
+  {t:'Adjektivendungen nach der, die, das', lead:'After der, dieser, jeder, welcher: the ending is -e or -en.', head:['','m|masculine','f|feminine','n|neuter','pl|plural'],
+   rows:[['Nominativ','der neu<b>e</b> Tisch','die neu<b>e</b> Lampe','das neu<b>e</b> Bett','die neu<b>en</b> Stühle'],['Akkusativ','den neu<b>en</b> Tisch','die neu<b>e</b> Lampe','das neu<b>e</b> Bett','die neu<b>en</b> Stühle'],['Dativ','dem neu<b>en</b> Tisch','der neu<b>en</b> Lampe','dem neu<b>en</b> Bett','den neu<b>en</b> Stühlen'],['Genitiv','des neu<b>en</b> Tisches','der neu<b>en</b> Lampe','des neu<b>en</b> Bettes','der neu<b>en</b> Stühle']],
+   read:['<b>-e</b> only in the five places of the singular Nominativ and the feminine/neuter Akkusativ.','<b>-en</b> everywhere else. The article already shows the case, so the adjective stays simple.'],
+   ex:[['Ich nehme die blaue Jacke mit dem großen Knopf.','I’ll take the blue jacket with the big button.']]},
+  {t:'Adjektivendungen nach ein, kein, mein', lead:'After ein, kein and the possessives: the adjective shows the gender where ein has no ending.', head:['','m|masculine','f|feminine','n|neuter','pl|plural (kein, mein)'],
+   rows:[['Nominativ','ein neu<b>er</b> Tisch','eine neu<b>e</b> Lampe','ein neu<b>es</b> Bett','keine neu<b>en</b> Stühle'],['Akkusativ','einen neu<b>en</b> Tisch','eine neu<b>e</b> Lampe','ein neu<b>es</b> Bett','keine neu<b>en</b> Stühle'],['Dativ','einem neu<b>en</b> Tisch','einer neu<b>en</b> Lampe','einem neu<b>en</b> Bett','keinen neu<b>en</b> Stühlen'],['Genitiv','eines neu<b>en</b> Tisches','einer neu<b>en</b> Lampe','eines neu<b>en</b> Bettes','keiner neu<b>en</b> Stühle']],
+   read:['<b>ein</b> has no ending in three places (masc. Nom, neuter Nom and Akk), so the adjective takes the der-word signal: -er, -es.','Everything else is like the table above: -e or -en.'],
+   ex:[['Er hat ein neues Auto und einen alten Hund.','He has a new car and an old dog.']]},
+  {t:'Adjektivendungen ohne Artikel', lead:'With no article, the adjective carries the full article ending.', head:['','m|masculine','f|feminine','n|neuter','pl|plural'],
+   rows:[['Nominativ','frisch<b>er</b> Kaffee','frisch<b>e</b> Milch','frisch<b>es</b> Brot','frisch<b>e</b> Eier'],['Akkusativ','frisch<b>en</b> Kaffee','frisch<b>e</b> Milch','frisch<b>es</b> Brot','frisch<b>e</b> Eier'],['Dativ','mit frisch<b>em</b> Kaffee','mit frisch<b>er</b> Milch','mit frisch<b>em</b> Brot','mit frisch<b>en</b> Eiern'],['Genitiv','frisch<b>en</b> Kaffees','frisch<b>er</b> Milch','frisch<b>en</b> Brotes','frisch<b>er</b> Eier']],
+   read:['The ending copies the article: der → -er, die → -e, das → -es, dem → -em.','Only exception: Genitiv masculine and neuter take -en.','Typical in adverts, menus and after numbers: <i>zwei große Zimmer, mit freundlichen Grüßen</i>.'],
+   ex:[['Wir suchen freundliche Mitarbeiter mit guten Deutschkenntnissen.','We are looking for friendly staff with good German.']]},
+  {t:'Komparativ und Superlativ', lead:'Comparing: bigger, the biggest.', head:['','base','comparative (+er)','superlative'],
+   rows:[['regular','schnell','schnell<b>er</b>','am schnell<b>sten</b>'],['short words with umlaut','alt · groß · jung','<b>ä</b>lter · gr<b>ö</b>ßer · j<b>ü</b>nger','am <b>ä</b>ltesten · am gr<b>ö</b>ßten · am j<b>ü</b>ngsten'],['irregular','gut · viel · gern','besser · mehr · lieber','am besten · am meisten · am liebsten'],['irregular','hoch · nah','höher · näher','am höchsten · am nächsten'],['before a noun','','der schnell<b>ere</b> Zug','der schnell<b>ste</b> Zug']],
+   read:['<b>als</b> after a comparative: <i>größer als ich</i>. <b>so … wie</b> for the same: <i>so groß wie ich</i>.','<b>-esten</b> after -d, -t, -s, -ß, -z: am ältesten, am kürzesten.','<b>Before a noun</b> the comparative and superlative take normal adjective endings.'],
+   ex:[['Der Zug ist schneller als der Bus, aber das Flugzeug ist am schnellsten.','The train is faster than the bus, but the plane is the fastest.']]},
+  {t:'Partizipien als Adjektive', lead:'Participles can stand before a noun like adjectives.', head:['form','meaning','example'],
+   rows:[['Partizip I: infinitive + d','something that is happening now (active)','<i>das schlafen<b>d</b>e Kind</i> (the sleeping child)'],['Partizip II','something already done (passive)','<i>das reparier<b>t</b>e Auto</i> (the repaired car)']],
+   read:['Both take normal adjective endings: <i>ein lachendes Kind, mit gekochten Eiern</i>.','Very common in written texts and job ads: <i>die steigenden Preise, ein abgeschlossenes Studium</i>.'],
+   ex:[['Ich habe ein gebrauchtes Fahrrad gekauft.','I bought a used bike.']]}]},
+ {id:'saetze2', ch:'Sätze verbinden', intro:'Joining sentences: where the verb goes after each connector, relative clauses and more.', tables:[
+  {t:'Konnektoren: wohin mit dem Verb?', lead:'The connector decides the position of the verb.', head:['type','connectors','verb','example'],
+   rows:[['position 0','und, aber, oder, denn, sondern','no change','<i>…, <b>denn</b> ich <b>bin</b> krank.</i>'],['position 1','deshalb, darum, trotzdem, dann, danach, außerdem, sonst, also','right after the connector','<i>…, <b>deshalb</b> <b>bleibe</b> ich zu Hause.</i>'],['subordinate clause','weil, dass, wenn, ob, obwohl, als, damit, bevor, nachdem, während, bis, seit, sobald','at the very end','<i>…, <b>weil</b> ich krank <b>bin</b>.</i>']],
+   read:['<b>position 0</b>: the connector takes no position; the sentence goes on normally.','<b>position 1</b>: the connector is position 1, so the verb follows at once and the subject comes after it.','<b>subordinate</b>: verb at the end, comma before. If the subordinate clause comes first, the main clause starts with its verb: <i>Weil ich krank bin, <b>bleibe</b> ich zu Hause.</i>'],
+   ex:[['Ich lerne Deutsch, weil ich in Deutschland arbeiten möchte.','I learn German because I want to work in Germany.']]},
+  {t:'Grund und Gegengrund', lead:'Reasons and contrasts with three word orders.', head:['meaning','subordinate (verb at end)','position 0','position 1'],
+   rows:[['reason','weil, da','denn','deshalb, darum, deswegen'],['contrast','obwohl','aber','trotzdem'],['condition','wenn, falls','','sonst (otherwise)']],
+   read:['<b>Same meaning, different order</b>: <i>weil ich müde bin · denn ich bin müde · deshalb bin ich müde</i>.'],
+   ex:[['Obwohl ich müde bin, gehe ich zum Training.','Although I’m tired, I’m going to training.']]},
+  {t:'Temporale Nebensätze', lead:'Time conjunctions.', head:['conjunction','meaning','example'],
+   rows:[['als','when: once in the past','<i>Als ich ein Kind war, …</i>'],['wenn','when, whenever: present, future, repeated','<i>Wenn ich Zeit habe, …</i>'],['während','while','<i>Während er kocht, …</i>'],['bevor','before','<i>Bevor du gehst, …</i>'],['nachdem','after (with Plusquamperfekt)','<i>Nachdem ich gegessen hatte, …</i>'],['seit(dem)','since','<i>Seit ich hier wohne, …</i>'],['bis','until','<i>Warte, bis ich komme.</i>'],['sobald','as soon as','<i>Sobald ich fertig bin, …</i>']],
+   read:['<b>als or wenn</b>: one time in the past → als; repeated or present/future → wenn.'],
+   ex:[['Als ich nach Deutschland kam, konnte ich kein Deutsch.','When I came to Germany, I couldn’t speak German.']]},
+  {t:'Relativpronomen', lead:'der, die, das … in relative clauses. Gender and number come from the noun, the case from the relative clause.', head:['','m|masculine','f|feminine','n|neuter','pl|plural'],
+   rows:[['Nominativ','der','die','das','die'],['Akkusativ','<b>den</b>','die','das','die'],['Dativ','<b>dem</b>','<b>der</b>','<b>dem</b>','<b>denen</b>'],['Genitiv','<b>dessen</b>','<b>deren</b>','<b>dessen</b>','<b>deren</b>']],
+   read:['Like the article, except <b>Dativ plural denen</b> and the <b>Genitiv</b> forms dessen/deren.','<b>With a preposition</b>: the preposition goes first: <i>die Firma, <b>in der</b> ich arbeite</i>.','<b>wo</b> for places, <b>was</b> after alles, etwas, nichts, das: <i>alles, was ich weiß</i>.','The verb goes to the end; commas on both sides.'],
+   ex:[['Das ist der Kollege, dem ich geholfen habe.','That’s the colleague I helped.']]},
+  {t:'Finalsätze: um … zu oder damit', lead:'Saying why you do something (purpose).', head:['form','when','example'],
+   rows:[['um … zu + infinitive','same subject in both parts','<i>Ich lerne, <b>um</b> die Prüfung <b>zu</b> bestehen.</i>'],['damit + verb at the end','different subjects','<i>Ich spreche langsam, <b>damit</b> du mich verstehst.</i>']],
+   read:['With the <b>same subject</b> you can use both, but um … zu is shorter.'],
+   ex:[['Er spart Geld, um ein Auto zu kaufen.','He’s saving money to buy a car.']]},
+  {t:'Doppelkonnektoren', lead:'Connectors in two parts.', head:['connector','meaning','example'],
+   rows:[['sowohl … als auch','both … and','<i>sowohl Arabisch als auch Französisch</i>'],['nicht nur … sondern auch','not only … but also','<i>nicht nur nett, sondern auch klug</i>'],['entweder … oder','either … or','<i>entweder heute oder morgen</i>'],['weder … noch','neither … nor','<i>weder Zeit noch Geld</i>'],['zwar … aber','admittedly … but','<i>zwar teuer, aber gut</i>'],['je … desto','the more … the more','<i>Je mehr ich übe, desto besser werde ich.</i>']],
+   read:['<b>je … desto</b>: je-part has the verb at the end, desto-part has the verb right after the comparative.'],
+   ex:[['Ich spreche sowohl Arabisch als auch Französisch.','I speak both Arabic and French.']]},
+  {t:'Indirekte Fragen', lead:'A question inside a sentence: the verb goes to the end.', head:['direct question','indirect question'],
+   rows:[['<i>Wann <b>kommt</b> der Bus?</i>','<i>Wissen Sie, wann der Bus <b>kommt</b>?</i>'],['<i>Kommst du morgen?</i>','<i>Ich weiß nicht, <b>ob</b> du morgen <b>kommst</b>.</i>']],
+   read:['<b>W-questions</b> keep the question word.','<b>Yes/no questions</b> become <b>ob</b>.','Very polite: <i>Können Sie mir sagen, wo der Bahnhof ist?</i>'],
+   ex:[['Können Sie mir sagen, wo das Bürgeramt ist?','Can you tell me where the Bürgeramt is?']]},
+  {t:'Vergleichssätze', lead:'Comparing in whole sentences.', head:['pattern','example'],
+   rows:[['so + adjective + wie','<i>Das Wetter ist so schön, wie es im Wetterbericht hieß.</i>'],['comparative + als','<i>Die Prüfung war leichter, als ich gedacht hatte.</i>'],['je … desto','<i>Je früher wir losfahren, desto weniger Stau gibt es.</i>']],
+   read:['After <b>als</b> and <b>wie</b> in a sentence, the verb goes to the end.'],
+   ex:[['Der Job ist besser bezahlt, als ich erwartet habe.','The job pays better than I expected.']]}]},
+ {id:'wort', ch:'Wortbildung', intro:'How German builds new words, and the little words that colour a sentence.', tables:[
+  {t:'Komposita', lead:'German joins words into one. The last word decides the gender and the meaning.', head:['parts','compound','note'],
+   rows:[['die Hand + der Schuh','<span class="m">der</span> Handschuh','the last word gives the article'],['arbeiten + der Platz','<span class="m">der</span> Arbeitsplatz','an -s- often joins the parts'],['schreiben + der Tisch','<span class="m">der</span> Schreibtisch','a verb loses -en'],['die Kinder + der Garten','<span class="m">der</span> Kindergarten','the first part describes the second']],
+   read:['<b>Read from the back</b>: a Haustür is a kind of Tür.'],
+   ex:[['Mein Arbeitsplatz ist neben der Haustür.','My workplace is next to the front door.']]},
+  {t:'Nomen und Adjektive bilden', lead:'Endings that make nouns and adjectives.', head:['ending','makes','examples'],
+   rows:[['-ung (die)','noun from a verb','wohnen → die Wohnung, ordnen → die Ordnung'],['-heit, -keit (die)','noun from an adjective','frei → die Freiheit, möglich → die Möglichkeit'],['-er / -erin','person who does it','lehren → der Lehrer, die Lehrerin'],['das + infinitive','the activity','das Essen, das Schwimmen'],['-ig, -lich, -isch','adjective','die Sonne → sonnig, der Freund → freundlich, Marokko → marokkanisch'],['-bar','can be done','essen → essbar, lösen → lösbar'],['-los / un-','without / not','arbeitslos, unfreundlich']],
+   read:['<b>-in</b> makes the female form: der Kollege → die Kollegin; plural -innen.'],
+   ex:[['Die Lösung ist leider nicht machbar.','Unfortunately the solution is not feasible.']]},
+  {t:'Partikeln', lead:'Small words in speech that change the tone, not the facts.', head:['word','tone','example'],
+   rows:[['mal','softer, friendlier','<i>Komm mal her!</i>'],['doch','insisting or encouraging','<i>Komm doch mit!</i>'],['ja','“as we both know”','<i>Das ist ja interessant!</i>'],['denn','curious, in questions','<i>Wo warst du denn?</i>'],['eben / halt','“that’s just how it is”','<i>Das ist eben so.</i>'],['schon','reassuring','<i>Das klappt schon.</i>']],
+   read:['They have no exact English translation. Listen for them in videos and copy them.'],
+   ex:[['Kannst du mir mal helfen?','Could you give me a hand?']]}]},
+);
+// Irregular verbs: infinitive | er-form if it changes | Präteritum | Perfekt | English
+const IRREG = `beginnen||begann|hat begonnen|to begin
+bekommen||bekam|hat bekommen|to get
+bitten||bat|hat gebeten|to ask for
+bleiben||blieb|ist geblieben|to stay
+brechen|bricht|brach|hat gebrochen|to break
+brennen||brannte|hat gebrannt|to burn
+bringen||brachte|hat gebracht|to bring
+denken||dachte|hat gedacht|to think
+dürfen|darf|durfte|hat gedurft|to be allowed
+empfehlen|empfiehlt|empfahl|hat empfohlen|to recommend
+entscheiden||entschied|hat entschieden|to decide
+essen|isst|aß|hat gegessen|to eat
+fahren|fährt|fuhr|ist gefahren|to go, to drive
+fallen|fällt|fiel|ist gefallen|to fall
+finden||fand|hat gefunden|to find
+fliegen||flog|ist geflogen|to fly
+geben|gibt|gab|hat gegeben|to give
+gefallen|gefällt|gefiel|hat gefallen|to please
+gehen||ging|ist gegangen|to go
+gewinnen||gewann|hat gewonnen|to win
+haben|hat|hatte|hat gehabt|to have
+halten|hält|hielt|hat gehalten|to hold, to stop
+hängen||hing|hat gehangen|to hang (be hanging)
+heben||hob|hat gehoben|to lift
+heißen||hieß|hat geheißen|to be called
+helfen|hilft|half|hat geholfen|to help
+kennen||kannte|hat gekannt|to know
+kommen||kam|ist gekommen|to come
+können|kann|konnte|hat gekonnt|can
+laden|lädt|lud|hat geladen|to load, to charge
+lassen|lässt|ließ|hat gelassen|to let, to leave
+laufen|läuft|lief|ist gelaufen|to run, to walk
+leihen||lieh|hat geliehen|to lend
+lesen|liest|las|hat gelesen|to read
+liegen||lag|hat gelegen|to lie
+lügen||log|hat gelogen|to lie (not tell the truth)
+messen|misst|maß|hat gemessen|to measure
+mögen|mag|mochte|hat gemocht|to like
+müssen|muss|musste|hat gemusst|must
+nehmen|nimmt|nahm|hat genommen|to take
+nennen||nannte|hat genannt|to name
+raten|rät|riet|hat geraten|to advise, to guess
+rennen||rannte|ist gerannt|to run
+riechen||roch|hat gerochen|to smell
+rufen||rief|hat gerufen|to call
+scheinen||schien|hat geschienen|to shine, to seem
+schieben||schob|hat geschoben|to push
+schlafen|schläft|schlief|hat geschlafen|to sleep
+schlagen|schlägt|schlug|hat geschlagen|to hit
+schließen||schloss|hat geschlossen|to close
+schneiden||schnitt|hat geschnitten|to cut
+schreiben||schrieb|hat geschrieben|to write
+schreien||schrie|hat geschrien|to shout
+schwimmen||schwamm|ist geschwommen|to swim
+sehen|sieht|sah|hat gesehen|to see
+sein|ist|war|ist gewesen|to be
+senden||sandte|hat gesandt|to send
+singen||sang|hat gesungen|to sing
+sitzen||saß|hat gesessen|to sit
+sollen|soll|sollte|hat gesollt|should
+sprechen|spricht|sprach|hat gesprochen|to speak
+springen||sprang|ist gesprungen|to jump
+stehen||stand|hat gestanden|to stand
+stehlen|stiehlt|stahl|hat gestohlen|to steal
+steigen||stieg|ist gestiegen|to climb, to rise
+sterben|stirbt|starb|ist gestorben|to die
+streiten||stritt|hat gestritten|to argue
+tragen|trägt|trug|hat getragen|to carry, to wear
+treffen|trifft|traf|hat getroffen|to meet
+treiben||trieb|hat getrieben|to do (sport)
+trinken||trank|hat getrunken|to drink
+tun||tat|hat getan|to do
+vergessen|vergisst|vergaß|hat vergessen|to forget
+verlieren||verlor|hat verloren|to lose
+verstehen||verstand|hat verstanden|to understand
+wachsen|wächst|wuchs|ist gewachsen|to grow
+waschen|wäscht|wusch|hat gewaschen|to wash
+werden|wird|wurde|ist geworden|to become
+werfen|wirft|warf|hat geworfen|to throw
+wiegen||wog|hat gewogen|to weigh
+wissen|weiß|wusste|hat gewusst|to know
+wollen|will|wollte|hat gewollt|to want
+ziehen||zog|hat gezogen|to pull, to move`.split('\n').map(l => l.split('|'));
+GT.push({id:'anhang', ch:'Anhang: Listen', intro:'Look-up lists: irregular verbs, verbs with two objects, ordinal numbers.', tables:[
+  {t:'Unregelmäßige Verben', lead:`The ${IRREG.length} irregular verbs you need most up to B1. Verbs with a prefix follow their base verb: ankommen like kommen, verstehen like stehen.`, head:['infinitive','er/sie/es (if it changes)','Präteritum','Perfekt','English'],
+   rows:IRREG.map(([inf, er, pr, pf, en]) => [`<b>${inf}</b>`, er, pr, pf, en]),
+   read:['<b>er/sie/es</b>: only filled in when the present tense changes the vowel (fährt, nimmt).','<b>Perfekt</b>: <i>ist</i> marks the verbs that take sein.'],
+   ex:[['Gestern bin ich früh aufgestanden und habe den Bus genommen.','Yesterday I got up early and took the bus.']]},
+  {t:'Verben mit Dativ und Akkusativ', lead:'Verbs with two objects: a person in the Dativ and a thing in the Akkusativ.', head:['verb','example'],
+   rows:[['geben, schenken, leihen','<i>Ich gebe <b>dem Kind</b> (Dat) <b>einen Apfel</b> (Akk).</i>'],['bringen, schicken, kaufen','<i>Er schickt <b>mir</b> <b>eine E-Mail</b>.</i>'],['zeigen, erklären, erzählen','<i>Ich zeige <b>dir</b> <b>die Stadt</b>.</i>'],['empfehlen, wünschen, verbieten','<i>Der Arzt verbietet <b>ihm</b> <b>das Rauchen</b>.</i>'],['sagen, schreiben, beantworten','<i>Sag <b>mir</b> <b>die Wahrheit</b>!</i>']],
+   read:['The <b>person</b> (receiver) is Dativ, the <b>thing</b> is Akkusativ.','Order: two nouns → Dativ first; two pronouns → Akkusativ first: <i>Ich gebe ihn ihm.</i>'],
+   ex:[['Kannst du mir das Salz geben?','Can you pass me the salt?']]},
+  {t:'Ordinalzahlen', lead:'First, second, third … for dates and rankings.', head:['number','ordinal','rule'],
+   rows:[['1. · 3. · 7. · 8.','erste · dritte · siebte · achte','irregular, learn them'],['2. – 19.','zweite, vierte … neunzehnte','number + -te'],['20. and up','zwanzigste, einundzwanzigste, hundertste','number + -ste'],['date','am 1. Mai = am ersten Mai','am + ordinal with -en'],['written','der 3. Oktober','a full stop after the number']],
+   read:['Ordinals take adjective endings: <i>der erste Tag, am ersten Tag, mein zweites Kind</i>.'],
+   ex:[['Mein Geburtstag ist am dreiundzwanzigsten Juni.','My birthday is on the twenty-third of June.']]}]});
 LESSONS.find(l => l.id === 'aussprache').repeat = ['Zeit','Bier','heute','Häuser','Schule','spielen','Stadt','ich','nicht','Buch','zehn','Vater','Wasser','Sonne','Straße','über','müde','schön','Käse','Mädchen','Brötchen','Entschuldigung'];
 // ---- Telefon-Training: role-play calls. The app speaks the other person, you answer out loud. ----
 // keys: what a good answer must contain. "a/b" = either one; each one matches at the start of a word, so stems like "entschuldig" work.
@@ -3850,7 +4201,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = '669c31a';  // build.py puts the build number here
+const APP_VERSION = '8867ec7';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -4547,7 +4898,7 @@ function vTabelle(){
   $main.innerHTML = `
   <section class="card intro">
     <h2>Die <span class="hl">Tabelle</span></h2>
-    <p class="muted">Everything about cases on one page. Come back here whenever you hesitate.</p>
+    <p class="muted">Cases at a glance first. Below it, every grammar table from A1 to B1, chapter by chapter, each with how to read it.</p>
     <h4>Step 1 · Ask the question</h4>
     <div class="tablewrap"><table class="ct"><tr><th>ask</th><th>case</th><th>job</th></tr>
       <tr><td><b>Wer? Was?</b></td><td>Nominativ</td><td>subject: who does it</td></tr>
@@ -4589,7 +4940,16 @@ function vTabelle(){
     <p>kann · muss · will · darf · soll · möchte (ich and er/sie/es the same). Past: konnte · musste · wollte · war · hatte. Polite: <i>Könnten Sie …? · Ich hätte gern … · Ich würde gern … · Das wäre …</i></p>
     <h4>Reflexive pronouns</h4>
     <p>mich · dich · <b>sich</b> · uns · euch · <b>sich</b> (er/sie/es, sie, Sie)</p>
-  </section>`;
+  </section>
+  <section class="card stack"><h2>Alle Tabellen</h2><p class="muted" style="margin:0">${GT.reduce((a, c) => a + c.tables.length, 0)} tables in ${GT.length} chapters, in the order of Grammatik Aktiv. Tap a chapter to open it.</p>
+    <div class="gtnav">${GT.map(c => `<button data-gt="${c.id}">${esc(c.ch.split(':')[0])}</button>`).join('')}</div></section>
+  ${GT.map(c => `<details class="card gtch" id="gt-${c.id}"><summary><h3>${esc(c.ch)}</h3><span class="muted">${esc(c.intro)} · ${c.tables.length} tables</span></summary>
+    ${c.tables.map(t => `<section class="gtt"><h4>${esc(t.t)}</h4><p class="muted" style="margin:0 0 8px">${t.lead}</p>
+      <div class="tablewrap"><table class="ct"><tr>${t.head.map(h => { const [k, x] = /^(m|f|n|pl)\|/.test(h) ? h.split('|') : ['', h]; return `<th class="${k}">${x}</th>`; }).join('')}</tr>
+        ${t.rows.map(r => `<tr>${r.map(x => `<td>${x}</td>`).join('')}</tr>`).join('')}</table></div>
+      <ul class="gtread">${t.read.map(x => `<li>${x}</li>`).join('')}</ul>${t.tip ? `<p class="tip">${t.tip}</p>` : ''}
+      ${(t.ex || []).map(([de, en]) => `<div class="ex">${sayBtn(de)}<div><b>${de}</b><span>${en}</span></div></div>`).join('')}</section>`).join('')}</details>`).join('')}`;
+  $main.querySelectorAll('[data-gt]').forEach(b => b.onclick = () => { const d = document.getElementById('gt-' + b.dataset.gt); d.open = true; d.scrollIntoView({block:'start'}); });
 }
 
 // ---- Gemini key: stored on this device only, never in the progress code ----
