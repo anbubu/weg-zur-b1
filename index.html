@@ -540,7 +540,7 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 .card{border:1px solid var(--line);box-shadow:none}
 
 /* chunky buttons: a darker edge underneath that presses down */
-.btn{border-radius:999px;padding:13px 22px;font-weight:700;font-size:.95rem;letter-spacing:.01em;box-shadow:0 4px 0 var(--cta-edge);transition:transform .08s,box-shadow .08s,filter .15s}
+.btn{max-width:100%;white-space:normal;text-align:center;border-radius:999px;padding:13px 22px;font-weight:700;font-size:.95rem;letter-spacing:.01em;box-shadow:0 4px 0 var(--cta-edge);transition:transform .08s,box-shadow .08s,filter .15s}
 .btn:hover:not(:disabled){box-shadow:0 4px 0 var(--cta-edge);filter:brightness(1.1)}
 .btn:active:not(:disabled){transform:translateY(3px);box-shadow:0 1px 0 var(--cta-edge)}
 .btn.ghost{background:var(--panel);color:var(--ink);box-shadow:inset 0 0 0 2px var(--line),0 4px 0 var(--line)}
@@ -613,7 +613,6 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 .phero .seg-tabs button[aria-pressed="true"]{background:#fff;color:#17171F}
 .phero .btn.lime{max-width:100%;white-space:normal;text-align:left}
 .phero .btn.lime .bmin{white-space:nowrap}
-#testout{white-space:normal;max-width:100%;text-align:center}
 .phero .done-note{margin:6px 0 0;font-weight:700}
 .plancard .blocks{margin:0;padding:18px 18px 4px}
 .plancard > .muted{padding:0 18px 18px}
@@ -676,7 +675,7 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 .cstats div{min-width:124px;background:var(--panel);border:2px solid var(--line);border-radius:var(--r-card);padding:10px 16px;box-shadow:0 4px 0 var(--line)}
 .cstats small{display:block;font:800 .68rem var(--f);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
 .cstats b{font-size:1.8rem;font-weight:800;letter-spacing:-.03em}
-.week{display:flex;gap:10px;justify-content:center;flex-wrap:wrap}
+.week{display:flex;gap:6px;justify-content:center}
 .week span{display:flex;flex-direction:column;align-items:center;gap:5px;font:800 .72rem var(--f);color:var(--muted)}
 .week i{width:36px;height:36px;border-radius:50%;border:2px solid var(--line);display:grid;place-items:center;font-style:normal;background:var(--panel)}
 .week i.on{background:var(--lime);border-color:var(--lime-edge);color:var(--on-lime)}
@@ -3353,7 +3352,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = 'b2d7a9f';  // build.py puts the build number here
+const APP_VERSION = '04810fa';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -3704,17 +3703,19 @@ function startSession(){
 }
 function sessionDone(){
   activity = true; nav();
-  const s = streakInfo(state.met, today()), xpT = minutesOn(state, today());
+  const s = streakInfo(state.met, today()), xpT = minutesOn(state, today()), nl = nextLesson();
   const t = today(), [yy, mm, dd] = t.split('-').map(Number), mon = addDays(t, -((new Date(yy, mm - 1, dd).getDay() + 6) % 7));
   const week = ['Mo','Di','Mi','Do','Fr','Sa','So'].map((d, i) => { const k = addDays(mon, i); return `<span><i class="${state.met[k] ? 'on' : ''}${k === t ? ' today' : ''}">${state.met[k] ? icon('flame') : ''}</i>${d}</span>`; }).join('');
   $main.innerHTML = `<section class="celebrate">
     <div class="burst" aria-hidden="true"><div class="cbadge zap">${icon('flame')}</div>${[1,2,3,4].map(n => `<i class="spark s${n}">${icon('sparkles')}</i>`).join('')}</div>
-    <div class="bigstreak">${s.streak}</div>
+    ${s.streak ? `<div class="bigstreak">${s.streak}</div>` : ''}
     <h2>${s.todayDone ? (s.streak === 1 ? 'Du hast eine Serie gestartet!' : `${s.streak} Tage in Folge!`) : 'Geschafft!'}</h2>
     <div class="week" aria-label="This week">${week}</div>
-    <p class="muted" style="margin:0;max-width:44ch">${xpT} of ${state.planMin} minutes today${s.todayDone ? '. Daily goal reached.' : `. ${state.planMin - xpT} more to reach your goal. Back to your plan, or play a Blitz round.`}</p>
-    <button class="btn big" id="home">Back to today${icon('next')}</button>${s.todayDone ? '' : '<button class="btn ghost big" id="bl">Play Blitz</button>'}</section>`;
+    <p class="muted" style="margin:0;max-width:44ch">${xpT} of ${state.planMin} minutes today${s.todayDone ? '. Daily goal reached.' : `. ${state.planMin - xpT} more to reach your goal.`}</p>
+    ${nl && !s.todayDone ? `<button class="btn big" id="nextl">Next lesson: ${esc(nl.title)}${icon('next')}</button><button class="btn ghost big" id="home">Back to today</button>`
+      : `<button class="btn big" id="home">Back to today${icon('next')}</button>${s.todayDone ? '' : '<button class="btn ghost big" id="bl">Play Blitz</button>'}`}</section>`;
   document.getElementById('home').onclick = () => { stopActivity(); view = 'heute'; render(); };
+  const nx = document.getElementById('nextl'); if (nx) nx.onclick = () => openLesson(nl, sessionDone);
   const bl = document.getElementById('bl'); if (bl) bl.onclick = () => runBlitz(sessionDone);
 }
 
@@ -4581,7 +4582,7 @@ function vPruefung(){
   <section class="card stack">
     <div class="row" style="justify-content:space-between"><h3>Sprechen</h3><span class="tag">15 min · with a partner</span></div>
     <p style="margin:0">Teil 1: plan something together with your partner. Teil 2: present a topic on five slides (about 3 minutes). Teil 3: answer questions about your presentation and react to your partner’s. You get 15 minutes to prepare.</p>
-    <p class="tip" style="margin:0">The app can’t hear you. Write your Teil 2 presentation here, compare it with the model presentation, then say it out loud with a timer. Practise Teil 1 and Teil 3 with a tutor or a tandem partner.</p>
+    <p class="tip" style="margin:0">Write your Teil 2 presentation here, compare it with the model presentation, then say it out loud with a timer. To practise speaking with feedback on what you said, use Üben → Telefon-Training. Teil 1 and Teil 3 are not in the app yet: practise them with a tutor or a tandem partner.</p>
     <div class="row">${WRITING.filter(w => w.speak).map(w => `<button class="btn ghost" data-sp="${w.id}">${esc(w.title.replace('Sprechen Teil 2: ', ''))}</button>`).join('')}</div>
   </section>`;
   $main.querySelectorAll('[data-mod]').forEach(b => b.onclick = () => { const [k, si] = b.dataset.mod.split(':'); runModule(k, si === 'ai' ? 'ai' : +si); });
