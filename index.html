@@ -471,9 +471,7 @@ textarea.write{width:100%;min-height:230px;resize:vertical;line-height:1.65;font
   .bento .gauge .seg.on{animation:segin .5s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i) * 45ms)}
   .bento .bcol .fill{animation:barin .8s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i) * 50ms)}
   .bento .rings circle.val{animation:ringin 1s cubic-bezier(.16,1,.3,1) both}
-  ::view-transition-old(main),::view-transition-new(main){animation-duration:.22s;animation-timing-function:cubic-bezier(.16,1,.3,1)}
-  ::view-transition-new(main){animation-name:vtin}
-  #main{view-transition-name:main}
+  #main.enter{animation:vtin .22s cubic-bezier(.16,1,.3,1)}
 }
 @keyframes segin{from{opacity:.15}}
 @keyframes barin{from{transform:scaleY(.04)}}
@@ -2241,24 +2239,36 @@ document.addEventListener('click', e => { const b = e.target.closest('[data-say]
 document.addEventListener('keydown', e => { if (keyHandler) keyHandler(e); });
 
 // ---- shell ----
+// The menu is built once and then only updated in place. Rebuilding it on every tap (innerHTML) made the fixed bottom bar flicker on phones.
+let navBuilt = false;
 function nav(){
-  const due = dueCards().length, top = activity ? '' : PARENT[view] || view;
-  const btn = ([k, de, en], cur, extra = '') => `<button data-view="${k}" title="${en}" ${cur === k ? 'aria-current="page"' : ''}>${icon(k)}<span>${de}</span>${extra}</button>`;
-  document.getElementById('tabs').innerHTML = `
-    <div class="brand"><span class="logo">B1</span><div><b>Weg zur B1</b><small>Deutsch A1 bis B1</small></div></div>
-    <p class="navlabel">Hauptmenü</p>
-    <div class="navgroup primary">${VIEWS.map(v => btn(v, window.innerWidth <= 900 ? top : activity ? '' : view)).join('')}</div>
-    <p class="navlabel">Direkt</p>
-    <div class="navgroup secondary">${MORE.map(v => btn(v, activity ? '' : view, v[0] === 'karten' && due ? `<span class="badge">${due}</span>` : '')).join('')}</div>
-    <div class="side-foot">
-      <p class="navlabel" style="margin:0 10px">Modus</p>
-      <div class="modes">${[['light','Hell','sun'],['dark','Dunkel','moon']].map(([m, l, ic]) => `<button data-mode="${m}" aria-pressed="${curMode() === m}">${icon(ic)}${l}</button>`).join('')}</div>
-      <label class="switch" for="soundSw">Read answers aloud <input type="checkbox" id="soundSw" ${state.sound ? 'checked' : ''}></label>
-      <button class="sync" data-view="daten">${icon('gear')}<span>Settings · saved on this device</span></button>
-    </div>`;
-  document.getElementById('moveBtn').innerHTML = icon('gear');
-  const mb = document.getElementById('modeBtn');
-  if (mb) mb.innerHTML = icon(curMode() === 'dark' ? 'sun' : 'moon');
+  const tabs = document.getElementById('tabs'), due = dueCards().length;
+  if (!navBuilt){
+    const btn = ([k, de, en], extra = '') => `<button data-view="${k}" title="${en}">${icon(k)}<span>${de}</span>${extra}</button>`;
+    tabs.innerHTML = `
+      <div class="brand"><span class="logo">B1</span><div><b>Weg zur B1</b><small>Deutsch A1 bis B1</small></div></div>
+      <p class="navlabel">Hauptmenü</p>
+      <div class="navgroup primary">${VIEWS.map(v => btn(v)).join('')}</div>
+      <p class="navlabel">Direkt</p>
+      <div class="navgroup secondary">${MORE.map(v => btn(v, v[0] === 'karten' ? '<span class="badge" hidden></span>' : '')).join('')}</div>
+      <div class="side-foot">
+        <p class="navlabel" style="margin:0 10px">Modus</p>
+        <div class="modes">${[['light','Hell','sun'],['dark','Dunkel','moon']].map(([m, l, ic]) => `<button data-mode="${m}">${icon(ic)}${l}</button>`).join('')}</div>
+        <label class="switch" for="soundSw">Read answers aloud <input type="checkbox" id="soundSw"></label>
+        <button class="sync" data-view="daten">${icon('gear')}<span>Settings · saved on this device</span></button>
+      </div>`;
+    document.getElementById('moveBtn').innerHTML = icon('gear');
+    navBuilt = true;
+  }
+  const narrow = window.innerWidth <= 900, top = activity ? '' : PARENT[view] || view;
+  tabs.querySelectorAll('.primary [data-view]').forEach(b => b.toggleAttribute('aria-current', b.dataset.view === (narrow ? top : activity ? '' : view)));
+  tabs.querySelectorAll('.secondary [data-view]').forEach(b => b.toggleAttribute('aria-current', b.dataset.view === (activity ? '' : view)));
+  tabs.querySelectorAll('[aria-current]').forEach(b => b.setAttribute('aria-current', 'page'));
+  const badge = tabs.querySelector('.badge'); badge.hidden = !due; badge.textContent = due || '';
+  tabs.querySelectorAll('button[data-mode]').forEach(b => b.setAttribute('aria-pressed', String(curMode() === b.dataset.mode)));
+  tabs.querySelector('#soundSw').checked = !!state.sound;
+  const mb = document.getElementById('modeBtn'), want = curMode() === 'dark' ? 'sun' : 'moon';
+  if (mb && mb.dataset.icon !== want){ mb.innerHTML = icon(want); mb.dataset.icon = want; }
 }
 document.getElementById('tabs').addEventListener('click', e => {
   const m = e.target.closest('button[data-mode]'); if (m) return setMode(m.dataset.mode);  // button only: <html data-mode> would match every tap
@@ -2287,8 +2297,9 @@ function stopActivity(){ activity = false; keyHandler = null; clearInterval(blit
 let rendered = false;
 function render(){
   const go = () => { nav(); chips(); setTitle(); ({heute:vHeute, pfad:vPfad, ueben:vUeben, pruefung:vPruefung, tabelle:vTabelle, karten:vKarten, lesen:vLesen, schreiben:vSchreiben, daten:vDaten, fortschritt:vFortschritt})[view](); };
-  if (rendered && document.startViewTransition && !matchMedia('(prefers-reduced-motion: reduce)').matches){ try { document.startViewTransition(go); } catch(e) { go(); } }
-  else go();
+  go();
+  // A short fade of the content. (document.startViewTransition snapshots the whole screen, fixed bottom bar included, and froze phones for about a second.)
+  if (rendered && !matchMedia('(prefers-reduced-motion: reduce)').matches){ $main.classList.remove('enter'); void $main.offsetWidth; $main.classList.add('enter'); }
   rendered = true;
 }
 const backTo = (label, v) => `<div class="row"><button class="linkbtn" data-goto="${v}">${icon('back')}${label}</button></div>`;
