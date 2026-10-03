@@ -717,6 +717,9 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 .gtnav{display:flex;flex-wrap:wrap;gap:6px}.gtnav button{border:0;background:var(--panel2);color:var(--ink);border-radius:999px;padding:7px 12px;font:600 .82rem var(--f);cursor:pointer}
 .gtch summary{cursor:pointer;list-style:none;display:flex;flex-direction:column;gap:3px}.gtch summary::-webkit-details-marker{display:none}.gtch summary h3{margin:0}.gtch summary h3::after{content:' +';color:var(--muted)}.gtch[open] summary h3::after{content:' −'}
 .gtt{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}.gtread{margin:8px 0;padding-left:18px;color:var(--muted);font-size:.92rem}.gtread li{margin:4px 0}.gtread b{color:var(--ink)}
+.tdeck .row{gap:6px}.tdeck .btn{padding:9px 14px;font-size:.86rem}
+.tdeck{display:flex;flex-direction:column;gap:8px;background:var(--panel2);border-radius:var(--r-card);padding:14px}
+.tbar{position:relative;height:8px;border-radius:99px;background:var(--line);overflow:hidden}.tbar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:var(--accent-soft)}.tbar i.well{background:var(--go)}
 .model{display:flex;gap:12px;align-items:center;justify-content:space-between;background:var(--panel2);border-radius:var(--r-card);padding:12px 14px}
 .model small{font-weight:700;color:var(--muted)}.model p{margin:2px 0 0;font-weight:600}
 /* ---------- motion ---------- */
@@ -3526,6 +3529,225 @@ Sucht euch ein Hobby mit Deutschen! Ob Sport, Musik oder Kochen ist egal. Im Kur
      I('Was rät Amira anderen?',['ein Hobby mit Deutschen suchen','nur Grammatik lernen','viel Englisch sprechen'],0)],
    glossary:[['der Verein','club'],['das Mitglied','member'],['geduldig','patient'],['mitnehmen','to take along'],['das Lehrbuch','textbook'],['das Ehrenamt','voluntary role'],['zurückgeben','to give back'],['raten','to advise'],['echt','real']]}];
 LIBRARY.push(...B1TEXTS);
+// ---- Top 100: the most frequent German verbs and nouns, as their own flashcard decks (added 2026-10-03) ----
+// Order follows German frequency lists, trimmed of rare officialese. Verbs: infinitive|English|er-form|Präteritum|Perfekt. Nouns: noun|English|gender|plural ('' = no plural).
+const TOP_VERBS = `sein|to be|ist|war|ist gewesen
+haben|to have|hat|hatte|hat gehabt
+werden|to become|wird|wurde|ist geworden
+können|can, to be able to|kann|konnte|hat gekonnt
+müssen|must, to have to|muss|musste|hat gemusst
+sagen|to say|sagt|sagte|hat gesagt
+machen|to make, to do|macht|machte|hat gemacht
+geben|to give|gibt|gab|hat gegeben
+kommen|to come|kommt|kam|ist gekommen
+sollen|should, to be supposed to|soll|sollte|hat gesollt
+wollen|to want|will|wollte|hat gewollt
+gehen|to go, to walk|geht|ging|ist gegangen
+wissen|to know (a fact)|weiß|wusste|hat gewusst
+sehen|to see|sieht|sah|hat gesehen
+lassen|to let, to leave|lässt|ließ|hat gelassen
+stehen|to stand|steht|stand|hat gestanden
+finden|to find|findet|fand|hat gefunden
+bleiben|to stay|bleibt|blieb|ist geblieben
+liegen|to lie (be lying)|liegt|lag|hat gelegen
+heißen|to be called|heißt|hieß|hat geheißen
+denken|to think|denkt|dachte|hat gedacht
+nehmen|to take|nimmt|nahm|hat genommen
+tun|to do|tut|tat|hat getan
+dürfen|may, to be allowed to|darf|durfte|hat gedurft
+glauben|to believe, to think|glaubt|glaubte|hat geglaubt
+halten|to hold, to stop|hält|hielt|hat gehalten
+nennen|to name, to call|nennt|nannte|hat genannt
+mögen|to like|mag|mochte|hat gemocht
+zeigen|to show|zeigt|zeigte|hat gezeigt
+führen|to lead|führt|führte|hat geführt
+sprechen|to speak|spricht|sprach|hat gesprochen
+bringen|to bring|bringt|brachte|hat gebracht
+leben|to live|lebt|lebte|hat gelebt
+fahren|to go (by vehicle), to drive|fährt|fuhr|ist gefahren
+meinen|to mean, to think|meint|meinte|hat gemeint
+fragen|to ask|fragt|fragte|hat gefragt
+kennen|to know (a person, a place)|kennt|kannte|hat gekannt
+gelten|to be valid|gilt|galt|hat gegolten
+stellen|to put (upright)|stellt|stellte|hat gestellt
+spielen|to play|spielt|spielte|hat gespielt
+arbeiten|to work|arbeitet|arbeitete|hat gearbeitet
+brauchen|to need|braucht|brauchte|hat gebraucht
+folgen|to follow|folgt|folgte|ist gefolgt
+lernen|to learn|lernt|lernte|hat gelernt
+bestehen|to pass (an exam)|besteht|bestand|hat bestanden
+verstehen|to understand|versteht|verstand|hat verstanden
+setzen|to put, to set|setzt|setzte|hat gesetzt
+bekommen|to get, to receive|bekommt|bekam|hat bekommen
+beginnen|to begin|beginnt|begann|hat begonnen
+erzählen|to tell|erzählt|erzählte|hat erzählt
+versuchen|to try|versucht|versuchte|hat versucht
+schreiben|to write|schreibt|schrieb|hat geschrieben
+laufen|to run, to walk|läuft|lief|ist gelaufen
+erklären|to explain|erklärt|erklärte|hat erklärt
+sitzen|to sit|sitzt|saß|hat gesessen
+ziehen|to pull, to move|zieht|zog|hat gezogen
+scheinen|to shine, to seem|scheint|schien|hat geschienen
+fallen|to fall|fällt|fiel|ist gefallen
+gehören|to belong|gehört|gehörte|hat gehört
+entstehen|to come about|entsteht|entstand|ist entstanden
+erhalten|to receive|erhält|erhielt|hat erhalten
+treffen|to meet|trifft|traf|hat getroffen
+suchen|to look for|sucht|suchte|hat gesucht
+legen|to lay, to put (flat)|legt|legte|hat gelegt
+vorstellen|to introduce, to imagine|stellt vor|stellte vor|hat vorgestellt
+erreichen|to reach|erreicht|erreichte|hat erreicht
+tragen|to carry, to wear|trägt|trug|hat getragen
+schaffen|to manage (to do)|schafft|schaffte|hat geschafft
+lesen|to read|liest|las|hat gelesen
+verlieren|to lose|verliert|verlor|hat verloren
+erkennen|to recognise|erkennt|erkannte|hat erkannt
+entwickeln|to develop|entwickelt|entwickelte|hat entwickelt
+reden|to talk|redet|redete|hat geredet
+aussehen|to look (like)|sieht aus|sah aus|hat ausgesehen
+erscheinen|to appear|erscheint|erschien|ist erschienen
+bilden|to form|bildet|bildete|hat gebildet
+anfangen|to start|fängt an|fing an|hat angefangen
+erwarten|to expect|erwartet|erwartete|hat erwartet
+wohnen|to live (somewhere)|wohnt|wohnte|hat gewohnt
+warten|to wait|wartet|wartete|hat gewartet
+helfen|to help|hilft|half|hat geholfen
+gewinnen|to win|gewinnt|gewann|hat gewonnen
+schließen|to close|schließt|schloss|hat geschlossen
+fühlen|to feel|fühlt|fühlte|hat gefühlt
+bieten|to offer|bietet|bot|hat geboten
+interessieren|to interest|interessiert|interessierte|hat interessiert
+erinnern|to remind|erinnert|erinnerte|hat erinnert
+anbieten|to offer|bietet an|bot an|hat angeboten
+studieren|to study (at university)|studiert|studierte|hat studiert
+verbinden|to connect|verbindet|verband|hat verbunden
+ansehen|to look at|sieht an|sah an|hat angesehen
+fehlen|to be missing|fehlt|fehlte|hat gefehlt
+bedeuten|to mean|bedeutet|bedeutete|hat bedeutet
+vergleichen|to compare|vergleicht|verglich|hat verglichen
+kaufen|to buy|kauft|kaufte|hat gekauft
+essen|to eat|isst|aß|hat gegessen
+trinken|to drink|trinkt|trank|hat getrunken
+schlafen|to sleep|schläft|schlief|hat geschlafen
+hören|to hear, to listen|hört|hörte|hat gehört
+bezahlen|to pay|bezahlt|bezahlte|hat bezahlt`.split('\n').map(l => l.split('|'));
+const TOP_NOUNS = `Jahr|year|n|Jahre
+Zeit|time|f|Zeiten
+Mensch|person, human being|m|Menschen
+Tag|day|m|Tage
+Mann|man, husband|m|Männer
+Frau|woman, wife, Mrs|f|Frauen
+Kind|child|n|Kinder
+Leben|life|n|
+Welt|world|f|Welten
+Hand|hand|f|Hände
+Land|country|n|Länder
+Stadt|city, town|f|Städte
+Arbeit|work|f|Arbeiten
+Haus|house|n|Häuser
+Frage|question|f|Fragen
+Weg|way, path|m|Wege
+Seite|side, page|f|Seiten
+Teil|part|m|Teile
+Geld|money|n|
+Woche|week|f|Wochen
+Monat|month|m|Monate
+Stunde|hour, lesson|f|Stunden
+Minute|minute|f|Minuten
+Abend|evening|m|Abende
+Morgen|morning|m|Morgen
+Nacht|night|f|Nächte
+Familie|family|f|Familien
+Freund|friend|m|Freunde
+Schule|school|f|Schulen
+Auto|car|n|Autos
+Wasser|water|n|
+Name|name|m|Namen
+Problem|problem|n|Probleme
+Beispiel|example|n|Beispiele
+Grund|reason|m|Gründe
+Ende|end|n|Enden
+Anfang|beginning|m|Anfänge
+Platz|place, seat, square|m|Plätze
+Ort|place, village|m|Orte
+Sache|thing, matter|f|Sachen
+Ding|thing|n|Dinge
+Kopf|head|m|Köpfe
+Auge|eye|n|Augen
+Mutter|mother|f|Mütter
+Vater|father|m|Väter
+Eltern|parents|pl|
+Bruder|brother|m|Brüder
+Schwester|sister|f|Schwestern
+Sohn|son|m|Söhne
+Tochter|daughter|f|Töchter
+Wort|word|n|Wörter
+Sprache|language|f|Sprachen
+Buch|book|n|Bücher
+Brief|letter|m|Briefe
+Nummer|number|f|Nummern
+Zahl|number, figure|f|Zahlen
+Uhr|clock, o’clock|f|Uhren
+Straße|street|f|Straßen
+Zimmer|room|n|Zimmer
+Wohnung|flat, apartment|f|Wohnungen
+Tür|door|f|Türen
+Tisch|table|m|Tische
+Essen|food, meal|n|
+Brot|bread|n|Brote
+Firma|company|f|Firmen
+Chef|boss|m|Chefs
+Kollege|colleague|m|Kollegen
+Beruf|job, profession|m|Berufe
+Ausbildung|vocational training|f|Ausbildungen
+Prüfung|exam|f|Prüfungen
+Termin|appointment|m|Termine
+Idee|idea|f|Ideen
+Meinung|opinion|f|Meinungen
+Hilfe|help|f|
+Antwort|answer|f|Antworten
+Bild|picture|n|Bilder
+Musik|music|f|
+Spiel|game, match|n|Spiele
+Reise|journey, trip|f|Reisen
+Zug|train|m|Züge
+Bus|bus|m|Busse
+Bahnhof|station|m|Bahnhöfe
+Arzt|doctor|m|Ärzte
+Körper|body|m|Körper
+Herz|heart|n|Herzen
+Liebe|love|f|
+Glück|luck, happiness|n|
+Lust|desire, wanting to|f|
+Spaß|fun|m|
+Hunger|hunger|m|
+Wetter|weather|n|
+Sonne|sun|f|
+Luft|air|f|
+Tier|animal|n|Tiere
+Information|information|f|Informationen
+Möglichkeit|possibility|f|Möglichkeiten
+Erfahrung|experience|f|Erfahrungen
+Ziel|goal|n|Ziele
+Telefon|telephone|n|Telefone
+Mal|time (occasion)|n|Male`.split('\n').map(l => l.split('|'));
+const TOP100 = {verben:[], nomen:[]};
+{
+  const first = {};
+  for (const v of VOCAB) if (!first[v.de]) first[v.de] = v;
+  const ART = {m:'der', f:'die', n:'das', pl:'die'};
+  for (const [de, en, er, pr, pf] of TOP_VERBS){
+    let v = first[de];
+    if (!v){ v = {id:'topv:' + de, de, en, g:'', th:'topv'}; VOCAB.push(v); VBYID[v.id] = v; first[de] = v; }
+    v.forms = `${er} · ${pr} · ${pf}`; TOP100.verben.push(v.id);
+  }
+  for (const [de, en, g, pl] of TOP_NOUNS){
+    let v = first[de];
+    if (!v || v.g !== g){ v = {id:'topn:' + de, de, en, g, th:'topn'}; VOCAB.push(v); VBYID[v.id] = v; }
+    v.forms = g === 'pl' ? 'plural only' : pl ? `Plural: die ${pl}` : 'no plural'; TOP100.nomen.push(v.id);
+  }
+  Object.assign(THEMES, {topv:'Top 100 Verben', topn:'Top 100 Nomen'});
+}
 // ---- Grammar tables (Tabelle): every grammar table of the A1–B1 syllabus, ordered like Grammatik Aktiv, written fresh for this app ----
 // head: "m|…", "f|…", "n|…", "pl|…" colour a column by gender. read: one line per part of the table ("how to read it").
 const GT = [
@@ -4201,7 +4423,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = '8867ec7';  // build.py puts the build number here
+const APP_VERSION = '0d04f9a';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -4724,9 +4946,9 @@ function runCards(ids, {onDone, extra = false}){
     if (!queue.length){ activity = false; return onDone(); }
     const it = queue[0], v = VBYID[it.id], card = state.cards[it.id] || {b:0};
     const de = (v.g ? gspan(v.g, G[v.g]) + ' ' : '') + v.de, sayTxt = (v.g ? G[v.g] + ' ' : '') + v.de;
-    const reverse = card.b >= 2;
+    const reverse = card.b >= 2, forms = v.forms ? `<div class="muted" style="margin-top:6px">${esc(v.forms)}</div>` : '';
     const front = reverse ? `<div class="word" style="font-size:1.6rem">${v.en}</div><span class="tag">say it in German, then flip</span>` : `<div class="word">${de}</div>${sayBtn(sayTxt)}`;
-    const back = reverse ? `<div class="word">${de}</div>${sayBtn(sayTxt)}` : `<div class="back">${v.en}</div>`;
+    const back = reverse ? `<div class="word">${de}</div>${sayBtn(sayTxt)}${forms}` : `<div class="back">${v.en}</div>${forms}`;
     $main.innerHTML = `
     <div class="qtop"><button class="linkbtn" id="quit" aria-label="Quit">${icon('x')}</button><div class="bar"><i style="width:${cleared/total*100}%"></i></div><span class="tag">${cleared}/${total}</span></div>
     <section class="fc">${front}<div id="back" hidden><hr>${back}</div><span class="tag">${THEMES[v.th]}</span></section>
@@ -4760,7 +4982,7 @@ function runCards(ids, {onDone, extra = false}){
 function vKarten(){
   const ids = Object.keys(state.cards).filter(id => VBYID[id]), due = dueCards();
   const st = [0,0,0,0]; ids.forEach(id => { const b = state.cards[id].b; st[b === 0 ? 0 : b <= 2 ? 1 : b <= 4 ? 2 : 3]++; });
-  const learned = new Set(ids.map(id => VBYID[id].th)), my = Array.isArray(state.myWords) ? state.myWords : [];
+  const learned = new Set(ids.map(id => VBYID[id].th)), my = Array.isArray(state.myWords) ? state.myWords : [], dueSet = new Set(due);
   $main.innerHTML = `${backTo('Üben','ueben')}
   <section class="card stack">
     <div class="row" style="justify-content:space-between"><h2>Karten</h2><span class="tag">${ids.length} words</span></div>
@@ -4768,6 +4990,15 @@ function vKarten(){
     <p class="muted" style="margin:0">Cards you know come back later and later (1, 2, 4, 8 … days). Cards you miss come back today. From stage “Lernen” on, some cards show English first, so you practise saying the German word.</p>
     <button class="btn big" id="rev" ${due.length ? '' : 'disabled'}>${due.length ? `Review ${due.length} due card${due.length===1?'':'s'}` : 'Nothing due. Come back tomorrow.'}</button>
     ${ids.length ? '<button class="btn ghost" id="extra">Extra practice · 15 random words (doesn’t change the schedule)</button>' : ''}
+  </section>
+  <section class="card stack">
+    <h3>Die Top 100</h3>
+    <p class="muted" style="margin:0">The 100 most used German verbs and nouns. Together they make up a large part of everything you hear and read. Add 10 new cards a day: they join your normal review and come back until you know them.</p>
+    ${[['verben','100 Verben','with er-form, Präteritum and Perfekt on the back'],['nomen','100 Nomen','with the article and the plural']].map(([k, label, sub]) => { const L = TOP100[k], inDeck = L.filter(id => state.cards[id]), well = inDeck.filter(id => state.cards[id].b >= 3).length, dueHere = L.filter(id => dueSet.has(id)).length;
+      return `<div class="tdeck"><div class="row" style="justify-content:space-between"><b>${label}</b><span class="tag">${inDeck.length} in your deck · ${well} known well</span></div>
+      <div class="tbar"><i style="width:${inDeck.length}%"></i><i class="well" style="width:${well}%"></i></div><span class="muted" style="font-size:.84rem">${sub}</span>
+      <div class="row"><button class="btn" data-top="${k}:new" ${inDeck.length < L.length ? '' : 'disabled'}>${inDeck.length < L.length ? 'Learn 10 new' : 'All 100 in your deck'}</button>${dueHere ? `<button class="btn ghost" data-top="${k}:due">Review ${dueHere} due</button>` : ''}<button class="btn ghost" data-top="${k}:quick">Quick round · 20</button></div>
+      <details><summary class="muted">See all 100</summary><div class="words" style="margin-top:8px">${L.map(id => { const v = VBYID[id]; return `<span>${v.g ? gspan(v.g, G[v.g]) + ' ' : ''}${esc(v.de)} <span class="muted">· ${esc(v.en)}</span></span>`; }).join('')}</div></details></div>`; }).join('')}
   </section>
   <section class="card stack">
     <div class="row" style="justify-content:space-between"><h3>Meine Wörter</h3><span class="tag">${my.length} words</span></div>
@@ -4779,12 +5010,18 @@ function vKarten(){
       <button class="btn" id="mw-add">Add</button></div>
     ${my.length ? `<div class="words">${my.map(w => `<span>${w.g ? gspan(w.g, G[w.g]) + ' ' : ''}${esc(w.de)} <span class="muted">· ${esc(w.en)}</span> <button class="x" data-del="${esc(w.id)}" aria-label="Remove ${esc(w.de)}">×</button></span>`).join('')}</div>` : ''}
   </section>
-  ${Object.keys(THEMES).filter(th => th !== 'mine').map(th => {
+  ${Object.keys(THEMES).filter(th => !['mine','topv','topn'].includes(th)).map(th => {
     const l = LESSONS.find(x => x.th === th);
     return `<section class="card"><div class="row" style="justify-content:space-between"><h3>${THEMES[th]}</h3><span class="tag">${learned.has(th) ? 'in deck' : `unlocks with lesson ${LESSONS.indexOf(l)+1}`}</span></div>
     ${learned.has(th) ? `<div class="words" style="margin-top:10px">${VOCAB.filter(v => v.th === th).map(v => `<span>${v.g ? gspan(v.g, G[v.g])+' ' : ''}${v.de}</span>`).join('')}</div>` : ''}</section>`;
   }).join('')}`;
   document.getElementById('rev').onclick = () => runCards(shuffle(due), {onDone: render});
+  $main.querySelectorAll('[data-top]').forEach(b => b.onclick = () => {
+    const [k, mode] = b.dataset.top.split(':'), L = TOP100[k];
+    if (mode === 'new'){ const add = L.filter(id => !state.cards[id]).slice(0, 10); for (const id of add) state.cards[id] = {b:0, d:today()}; save(); runCards(add, {onDone: render}); }
+    else if (mode === 'due') runCards(shuffle(L.filter(id => dueSet.has(id))), {onDone: render});
+    else { const mine = L.filter(id => state.cards[id]); runCards(shuffle(mine.length >= 10 ? mine : L).slice(0, 20), {onDone: render, extra:true}); }
+  });
   const ex = document.getElementById('extra'); if (ex) ex.onclick = () => runCards(shuffle(ids).slice(0,15), {onDone: render, extra:true});
   document.getElementById('mw-add').onclick = () => {
     const de = document.getElementById('mw-de').value.trim(), en = document.getElementById('mw-en').value.trim(), g = document.getElementById('mw-g').value;
