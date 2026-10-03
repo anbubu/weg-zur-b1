@@ -16,11 +16,24 @@ Open the link once **with internet**. After that the app works with no internet 
 
 Your progress is saved only on the device you use. To move it:
 
-1. Tap the **⇄** button at the top of the app.
-2. Tap **Copy progress code** and send the code to yourself (WhatsApp, e-mail, notes).
-3. On the other device, open the app, tap **⇄**, paste the code and tap **Replace this device’s progress**.
+1. Tap the **gear** button at the top of the app (Settings).
+2. Under *Copy my progress*, tap **Copy progress code** and send the code to yourself (WhatsApp, e-mail, notes).
+3. On the other device, open the app, tap the gear, paste the code and tap **Replace this device’s progress**.
 
 Copy your code now and then as a backup too: if a phone is lost or reset, the code brings everything back.
+
+## Where to start
+
+Open the app and press the big button on **Heute**. It always shows one next step. If you are new, it starts with a short lesson on how German sounds. The **Lernpfad** has seven stages, from your first greetings to the start of B1, then B1 exam training. **Fortschritt** shows your streak, weekly chart and weak spots.
+
+## Gemini (optional)
+
+The app works fully without it. With a free Gemini key it can also explain the mistakes in your writing, write new reading texts and write new exam sets (needs internet):
+
+1. Open https://aistudio.google.com/apikey, sign in and create an API key.
+2. In the app, tap the gear (Settings), paste the key under *Gemini* and tap **Save and test**.
+
+The key stays on that device only and is not part of your progress code. Google's free plan may use what you send to improve its products, so don't write private things. Remove the key any time in Settings.
 
 ## A German voice for "read aloud"
 
