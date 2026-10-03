@@ -204,11 +204,11 @@ svg.i{width:18px;height:18px;flex:none;stroke-width:1.9}
 .plan li{display:flex;gap:9px;align-items:center}
 .plan li svg.i{width:16px;height:16px;color:var(--accent)}
 .gauge{position:relative;display:grid;place-items:center;margin:auto 0}
-.gauge svg{width:100%;max-width:220px;height:auto;overflow:visible}
+.gauge svg{width:100%;max-width:300px;height:auto;overflow:visible}
 .gauge .seg{fill:none;stroke:var(--panel2);stroke-width:14;stroke-linecap:butt}
 .gauge .seg.on{stroke:var(--sun)} .gauge .seg.on.hot{stroke:var(--accent)}
 .gauge .read{position:absolute;bottom:4px;text-align:center}
-.gauge .read b{font:600 2rem/1 var(--fm);letter-spacing:-.04em;display:block}
+.gauge .read b{font:800 2.6rem/1 var(--fm);letter-spacing:-.04em;display:block}
 .gauge .read small{color:var(--muted);font-size:.78rem}
 .goalsel{display:flex;justify-content:center;margin-top:10px}
 .goalsel select{font:500 .8rem var(--f);border:1px solid var(--line);background:var(--panel2);color:var(--ink);border-radius:999px;padding:5px 10px}
@@ -493,7 +493,7 @@ details summary{cursor:pointer;font-weight:600}
 .lvl{display:inline-block;font:600 .7rem var(--fm);border-radius:999px;padding:1px 7px;background:var(--panel2);margin-right:6px}
 .formrow{display:flex;gap:10px;flex-wrap:wrap;align-items:end}
 .formrow label{display:flex;flex-direction:column;gap:5px;font-size:.82rem;color:var(--muted);flex:1;min-width:150px}
-input[type=text],select,textarea{font:inherit;color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:var(--r-field);padding:10px 12px}
+input[type=text],input[type=password],input[type=search],select,textarea{font:inherit;color:var(--ink);background:var(--panel2);border:1px solid var(--line);border-radius:var(--r-field);padding:10px 12px}
 input::placeholder,textarea::placeholder{color:var(--muted)}
 .task{white-space:pre-line}
 .points{margin:.4em 0;padding-left:1.2em}
@@ -513,7 +513,7 @@ textarea.write{width:100%;min-height:230px;resize:vertical;line-height:1.65;font
 .lesson .num{font:600 .95rem var(--fm);width:46px;height:46px;border-radius:14px;display:grid;place-items:center;background:var(--panel2)}
 .lesson.done .num{background:var(--accent-fill);color:var(--on-accent)}
 .lesson.next{box-shadow:var(--shadow),inset 0 0 0 2px var(--accent)}
-.lesson b{display:block;font-weight:600} .lesson span{color:var(--muted);font-size:.88rem}
+.lesson b{display:block;font-weight:700;color:var(--ink);font-size:.98rem} .lesson span{color:var(--muted);font-size:.88rem}
 .toast{position:fixed;left:50%;bottom:calc(100px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--cta);color:var(--on-cta);padding:11px 18px;border-radius:999px;font-weight:600;font-size:.9rem;z-index:30;max-width:calc(100% - 32px);text-align:center;box-shadow:0 12px 30px -12px rgba(0,0,0,.45);animation:toastin .28s cubic-bezier(.16,1,.3,1)}
 @keyframes toastin{from{opacity:0;transform:translate(-50%,8px)}}
 @media (min-width:901px){.toast{bottom:32px}}
@@ -522,7 +522,7 @@ textarea.write{width:100%;min-height:230px;resize:vertical;line-height:1.65;font
 body{background:var(--g3);font-size:15.5px;font-variant-numeric:tabular-nums}
 h1,h2,h3{font-weight:800;letter-spacing:-.025em}
 h2{font-size:1.55rem}
-h4{font-weight:700;letter-spacing:.07em;text-transform:uppercase;font-size:.7rem}
+h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;color:var(--ink)}
 .shell{background:none;padding:0;gap:20px;border-radius:0}
 .side{border:1px solid var(--line);box-shadow:none}
 .brand{border-bottom-color:var(--line)}
@@ -592,6 +592,7 @@ h4{font-weight:700;letter-spacing:.07em;text-transform:uppercase;font-size:.7rem
 .lesson{border:0;box-shadow:inset 0 0 0 2px var(--line),0 4px 0 var(--line)}
 .lesson:hover{transform:none;background:var(--panel2)}
 .lesson .num{border-radius:14px;font:800 .95rem var(--f)}
+@media (min-width:1100px){section.stack:has(> button.lesson){display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}}
 .lesson.done .num{background:var(--go);color:var(--on-go)}
 .lesson.next{box-shadow:inset 0 0 0 2px var(--accent),0 4px 0 var(--accent)}
 
@@ -599,7 +600,7 @@ h4{font-weight:700;letter-spacing:.07em;text-transform:uppercase;font-size:.7rem
 .plancard{padding:0;overflow:hidden}
 .phero{background:var(--sc,var(--t4));color:#fff;padding:22px 22px 24px;display:flex;flex-direction:column;gap:10px}
 .phero .ptop{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
-.phero .plabel{font:800 .72rem var(--f);letter-spacing:.08em;text-transform:uppercase;opacity:.9}
+.phero .plabel{font:700 .8rem var(--f);background:rgba(255,255,255,.18);padding:6px 12px;border-radius:999px}
 .phero h2{font-size:1.9rem;color:#fff}
 .phero .pcan{margin:0;font-size:.9rem;opacity:.9;max-width:60ch}
 .phero .pmeta{display:flex;justify-content:space-between;font:700 .84rem var(--f);opacity:.95}
@@ -2908,7 +2909,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = 'f13a386';  // build.py puts the build number here
+const APP_VERSION = '5271a3a';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -3156,7 +3157,7 @@ function vHeute(){
     const pct = Math.min(100, Math.round(mins / goal * 100));
     card = `<section class="card step plancard">
       <div class="phero" style="--sc:${stageColor(st)}">
-        <div class="ptop"><span class="plabel">${st ? `Stage ${sn} of ${STAGES.length} · ${st.name}` : 'Exam training'}</span>
+        <div class="ptop"><span class="plabel">${st ? `${st.name} · stage ${sn} of ${STAGES.length}` : 'Exam training'}</span>
           <div class="seg-tabs" role="group" aria-label="Length of the plan">${[[30, '30 min'], [60, '1 hour'], [120, '2 hours']].map(([v, l]) => `<button data-size="${v}" aria-pressed="${goal === v}">${l}</button>`).join('')}</div></div>
         <h2>Dein Plan für heute</h2>
         <p class="pcan">${st ? st.can : 'All lessons are done. Now it is exam training: reading, writing, listening and full practice exams.'}</p>
@@ -3911,8 +3912,8 @@ function vSchreiben(){
   $main.innerHTML = `${backTo('Üben','ueben')}
   <section class="card stack"><h2>Schreiben</h2><p class="muted" style="margin:0">Write first, mistakes and all. Then press “Prüfen”: the app checks length, greeting, closing, du or Sie and your linking words. You tick the task points you covered and compare your text with a model answer.</p></section>
   ${groups.map(([g, label]) => `<h3 style="margin-top:4px">${label}</h3><section class="stack">${of(g).map(w => { const last = state.writing[w.id];
-    return `<button class="lesson ${last ? 'done' : ''}" data-w="${w.id}"><span class="num" style="font-size:1rem">${w.exam ? 'A' + w.exam : w.speak ? 'Sp' : w.level}</span>
-      <span style="min-width:0"><b>${esc(w.title)}</b><span>about ${w.words} words${w.exam ? ` · ${EXAM_POINTS[w.exam]} exam points` : ''}</span></span>
+    return `<button class="lesson ${last ? 'done' : ''}" data-w="${w.id}"><span class="num" style="font-size:1rem">${w.speak ? 'Sp' : w.level}</span>
+      <span style="min-width:0"><b>${esc(w.title)}</b><span>${w.exam ? `Aufgabe ${w.exam} · ` : ''}about ${w.words} words${w.exam ? ` · ${EXAM_POINTS[w.exam]} exam points` : ''}</span></span>
       <span class="tag">${last ? last.s + '%' : ''}</span></button>`; }).join('')}</section>`).join('')}`;
   $main.querySelectorAll('[data-w]').forEach(b => b.onclick = () => openWriting(WRITING.find(w => w.id === b.dataset.w), 'schreiben'));
 }
