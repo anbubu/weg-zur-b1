@@ -702,8 +702,23 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 }
 @media (max-width:640px){.qtext{font-size:1.4rem}.celebrate h2{font-size:1.75rem}}
 
+.call{max-width:760px;margin:0 auto;width:100%}
+.callbar{display:flex;align-items:center;gap:12px}.callbar>div{flex:1;min-width:0}.callbar b{display:block}.callbar small{color:var(--muted);font-size:.84rem}
+.cav{flex:none;width:46px;height:46px;border-radius:50%;display:grid;place-items:center;background:var(--go);color:var(--on-go)}
+.thread{display:flex;flex-direction:column;gap:10px}
+.bub{max-width:85%;padding:12px 16px;border-radius:20px}.bub p{margin:0;font-size:1.02rem}.bub small{display:block;margin-top:4px;color:var(--muted);font-size:.84rem}
+.bub.them{align-self:flex-start;background:var(--panel2);border-bottom-left-radius:6px}
+.bub.me{align-self:flex-end;background:var(--accent-soft);border-bottom-right-radius:6px}
+.bub.live p{opacity:.7}.bub.hide p{filter:blur(7px);user-select:none}
+.ring{display:flex;align-items:center;gap:10px;color:var(--muted);font-weight:700}.ring svg.i{color:var(--go)}
+.kcheck{display:flex;flex-wrap:wrap;gap:6px}.kcheck span{display:inline-flex;align-items:center;gap:4px;padding:4px 10px;border-radius:999px;font-weight:700;font-size:.82rem}
+.kcheck .ok{background:var(--okbg);color:var(--ok)}.kcheck .no{background:var(--badbg);color:var(--bad)}.kcheck svg.i{width:14px;height:14px}
+.model{display:flex;gap:12px;align-items:center;justify-content:space-between;background:var(--panel2);border-radius:var(--r-card);padding:12px 14px}
+.model small{font-weight:700;color:var(--muted)}.model p{margin:2px 0 0;font-weight:600}
 /* ---------- motion ---------- */
 @media (prefers-reduced-motion:no-preference){
+  .btn.rec{animation:recpulse 1.1s ease-in-out infinite}
+  .ring svg.i{animation:ringwig .9s ease-in-out infinite}
   .bento .gauge .seg.on{animation:segin .5s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i) * 45ms)}
   .bento .bcol .fill{animation:barin .8s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i) * 50ms)}
   .bento .rings circle.val{animation:ringin 1s cubic-bezier(.16,1,.3,1) both}
@@ -712,6 +727,8 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 @keyframes segin{from{opacity:.15}}
 @keyframes barin{from{transform:scaleY(.04)}}
 @keyframes ringin{from{stroke-dashoffset:var(--len)}}
+@keyframes recpulse{50%{filter:brightness(1.15);transform:scale(1.03)}}
+@keyframes ringwig{25%{transform:rotate(-14deg)}75%{transform:rotate(14deg)}}
 @keyframes vtin{from{opacity:0;transform:translateY(6px)}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 @media (max-width:640px){.qtext{font-size:1.3rem}.opts{grid-template-columns:1fr}.gopts{grid-template-columns:repeat(3,minmax(0,1fr))}.card{padding:16px}.qcard{padding:20px 16px}.stages{grid-template-columns:repeat(2,1fr)}.road{grid-template-columns:1fr 1fr 1fr}}
@@ -3069,6 +3086,93 @@ Interessiert? Schicken Sie Ihre Bewerbung mit Anschreiben und Lebenslauf per E-M
      I('Wann kann man im Homeoffice arbeiten?',['nach der Einarbeitung','ab dem ersten Tag','nie'],0)],
    glossary:[['die Aufgabe','task'],['beantworten','to answer'],['dokumentieren','to document'],['mindestens','at least'],['das Niveau','level'],['jemanden einarbeiten','to train a new colleague'],['unbefristet','permanent'],['der Zuschlag','extra pay'],['die Schicht','shift']]}];
 LIBRARY.push(...JOBTEXTS);
+// ---- Telefon-Training: role-play calls. The app speaks the other person, you answer out loud. ----
+// keys: what a good answer must contain. "a/b" = either one; each one matches at the start of a word, so stems like "entschuldig" work.
+const callNorm = s => ' ' + fold(s).replace(/[^\p{L}\p{N}€%]+/gu, ' ').trim() + ' ';
+function phoneCheck(said, keys){
+  const t = callNorm(said), hit = keys.filter(k => k.split('/').some(a => t.includes(callNorm(a).slice(0, -1))));
+  return {hit, miss:keys.filter(k => !hit.includes(k)), score:keys.length ? hit.length / keys.length : 0};
+}
+const GREET = co => ({c:'', task:`Answer the phone: greet, say your name and the company (${co}), and offer help.`,
+  model:`Guten Tag, ${co}, Sie sprechen mit Karim Benali. Was kann ich für Sie tun?`, keys:['guten tag/guten morgen/hallo','sprechen mit/mein name/hier ist/ich bin','was kann ich/wie kann ich/helfen']});
+const BYE = ['danke/dank','wiederhören'];
+const CALLS = [
+  {id:'c-internet', title:'Das Internet geht nicht', who:'Herr Becker', where:'NetzPlus Hotline', lesson:'cc-technik', steps:[
+    GREET('NetzPlus'),
+    {c:'Guten Tag, Becker hier. Mein Internet funktioniert seit heute Morgen nicht mehr.', en:'Good day, Becker here. My internet hasn’t worked since this morning.',
+     task:'Say you are sorry and ask for his customer number.', model:'Oh, das tut mir leid, Herr Becker. Können Sie mir bitte Ihre Kundennummer nennen?', keys:['tut mir leid/leid/entschuldig/schade','kundennummer','bitte']},
+    {c:'Ja, die ist 5 3 8 2 2 1 7.', en:'Yes, it’s 5 3 8 2 2 1 7.',
+     task:'Thank him and ask for his date of birth, for data protection.', model:'Vielen Dank. Aus Datenschutzgründen brauche ich noch Ihr Geburtsdatum.', keys:['danke/dank','geburtsdatum','datenschutz']},
+    {c:'Der dritte März 1990.', en:'The third of March 1990.',
+     task:'Ask him to restart the router: switch it off, wait 30 seconds, switch it on again.', model:'Danke. Bitte schalten Sie den Router aus, warten Sie dreißig Sekunden und schalten Sie ihn dann wieder ein.', keys:['router','schalten/neu start/ausschalten','warten','wieder ein/einschalten/wieder an']},
+    {c:'Okay … So, er ist wieder an. Aber die Lampe blinkt immer noch rot.', en:'Okay … So, it’s on again. But the light is still flashing red.',
+     task:'Say there is a fault in his area. A technician is already working on it. It should work again by 6 pm today.', model:'Ich sehe gerade, dass es in Ihrer Region eine Störung gibt. Ein Techniker arbeitet schon daran. Bis heute um 18 Uhr sollte alles wieder funktionieren.', keys:['störung','techniker','18/achtzehn/sechs uhr/heute abend','funktionier/geht']},
+    {c:'Ach so. Gut, dann warte ich. Danke für Ihre Hilfe!', en:'I see. Fine, then I’ll wait. Thanks for your help!',
+     task:'Ask if there is anything else, thank him for the call and say goodbye the phone way.', model:'Gern geschehen. Kann ich sonst noch etwas für Sie tun? … Dann vielen Dank für Ihren Anruf. Auf Wiederhören!', keys:['sonst noch', ...BYE]}]},
+  {id:'c-rechnung', title:'Die Rechnung ist zu hoch', who:'Frau Schulz', where:'MobilFon Kundenservice', lesson:'cc-rechnung', steps:[
+    GREET('MobilFon'),
+    {c:'Hallo, hier ist Schulz. Meine Handyrechnung ist diesen Monat dreißig Euro höher als sonst. Das kann doch nicht stimmen!', en:'Hello, Schulz here. My phone bill is thirty euros higher than usual this month. That can’t be right!',
+     task:'Show that you understand her, say you will check, and ask for her phone number.', model:'Ich verstehe, dass Sie sich ärgern, Frau Schulz. Ich schaue sofort nach. Wie ist Ihre Rufnummer, bitte?', keys:['verstehe','schaue/prüfe/nachsehen/kümmere','rufnummer/telefonnummer/handynummer/kundennummer']},
+    {c:'Meine Nummer ist 0151 2 4 6 8 0 9 3.', en:'My number is 0151 2 4 6 8 0 9 3.',
+     task:'Ask for her date of birth, for data protection.', model:'Danke. Aus Datenschutzgründen brauche ich bitte noch Ihr Geburtsdatum.', keys:['datenschutz','geburtsdatum']},
+    {c:'Der zwölfte Juli 1988.', en:'The twelfth of July 1988.',
+     task:'Explain: in May she made calls in Turkey. Turkey is not in the EU, so the calls cost 29.90 euros extra.', model:'Danke, Frau Schulz. Ich sehe hier, dass Sie im Mai in der Türkei telefoniert haben. Die Türkei ist nicht in der EU, deshalb haben diese Anrufe 29,90 Euro extra gekostet.', keys:['türkei','eu','telefoniert/anrufe/gespräche','gekostet/kosten/euro/€']},
+    {c:'Ach, der Urlaub! Das wusste ich nicht. Kann ich das in Raten bezahlen?', en:'Oh, the holiday! I didn’t know that. Can I pay it in instalments?',
+     task:'Say yes: she can pay in three instalments. The first one is debited on the 1st of next month.', model:'Ja, das ist kein Problem. Sie können den Betrag in drei Raten bezahlen. Die erste Rate wird am Ersten des nächsten Monats abgebucht.', keys:['rate','drei/3','abgebucht/abbuch/abgezogen']},
+    {c:'Super, vielen Dank!', en:'Great, thank you very much!',
+     task:'Say she will get a confirmation by e-mail, then end the call politely.', model:'Gern geschehen. Sie bekommen gleich eine Bestätigung per E-Mail. Vielen Dank für Ihren Anruf und auf Wiederhören!', keys:['bestätigung','mail', ...BYE]}]},
+  {id:'c-paket', title:'Das Paket ist nicht da', who:'Herr Wolff', where:'ModeMarkt Online-Shop', lesson:'cc-beschwerde', steps:[
+    GREET('ModeMarkt'),
+    {c:'Ich habe vor zwei Wochen eine Jacke bestellt, und sie ist immer noch nicht da! Ich habe schon dreimal angerufen!', en:'I ordered a jacket two weeks ago and it’s still not here! I’ve already called three times!',
+     task:'Apologise, say you understand his anger, and ask for the order number.', model:'Das tut mir wirklich leid. Ich verstehe Ihren Ärger. Können Sie mir bitte Ihre Bestellnummer nennen?', keys:['tut mir leid/leid/entschuldig','verstehe','bestellnummer/auftragsnummer']},
+    {c:'Die Bestellnummer ist M K 4 4 7 1.', en:'The order number is M K 4 4 7 1.',
+     task:'Say you are checking. Then explain: the parcel came back to you because the house number was missing.', model:'Einen Moment, ich schaue nach. … Das Paket ist leider zu uns zurückgekommen, weil die Hausnummer gefehlt hat.', keys:['moment/schaue','zurück','hausnummer']},
+    {c:'Oh nein. Die Hausnummer ist siebzehn.', en:'Oh no. The house number is seventeen.',
+     task:'Repeat the address to check it: Lindenstraße 17 in Köln. Ask if that is right.', model:'Ich wiederhole: Lindenstraße 17 in Köln. Ist das richtig?', keys:['lindenstraße','17/siebzehn','köln','richtig/stimmt']},
+    {c:'Ja, genau.', en:'Yes, exactly.',
+     task:'Say you will send the parcel today by express, free of charge, and it will arrive tomorrow.', model:'Danke. Ich schicke Ihnen das Paket heute noch per Express, natürlich kostenlos. Sie bekommen es morgen.', keys:['heute','express','kostenlos/gratis/umsonst','morgen']},
+    {c:'Na gut. Danke schön.', en:'Well, all right. Thank you.',
+     task:'As an apology, give him a 10 % voucher. Then say goodbye.', model:'Als Entschuldigung bekommen Sie außerdem einen Gutschein über zehn Prozent. Vielen Dank für Ihren Anruf. Auf Wiederhören!', keys:['entschuldigung','gutschein/rabatt','prozent/%', 'wiederhören']}]},
+  {id:'c-adresse', title:'Eine neue Adresse', who:'Frau Yilmaz', where:'VitaVersicherung Service', lesson:'cc-kunde', steps:[
+    GREET('VitaVersicherung'),
+    {c:'Guten Tag, Yilmaz hier. Ich bin umgezogen und möchte meine Adresse ändern.', en:'Good day, Yilmaz here. I’ve moved and would like to change my address.',
+     task:'Say you can do that right away, and ask for her contract number.', model:'Gern, das kann ich sofort für Sie machen. Wie ist Ihre Vertragsnummer, bitte?', keys:['gern/kein problem/natürlich','vertragsnummer']},
+    {c:'V wie Viktor, 7 7 0 3 5.', en:'V as in Viktor, 7 7 0 3 5.',
+     task:'Ask for her new address: street, house number, postcode and town.', model:'Danke. Wie lautet Ihre neue Anschrift? Ich brauche die Straße, die Hausnummer, die Postleitzahl und den Ort.', keys:['anschrift/adresse','straße','hausnummer','postleitzahl']},
+    {c:'Ahornweg 5, 80331 München.', en:'Ahornweg 5, 80331 Munich.',
+     task:'Ask her politely to spell the street name.', model:'Könnten Sie mir den Straßennamen bitte buchstabieren?', keys:['buchstabier','bitte','könnten/können/würden']},
+    {c:'A wie Anton, H wie Heinrich, O wie Otto, R wie Richard, N wie Nordpol. Und dann Weg.', en:'A as in Anton, H as in Heinrich, O as in Otto, R as in Richard, N as in Nordpol. And then Weg.',
+     task:'Repeat the address to check it and say that it is valid from 1 June.', model:'Vielen Dank. Ich wiederhole: Ahornweg 5, 80331 München. Die neue Adresse gilt ab dem ersten Juni.', keys:['ahornweg','münchen','ab','juni']},
+    {c:'Perfekt. Das war’s schon.', en:'Perfect. That’s all.',
+     task:'Say she will get a confirmation by post, then thank her and end the call.', model:'Sie bekommen in den nächsten Tagen eine Bestätigung per Post. Vielen Dank für Ihren Anruf. Auf Wiederhören, Frau Yilmaz!', keys:['bestätigung','post', ...BYE]}]},
+  {id:'c-kuendigung', title:'Ich will kündigen', who:'Frau Klein', where:'MobilFon Kundenservice', lesson:'cc-kunde', steps:[
+    GREET('MobilFon'),
+    {c:'Hallo, ich möchte meinen Handyvertrag kündigen. Er ist mir zu teuer.', en:'Hello, I’d like to cancel my phone contract. It’s too expensive for me.',
+     task:'Say that is a pity, offer help, and ask for her customer number.', model:'Das ist schade, aber ich helfe Ihnen gern. Können Sie mir bitte Ihre Kundennummer nennen?', keys:['schade/leid','helfe','kundennummer']},
+    {c:'Das ist die 2 0 4 4 9 1.', en:'It’s 2 0 4 4 9 1.',
+     task:'Explain that the contract has a minimum term until 31 August. She can cancel for that date.', model:'Danke. Ihr Vertrag hat eine Mindestlaufzeit bis zum 31. August. Zu diesem Datum können Sie kündigen.', keys:['mindestlaufzeit/laufzeit','august','kündigen']},
+    {c:'Hm. Und gibt es keinen günstigeren Tarif?', en:'Hm. And isn’t there a cheaper plan?',
+     task:'Offer the plan “Smart S”: 9.99 euros a month with 10 gigabytes.', model:'Doch, ich kann Ihnen unseren Tarif Smart S anbieten. Er kostet nur 9,99 Euro im Monat, und Sie haben zehn Gigabyte.', keys:['tarif','9/neun','monat','gigabyte/gb']},
+    {c:'Das klingt gut. Dann nehme ich lieber den.', en:'That sounds good. Then I’d rather take that one.',
+     task:'Confirm: the new plan starts next month, and she gets the contract documents by e-mail.', model:'Sehr gern. Der neue Tarif gilt ab dem nächsten Monat. Die Vertragsunterlagen bekommen Sie per E-Mail.', keys:['tarif','nächsten monat','mail']},
+    {c:'Danke, tschüss!', en:'Thanks, bye!',
+     task:'End the call the phone way and wish her a nice day.', model:'Vielen Dank für Ihren Anruf. Ich wünsche Ihnen einen schönen Tag. Auf Wiederhören!', keys:['schönen tag', ...BYE]}]},
+  {id:'c-interview', title:'Das Vorstellungsgespräch', who:'Frau Wagner', where:'TeleServ, Personalabteilung', lesson:'job-interview', face:1, steps:[
+    {c:'Guten Tag! Schön, dass Sie da sind. Haben Sie gut zu uns gefunden?', en:'Hello! Nice that you’re here. Did you find us easily?',
+     task:'Small talk: say yes, it was easy, and thank her for the invitation.', model:'Ja, danke, das war kein Problem. Vielen Dank für die Einladung.', keys:['danke/dank','einladung']},
+    {c:'Erzählen Sie doch mal etwas über sich.', en:'Tell me something about yourself.',
+     task:'Introduce yourself: your name, where you are from, how long you have been in Germany, and your work experience.', model:'Gern. Ich heiße Karim Benali und komme aus Casablanca in Marokko. Ich lebe seit einem Jahr in Deutschland. In Marokko habe ich zwei Jahre im Kundenservice gearbeitet.', keys:['ich heiße/mein name/ich bin','komme aus','seit','gearbeitet/arbeite']},
+    {c:'Warum möchten Sie gerade bei uns im Kundenservice arbeiten?', en:'Why do you want to work in our customer service in particular?',
+     task:'Say you like working with people and solving problems, and that your languages help the customers.', model:'Ich arbeite gern mit Menschen, und ich löse gern Probleme. Außerdem spreche ich Arabisch, Französisch und Deutsch. Das ist für Ihre Kunden ein Vorteil.', keys:['menschen','problem/löse/helfe','spreche','arabisch/französisch/sprachen']},
+    {c:'Was machen Sie, wenn ein Kunde am Telefon sehr wütend ist?', en:'What do you do when a customer is very angry on the phone?',
+     task:'Say you stay calm and listen, then you apologise and look for a solution.', model:'Ich bleibe ruhig und höre gut zu. Dann entschuldige ich mich und suche eine Lösung für den Kunden.', keys:['ruhig','höre/zuhören','entschuldig/tut mir leid/leid','lösung']},
+    {c:'Können Sie auch im Schichtdienst und am Wochenende arbeiten?', en:'Can you also work shifts and at weekends?',
+     task:'Say yes, that is no problem for you; you are flexible.', model:'Ja, das ist für mich kein Problem. Ich bin flexibel.', keys:['ja','kein problem/flexibel/gern']},
+    {c:'Gut. Haben Sie noch Fragen an uns?', en:'Good. Do you have any questions for us?',
+     task:'Ask about the induction and the working hours.', model:'Ja, gern. Wie sieht die Einarbeitung aus? Und wie sind die Arbeitszeiten?', keys:['einarbeitung','arbeitszeit/schicht']},
+    {c:'Die Einarbeitung dauert vier Wochen, und wir arbeiten zwischen sieben und zweiundzwanzig Uhr. Wir melden uns nächste Woche bei Ihnen.', en:'The induction takes four weeks, and we work between 7 am and 10 pm. We’ll get back to you next week.',
+     task:'Thank her for the conversation, say you look forward to her answer, and say goodbye. You are face to face, so: Auf Wiedersehen.', model:'Vielen Dank für das Gespräch. Ich freue mich auf Ihre Antwort. Auf Wiedersehen!', keys:['danke/dank','gespräch','freue','wiedersehen']}]},
+];
 WRITING.push(
   {id:'job-anschreiben', level:'B1', job:1, title:'Bewerbung als Kundenberater', situation:'Sie haben diese Anzeige gelesen: „Kundenberater (m/w/d) für unsere Hotline in Berlin gesucht. Deutsch B1, weitere Sprachen willkommen.“ Schreiben Sie ein kurzes Anschreiben an Frau Wagner von der Firma TeleServ.', points:['Warum Sie sich bewerben','Ihre Erfahrung und Ihre Sprachen','Ihre Stärken im Umgang mit Kunden','Ab wann Sie anfangen können, und Bitte um ein Gespräch'], words:100, letter:1, reg:'Sie',
    model:'Sehr geehrte Frau Wagner,\nhiermit bewerbe ich mich um die Stelle als Kundenberater in Ihrer Hotline in Berlin. Ich habe Ihre Anzeige im Internet gelesen und bin sehr interessiert, weil ich gern mit Menschen arbeite.\nIch habe zwei Jahre im Kundenservice einer Telefonfirma in Casablanca gearbeitet. Dort habe ich jeden Tag Anrufe angenommen, Fragen zu Rechnungen beantwortet und Beschwerden bearbeitet. Deshalb kenne ich die typischen Fragen von Kunden. Ich spreche Arabisch als Muttersprache, Französisch fließend und Deutsch auf dem Niveau B1.\nIch bin freundlich und geduldig und bleibe auch in schwierigen Gesprächen ruhig. Außerdem arbeite ich gern im Team.\nIch kann ab dem 1. März anfangen. Über eine Einladung zu einem Vorstellungsgespräch würde ich mich sehr freuen.\nMit freundlichen Grüßen\nKarim Benali'},
@@ -3115,7 +3219,7 @@ const LUC = {heute:'House', pfad:'Route', ueben:'Dumbbell', pruefung:'Graduation
   say:'Volume2', flame:'Flame', play:'Play', sun:'Sun', moon:'Moon', x:'X', back:'ArrowLeft', next:'ArrowRight', check:'Check', clock:'Clock', list:'ListChecks',
   target:'Target', zap:'Zap', brain:'Brain', chevL:'ChevronLeft', chevR:'ChevronRight', cloud:'Cloud', device:'Smartphone', snow:'Snowflake', trophy:'Trophy',
   shapes:'Shapes', dialog:'MessagesSquare', repeat:'Repeat', timer:'Timer', spell:'SpellCheck', headphones:'Headphones', sparkles:'Sparkles',
-  book:'BookMarked', video:'CirclePlay', ext:'ArrowUpRight', move:'ArrowLeftRight', copy:'ClipboardCopy', gear:'Settings', trend:'TrendingUp', fortschritt:'TrendingUp', search:'Search', suche:'Search'};
+  book:'BookMarked', video:'CirclePlay', ext:'ArrowUpRight', move:'ArrowLeftRight', copy:'ClipboardCopy', gear:'Settings', phone:'Phone', mic:'Mic', eye:'Eye', eyeoff:'EyeOff', trend:'TrendingUp', fortschritt:'TrendingUp', search:'Search', suche:'Search'};
 const iconCache = {};
 const icon = k => {
   if (iconCache[k]) return iconCache[k];
@@ -3124,12 +3228,12 @@ const icon = k => {
   return ICONS[k] ? open + ICONS[k] + '</svg>' : '';
 };
 const VIEWS = [['heute','Heute','Today'],['pfad','Lernpfad','Learning path'],['ueben','Üben','Practice'],['pruefung','Prüfung','Exam'],['tabelle','Tabelle','Cheat sheet']];
-const PARENT = {karten:'ueben', lesen:'ueben', schreiben:'ueben'};
+const PARENT = {karten:'ueben', lesen:'ueben', schreiben:'ueben', telefon:'ueben'};
 const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['schreiben','Schreiben','Writing'],['fortschritt','Fortschritt','Progress'],['suche','Nachschlagen','Look something up']];
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = 'f5388b3';  // build.py puts the build number here
+const APP_VERSION = '43ed051';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -3138,7 +3242,7 @@ const today = () => dayKey(new Date());
 
 // ---- state + sync ----
 const LS = 'wegzurb1';
-function fresh(){ return {v:1, lscore:{}, xp:0, days:{}, met:{}, done:{}, cards:{}, best:{blitz:0}, read:{}, writing:{}, exams:[], stats:{}, lastLevel:'A1', goal:60, secs:{}, credit:{}, planMin:120, plan:null, myWords:[], sound:true, updatedAt:0}; }
+function fresh(){ return {v:1, lscore:{}, xp:0, days:{}, met:{}, done:{}, cards:{}, best:{blitz:0}, read:{}, writing:{}, exams:[], stats:{}, lastLevel:'A1', goal:60, secs:{}, credit:{}, planMin:120, plan:null, myWords:[], calls:{}, sound:true, updatedAt:0}; }
 const normalize = s => Object.assign(fresh(), s || {});
 let state = fresh();
 try { state = normalize(JSON.parse(localStorage.getItem(LS))); } catch(e) {}
@@ -3243,7 +3347,7 @@ function chips(){
   document.getElementById('chipXp').innerHTML = `${icon('clock')}${minutesOn(state, t)}/${state.planMin} min`;
 }
 const TITLES = {pfad:['Lernpfad','Weg zur B1 / Lernpfad'], ueben:['Üben','Weg zur B1 / Üben'], fortschritt:['Fortschritt','Weg zur B1 / Your progress'], suche:['Nachschlagen','Weg zur B1 / Look something up'], pruefung:['Prüfung','Weg zur B1 / Goethe-Zertifikat B1'],
-  tabelle:['Tabelle','Weg zur B1 / Grammatik auf einen Blick'], karten:['Karten','Üben / Karten'], lesen:['Lesen','Üben / Lesen'], schreiben:['Schreiben','Üben / Schreiben'], daten:['Einstellungen','Weg zur B1 / Gemini and your progress']};
+  tabelle:['Tabelle','Weg zur B1 / Grammatik auf einen Blick'], karten:['Karten','Üben / Karten'], lesen:['Lesen','Üben / Lesen'], schreiben:['Schreiben','Üben / Schreiben'], telefon:['Telefon-Training','Üben / Telefon-Training'], daten:['Einstellungen','Weg zur B1 / Gemini and your progress']};
 function setHead(t, sub){ document.getElementById('vtitle').textContent = t; document.getElementById('vsub').textContent = sub || ''; }
 function setTitle(){
   const h = new Date().getHours(), [t, sub] = view === 'heute'
@@ -3258,7 +3362,7 @@ function maybeReload(){ if (window.__updated && !activity){ location.reload(); r
 let rendered = false;
 function render(){
   if (maybeReload()) return;
-  const go = () => { nav(); chips(); setTitle(); ({heute:vHeute, pfad:vPfad, ueben:vUeben, pruefung:vPruefung, tabelle:vTabelle, karten:vKarten, lesen:vLesen, schreiben:vSchreiben, daten:vDaten, fortschritt:vFortschritt, suche:vSuche})[view](); };
+  const go = () => { nav(); chips(); setTitle(); ({heute:vHeute, pfad:vPfad, ueben:vUeben, pruefung:vPruefung, tabelle:vTabelle, karten:vKarten, lesen:vLesen, schreiben:vSchreiben, telefon:vTelefon, daten:vDaten, fortschritt:vFortschritt, suche:vSuche})[view](); };
   go();
   // A short fade of the content. (document.startViewTransition snapshots the whole screen, fixed bottom bar included, and froze phones for about a second.)
   if (rendered && !matchMedia('(prefers-reduced-motion: reduce)').matches){ $main.classList.remove('enter'); void $main.offsetWidth; $main.classList.add('enter'); }
@@ -3727,6 +3831,7 @@ function vUeben(){
     <button class="tile p-butter" data-goto="karten"><span class="ic">${icon('karten')}</span><b>Karten</b><span>Flashcards · ${due} due today · ${Object.keys(state.cards).length} words in your deck</span></button>
     <button class="tile p-mint" data-goto="lesen"><span class="ic">${icon('lesen')}</span><b>Lesen</b><span>Reading and listening · ${nr ? `Next: ${esc(nr.title)} (${nr.level})` : 'All 20 texts read. Read your favourites again.'}</span></button>
     <button class="tile p-lilac" data-goto="schreiben"><span class="ic">${icon('schreiben')}</span><b>Schreiben</b><span>Check list and model answers · ${wdone ? `${wdone} of ${WRITING.length} tasks written` : `${WRITING.length} tasks from A1 to the B1 exam`}</span></button>
+    <button class="tile p-sky" data-goto="telefon"><span class="ic">${icon('phone')}</span><b>Telefon-Training</b><span>Role-play calls · The app is the customer, you answer out loud · ${CALLS.length} calls</span></button>
   </section>
   <div class="lvhead"><h3>Spiele</h3><span>quick rounds</span></div>
   <section class="grid2">
@@ -4085,6 +4190,100 @@ function vDaten(){
       view = 'heute'; render(); toTop();
     };
   };
+}
+
+// ---- Telefon-Training ----
+const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+function vTelefon(){
+  const calls = state.calls || {};
+  $main.innerHTML = `${backTo('Üben','ueben')}
+  <section class="card stack"><h2>Telefon-Training</h2><p class="muted" style="margin:0">Role-play real calls. The app is the customer and speaks first; you are the customer adviser and answer out loud. ${SpeechRec ? 'Tap the microphone and the app checks the key words of your answer.' : 'Say your answer out loud, then compare it with a good answer.'} Put on headphones if you can.</p></section>
+  <section class="stack">${CALLS.map((c, i) => { const best = calls[c.id], l = LESSONS.find(x => x.id === c.lesson);
+    return `<button class="lesson ${best >= 80 ? 'done' : ''}" data-call="${i}"><span class="num">${icon(c.face ? 'dialog' : 'phone')}</span>
+      <span style="min-width:0"><b>${esc(c.title)}</b><span>${esc(c.who)} · ${esc(c.where)} · ${c.steps.length} turns${l ? ` · words: ${esc(l.title)}` : ''}</span></span>
+      <span class="tag">${best != null ? best + '%' : ''}</span></button>`; }).join('')}</section>`;
+  $main.querySelectorAll('[data-call]').forEach(b => b.onclick = () => runCall(CALLS[+b.dataset.call], () => { view = 'telefon'; render(); toTop(); }));
+}
+function runCall(sc, onDone){
+  activity = true; nav(); toTop(); keyHandler = null; setHead(sc.title, 'Üben / Telefon-Training');
+  const n = sc.steps.length, scores = [], thread = [];
+  let i = 0, best = 0, rec = null, showText = state.callText !== false;
+  const bub = (who, text, en) => `<div class="bub ${who}"><p>${esc(text)}</p>${en ? `<small>${esc(en)}</small>` : ''}</div>`;
+  function step(){
+    const s = sc.steps[i]; best = 0;
+    $main.innerHTML = `<section class="card call stack">
+      <div class="callbar"><span class="cav">${icon(sc.face ? 'dialog' : 'phone')}</span><div><b>${esc(sc.who)}</b><small>${esc(sc.where)}</small></div>
+        <span class="tag">${i + 1} / ${n}</span><button class="linkbtn" id="hang">${icon('x')}${sc.face ? 'End' : 'Auflegen'}</button></div>
+      <div class="thread">${thread.join('')}${s.c ? `<div class="bub them ${showText ? '' : 'hide'}" id="cur"><p>${esc(s.c)}</p>${showText && s.en ? `<small>${esc(s.en)}</small>` : ''}</div>` : `<div class="ring">${icon('phone')}Das Telefon klingelt …</div>`}</div>
+      ${s.c ? `<div class="row"><button class="linkbtn" id="again">${icon('say')}Hear it again</button><button class="linkbtn" id="tt">${icon(showText ? 'eyeoff' : 'eye')}${showText ? 'Hide the text (listening practice)' : 'Show the text'}</button></div>` : ''}
+      <p class="tip" style="margin:0"><b>Your turn:</b> ${esc(s.task)}</p>
+      <div class="row" id="act">${SpeechRec ? `<button class="btn go big" id="mic">${icon('mic')}Answer out loud</button>` : ''}<button class="btn ${SpeechRec ? 'ghost' : 'go big'}" id="show">Show a good answer</button></div>
+      <div id="res" class="stack" aria-live="polite"></div></section>`;
+    if (s.c) say(s.c);
+    if (i) (document.getElementById('cur') || $main.querySelector('.ring')).scrollIntoView({block:'start'});
+    document.getElementById('hang').onclick = () => { stopActivity(); onDone(); };
+    const ag = document.getElementById('again'); if (ag) ag.onclick = () => say(s.c);
+    const tt = document.getElementById('tt'); if (tt) tt.onclick = () => { showText = !showText; state.callText = showText; save(); step(); };
+    const mic = document.getElementById('mic'); if (mic) mic.onclick = () => listen(s, mic);
+    document.getElementById('show').onclick = () => reveal(s, null);
+  }
+  function listen(s, btn){
+    if (rec){ rec.stop(); return; }
+    try { speechSynthesis.cancel(); } catch(e) {}
+    const res = document.getElementById('res');
+    let text = '', failed = '';
+    rec = new SpeechRec(); rec.lang = 'de-DE'; rec.interimResults = true; rec.maxAlternatives = 1; ctls.add(rec);
+    rec.onresult = e => { text = Array.from(e.results, r => r[0].transcript).join(' '); res.innerHTML = `<div class="bub me live"><p>${esc(text)}</p></div>`; };
+    rec.onerror = e => { failed = e.error; };
+    rec.onend = () => {
+      ctls.delete(rec); rec = null; btn.classList.remove('rec'); btn.innerHTML = icon('mic') + 'Answer out loud';
+      if (text.trim()) return reveal(s, text);
+      res.innerHTML = `<p class="muted" style="margin:0">${failed === 'not-allowed' || failed === 'service-not-allowed' ? 'The app may not use the microphone. Allow it in your browser’s site settings, or say your answer out loud and tap “Show a good answer”.'
+        : failed === 'network' ? 'Speech recognition needs internet. Say your answer out loud and tap “Show a good answer”.'
+        : 'I didn’t hear anything. Tap the microphone and speak, or tap “Show a good answer”.'}</p>`;
+    };
+    try { rec.start(); btn.classList.add('rec'); btn.innerHTML = icon('mic') + 'Listening … tap to stop'; res.innerHTML = ''; }
+    catch(e){ ctls.delete(rec); rec = null; }
+  }
+  function reveal(s, said){
+    const res = document.getElementById('res');
+    if (said != null){
+      const r = phoneCheck(said, s.keys); best = Math.max(best, r.score);
+      res.innerHTML = `${bub('me', said)}
+        <div class="kcheck">${s.keys.map(k => `<span class="${r.hit.includes(k) ? 'ok' : 'no'}">${icon(r.hit.includes(k) ? 'check' : 'x')}${esc(k.split('/')[0])}</span>`).join('')}</div>
+        <p class="muted" style="margin:0">${r.score === 1 ? 'You said everything that matters.' : r.score >= .5 ? 'Good. Compare with the answer below and try once more for the missing words.' : 'Listen to a good answer, then try again.'}</p>`;
+    } else res.innerHTML = '';
+    res.insertAdjacentHTML('beforeend', `<div class="model"><div><small>A good answer</small><p>${esc(s.model)}</p></div>${sayBtn(s.model)}</div>
+      ${said == null ? `<p class="muted" style="margin:0">Did you say something like this?</p><div class="row" id="self"><button class="btn ghost" data-sc="1">Yes</button><button class="btn ghost" data-sc=".5">Almost</button><button class="btn ghost" data-sc="0">Not yet</button></div>`
+        : `<div class="row">${SpeechRec ? `<button class="btn ghost" id="retry">${icon('mic')}Try again</button>` : ''}<button class="btn go" id="next">Weiter${icon('next')}</button></div>`}`);
+    if (said == null){ say(s.model); res.querySelectorAll('[data-sc]').forEach(b => b.onclick = () => { best = Math.max(best, +b.dataset.sc); next(s, null); }); }
+    else {
+      document.getElementById('next').onclick = () => next(s, said);
+      const rt = document.getElementById('retry'); if (rt) rt.onclick = () => listen(s, rt);
+    }
+    document.getElementById('act').hidden = true;
+    res.scrollIntoView({block:'nearest'});
+  }
+  function next(s, said){
+    scores.push(best);
+    if (s.c) thread.push(bub('them', s.c));
+    thread.push(bub('me', said || s.model));
+    if (++i < n) return step();
+    finish();
+  }
+  function finish(){
+    const pct = Math.round(scores.reduce((a, b) => a + b, 0) / n * 100), xp = 5 + Math.round(pct / 10);
+    state.calls = state.calls || {}; state.calls[sc.id] = Math.max(state.calls[sc.id] || 0, pct); addXP(xp);
+    $main.innerHTML = `<section class="celebrate">
+      <div class="burst" aria-hidden="true"><div class="cbadge">${icon(sc.face ? 'dialog' : 'phone')}</div>${[1,2,3,4].map(k => `<i class="spark s${k}">${icon('sparkles')}</i>`).join('')}</div>
+      <h2>${pct >= 80 ? 'Super Gespräch!' : pct >= 50 ? 'Gut gemacht!' : 'Geschafft!'}</h2>
+      <div class="cstats"><div><small>Key words</small><b>${pct}%</b></div><div><small>XP earned</small><b>+${xp}</b></div></div>
+      <p class="muted" style="margin:0;max-width:44ch">${pct >= 80 ? 'Try it again with the text hidden: then it is real listening, like on the phone.' : 'Do the call again tomorrow. Each time the sentences come faster.'}</p>
+      <button class="btn big" id="redo">${icon('repeat')}Do this call again</button><button class="btn ghost big" id="back">Back to the calls</button></section>`;
+    document.getElementById('redo').onclick = () => runCall(sc, onDone);
+    document.getElementById('back').onclick = () => { stopActivity(); onDone(); };
+  }
+  step();
 }
 
 // ---- Lesen ----
