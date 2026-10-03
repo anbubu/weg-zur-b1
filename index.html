@@ -2261,7 +2261,7 @@ function nav(){
   if (mb) mb.innerHTML = icon(curMode() === 'dark' ? 'sun' : 'moon');
 }
 document.getElementById('tabs').addEventListener('click', e => {
-  const m = e.target.closest('[data-mode]'); if (m) return setMode(m.dataset.mode);
+  const m = e.target.closest('button[data-mode]'); if (m) return setMode(m.dataset.mode);  // button only: <html data-mode> would match every tap
   const b = e.target.closest('[data-view]'); if (!b) return;
   view = b.dataset.view; stopActivity(); render(); window.scrollTo(0,0);
 });
