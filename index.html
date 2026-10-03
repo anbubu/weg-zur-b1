@@ -1083,7 +1083,140 @@ Am Ende der Führung gehen wir in unser Café. Dort dürfen Sie unsere Brötchen
        I('Firmen müssen ihren Mitarbeitern attraktive Angebote machen.',W,1,0,'„Wer gute Leute will, muss ihnen etwas bieten.“')]; })()},
   ]},
 };
-
+// Goethe-Zertifikat B1 format, practice set 2 (original texts)
+EXAM.lesen.teile2 = [
+  {title:'Teil 1 · Blog · Richtig/Falsch', instr:'Lesen Sie den Text und die Aufgaben 1 bis 6. Wählen Sie: Sind die Aussagen Richtig oder Falsch?',
+   texts:[{h:'Mariams Blog: Vier Wochen in der Autowerkstatt', body:`Hallo zusammen,
+seit vier Wochen mache ich ein Praktikum in einer Autowerkstatt in Bielefeld. Viele Leute sind überrascht, wenn ich das erzähle, weil man in Werkstätten immer noch wenige Frauen sieht. Aber ich wollte schon als Kind wissen, wie ein Motor funktioniert. Mein Vater hat am Wochenende oft sein altes Auto repariert, und ich durfte ihm helfen.
+Den Praktikumsplatz habe ich über meine Berufsberaterin bei der Agentur für Arbeit gefunden. Sie hat mir drei Betriebe empfohlen, und schon beim ersten Vorstellungsgespräch hat es geklappt.
+Die ersten Tage waren nicht leicht. Ich musste vor allem aufräumen und Werkzeug holen, und abends tat mir der Rücken weh. Aber mein Kollege Stefan hat mir viel erklärt, und inzwischen darf ich schon allein Reifen wechseln und das Öl kontrollieren.
+Am meisten gefällt mir das Team. Wir machen jeden Mittag zusammen Pause, und am Freitag bringt immer jemand Kuchen mit. Nur an die Arbeitszeit muss ich mich noch gewöhnen: Wir fangen um halb sieben an.
+Letzte Woche hat mein Chef gesagt, dass ich nach dem Praktikum bei ihnen eine Ausbildung anfangen kann. Ich habe sofort Ja gesagt!`}],
+   items:[I('Mariam macht seit ungefähr einem Monat ein Praktikum.','RF',0,0,'„seit vier Wochen“'),
+     I('In Autowerkstätten arbeiten heute genauso viele Frauen wie Männer.','RF',1,0,'„weil man in Werkstätten immer noch wenige Frauen sieht“'),
+     I('Mariam hat den Praktikumsplatz mit Hilfe einer Beraterin gefunden.','RF',0,0,'„über meine Berufsberaterin bei der Agentur für Arbeit“'),
+     I('Schon in der ersten Woche durfte Mariam allein Reifen wechseln.','RF',1,0,'First she only tidied up and fetched tools. „inzwischen“ = by now.'),
+     I('Mariam gefällt die Stimmung im Team.','RF',0,0,'„Am meisten gefällt mir das Team.“'),
+     I('Nach dem Praktikum möchte Mariam in einem anderen Betrieb arbeiten.','RF',1,0,'She can start an Ausbildung there and said yes.')]},
+  {title:'Teil 2 · Zeitungsartikel · a/b/c', instr:'Lesen Sie die Texte und die Aufgaben 7 bis 12. Wählen Sie bei jeder Aufgabe die richtige Lösung a, b oder c.',
+   texts:[{h:'Reparieren statt wegwerfen', body:`Jeden ersten Samstag im Monat wird das Gemeindehaus in Kassel-Nord zur Werkstatt. Dann kommen Menschen mit kaputten Toastern, Lampen, Fahrrädern oder Hosen ins „Repair-Café“. Ehrenamtliche Helfer – Elektriker, Schneiderinnen, Fahrradmechaniker – reparieren die Sachen zusammen mit den Besitzern. Die Reparatur kostet nichts, aber viele Besucher geben eine kleine Spende für Kaffee und Ersatzteile.
+„Wir wollen nicht nur Müll vermeiden“, sagt Organisator Klaus Becker, 67. „Die Leute sollen auch lernen, wie sie Dinge selbst reparieren können.“ Deshalb arbeiten die Besucher selbst mit, und die Helfer erklären.
+Nicht alles kann gerettet werden: Bei etwa jedem dritten Gerät fehlen Ersatzteile, oder die Reparatur ist zu kompliziert. Trotzdem ist das Café jeden Monat voll. Weil so viele Menschen kommen, sucht Becker jetzt weitere Helfer, besonders für Computer und Handys.`},
+     {h:'Ein Dorf kauft seinen Laden', body:`Als vor zwei Jahren der letzte Supermarkt im Dorf Wiesental geschlossen hat, mussten die 900 Einwohner für jedes Brot zwölf Kilometer in die nächste Stadt fahren. Für ältere Menschen ohne Auto war das ein großes Problem. Deshalb haben die Bürger eine Genossenschaft gegründet: 240 Familien haben je 250 Euro bezahlt, und mit dem Geld haben sie einen eigenen Dorfladen eröffnet.
+Heute gibt es dort Lebensmittel, viele davon von Bauern aus der Region, eine kleine Post und eine Kaffee-Ecke. Zwei Verkäuferinnen sind fest angestellt, außerdem helfen Rentner aus dem Dorf stundenweise mit.
+„Der Laden ist mehr als ein Geschäft“, sagt Bürgermeisterin Anna Roth. „Hier treffen sich die Leute wieder.“ Leicht ist es aber nicht: Die Preise sind etwas höher als im Supermarkt, und nicht alle Einwohner kaufen regelmäßig im Dorf ein.`}],
+   items:[I('Im Repair-Café …',['reparieren die Helfer die Sachen zusammen mit den Besuchern.','kann man gebrauchte Geräte kaufen.','arbeiten nur Elektriker.'],0,0,'„reparieren die Sachen zusammen mit den Besitzern“'),
+     I('Für eine Reparatur …',['bezahlt man einen festen Preis.','muss man nichts bezahlen.','muss man Ersatzteile mitbringen.'],1,0,'„Die Reparatur kostet nichts“. A donation is voluntary.'),
+     I('Klaus Becker sucht neue Helfer, weil …',['viele Helfer aufgehört haben.','jedes dritte Gerät kaputt bleibt.','sehr viele Besucher kommen.'],2,0,'„Weil so viele Menschen kommen, sucht Becker jetzt weitere Helfer“'),
+     I('Vor zwei Jahren …',['hat im Dorf ein neuer Supermarkt eröffnet.','gab es im Dorf kein Geschäft mehr.','sind viele Einwohner in die Stadt gezogen.'],1,1,'The last supermarket closed.'),
+     I('Den Dorfladen …',['haben die Bürger gemeinsam bezahlt.','hat eine Supermarktkette gekauft.','bezahlt die Stadt.'],0,1,'„240 Familien haben je 250 Euro bezahlt“'),
+     I('Ein Problem für den Laden ist, dass …',['er keine Verkäuferinnen findet.','es dort keine Produkte aus der Region gibt.','nicht alle Einwohner dort einkaufen.'],2,1,'„nicht alle Einwohner kaufen regelmäßig im Dorf ein“')]},
+  {title:'Teil 3 · Anzeigen zuordnen', instr:'Lesen Sie die Situationen 13 bis 19 und die Anzeigen a bis j. Welche Anzeige passt zu welcher Situation? Sie können jede Anzeige nur einmal verwenden. Für eine Situation gibt es keine passende Anzeige. In diesem Fall wählen Sie 0.',
+   texts:[['a','Tanzschule Rhythmus: Hochzeitstanz-Crashkurs für Paare. 3 Abende, freitags 19–21 Uhr.'],
+     ['b','Möbel Kraft: Lieferung und Aufbau Ihrer neuen Küche – kostenlos bei jedem Kauf über 2000 €.'],
+     ['c','Studentin hilft beim Umzug: Kisten packen, tragen, Möbel aufbauen. 15 € pro Stunde, auch am Wochenende.'],
+     ['d','Nachhilfe in Mathe und Physik für Schüler der Klassen 5 bis 10. Erfahrener Lehrer, auch online.'],
+     ['e','Computerkurs für Senioren: E-Mails schreiben, Fotos verschicken, sicher im Internet. Dienstag 10 Uhr, Stadtbücherei.'],
+     ['f','Yoga im Park: jeden Sonntag 9 Uhr, für alle Niveaus, kostenlos. Bitte eigene Matte mitbringen.'],
+     ['g','Transporter mieten ab 39 € pro Tag – ideal für Umzüge. Autovermietung Blitz, Hauptstraße 5.'],
+     ['h','Deutsch für den Beruf B1/B2: Bewerbungen schreiben, Telefongespräche und Vorstellungsgespräche üben. Abends, Volkshochschule.'],
+     ['i','Fitnessstudio Power: Probetraining gratis, Sauna inklusive, 24 Stunden geöffnet.'],
+     ['j','Mathe-Spielgruppe für Kinder von 4 bis 6 Jahren: Zahlen entdecken mit Spielen. Mittwoch 15 Uhr.']].map(([h,body]) => ({h, body})),
+   items:[I('Ein Freund zieht um. Er möchte selbst fahren, braucht aber ein großes Auto.',ADS,6,-1,'g: rent a van. (c is a person who helps, not a car.)'),
+     I('Ihre Nachbarin möchte lernen, wie sie ihren Enkeln Fotos per E-Mail schickt.',ADS,4,-1,'e: computer course for seniors.'),
+     I('Ihr Kollege möchte Vorstellungsgespräche auf Deutsch üben.',ADS,7,-1,'h: German for work, job interviews.'),
+     I('Eine Bekannte sucht für ihre Tochter (12 Jahre) Hilfe in Mathematik.',ADS,3,-1,'d: classes 5 to 10. (j is for children aged 4 to 6.)'),
+     I('Sie möchten am Wochenende draußen Sport machen und dafür nichts bezahlen.',ADS,5,-1,'f: outdoors, Sunday, free. (i is indoors and not free.)'),
+     I('Ihre Schwester sucht jemanden, der die Möbel in ihre neue Wohnung trägt.',ADS,2,-1,'c: help with moving, carrying furniture.'),
+     I('Ihr Bruder möchte ein gebrauchtes Sofa kaufen.',ADS,10,-1,'No ad sells used furniture (b is new kitchens), so the answer is 0.')]},
+  {title:'Teil 4 · Meinungen · Ja/Nein', instr:'Lesen Sie die Texte 20 bis 26. Wählen Sie: Ist die Person dafür, dass Geschäfte auch am Sonntag öffnen dürfen?\nIn einer Zeitung lesen Sie Kommentare zu einem Artikel über Ladenöffnungszeiten.',
+   texts:[['Jonas, 27, Frankfurt','Ich arbeite unter der Woche bis 19 Uhr, und am Samstag ist der Supermarkt immer total voll. Wenn ich am Sonntag in Ruhe einkaufen könnte, wäre das für mich eine große Erleichterung.'],
+     ['Gabriele, 58, Freiburg','Ich arbeite seit dreißig Jahren als Verkäuferin. Der Sonntag ist der einzige Tag, an dem meine ganze Familie zusammen ist. Den möchte ich nicht verlieren.'],
+     ['Murat, 35, Essen','Ich habe einen kleinen Kiosk. Wenn die großen Supermärkte auch sonntags öffnen, kommt niemand mehr zu mir. Für kleine Geschäfte wäre das das Ende.'],
+     ['Lena, 22, Berlin','In vielen Ländern ist das ganz normal, und niemand hat ein Problem damit. Außerdem gibt es viele Studierende wie mich, die gern am Sonntag ein paar Stunden arbeiten würden.'],
+     ['Herbert, 71, Kassel','Früher war ich strikt dagegen. Aber seit ich allein lebe, freue ich mich über jeden Ort, an dem Menschen sind. Ein offenes Geschäft am Sonntag wäre für mich keine schlechte Sache.'],
+     ['Sofia, 40, Hannover','Wir brauchen einen Tag in der Woche, an dem nicht alles ums Kaufen geht. Am Sonntag gehe ich mit meinen Kindern lieber in den Wald als ins Einkaufszentrum.'],
+     ['David, 31, Nürnberg','Am Anfang fand ich die Idee praktisch. Aber dann habe ich mit meiner Schwester gesprochen, die im Supermarkt arbeitet. Sie müsste dann jedes zweite Wochenende arbeiten. Nein, das geht zu weit.']].map(([h,body]) => ({h, body})),
+   items:[I('Jonas','JN',0,0,'Shopping on Sunday would make his life easier.'),I('Gabriele','JN',1,1,'She wants to keep Sunday for her family.'),I('Murat','JN',1,2,'It would be the end for small shops like his kiosk.'),
+     I('Lena','JN',0,3,'It is normal elsewhere, and students would like to work on Sundays.'),I('Herbert','JN',0,4,'„Früher war ich strikt dagegen. Aber …“: he changed his mind.'),
+     I('Sofia','JN',1,5,'Sunday should not be about shopping.'),I('David','JN',1,6,'„Am Anfang fand ich die Idee praktisch. Aber …“: he changed his mind and is against it.')]},
+  {title:'Teil 5 · Regeln · a/b/c', instr:'Lesen Sie die Aufgaben 27 bis 30 und den Text dazu. Wählen Sie bei jeder Aufgabe die richtige Lösung a, b oder c.\nSie sind in eine neue Wohnung gezogen und lesen die Hausordnung.',
+   texts:[{h:'Hausordnung · Lindenstraße 14', body:`Ruhezeiten: Von 22 bis 6 Uhr und sonntags den ganzen Tag ist Ruhe im Haus. Laute Musik und Bohren sind in dieser Zeit nicht erlaubt. Wenn Sie eine Feier planen, informieren Sie bitte vorher Ihre Nachbarn.
+Treppenhaus: Das Treppenhaus wird jede Woche von einer Firma geputzt. Fahrräder, Kinderwagen und Schuhe dürfen dort nicht stehen, weil sie den Fluchtweg blockieren. Für Fahrräder gibt es einen Raum im Keller.
+Müll: Bitte trennen Sie den Müll: Papier, Verpackungen, Glas und Restmüll. Glas bringen Sie bitte zum Container an der Ecke Lindenstraße/Parkweg. Sperrmüll, zum Beispiel alte Möbel, darf nicht neben die Mülltonnen gestellt werden. Melden Sie ihn bei der Stadt an.
+Waschküche: Die Waschmaschinen im Keller können Sie montags bis samstags von 8 bis 20 Uhr benutzen. Tragen Sie sich bitte vorher in die Liste an der Tür ein.
+Schäden: Wenn in Ihrer Wohnung etwas kaputt ist, melden Sie es bitte sofort der Hausverwaltung.`}],
+   items:[I('Am Sonntag …',['darf man nicht bohren.','darf man bis 22 Uhr laute Musik hören.','wird das Treppenhaus geputzt.'],0,0,'„sonntags den ganzen Tag ist Ruhe … Bohren … nicht erlaubt“'),
+     I('Wo sollen die Bewohner ihre Fahrräder abstellen?',['im Treppenhaus','im Keller','vor der Haustür'],1,0,'„Für Fahrräder gibt es einen Raum im Keller.“'),
+     I('Ein altes Sofa …',['kann man neben die Mülltonnen stellen.','bringt man zum Container an der Ecke.','muss man bei der Stadt anmelden.'],2,0,'Sperrmüll (bulky waste): „Melden Sie ihn bei der Stadt an.“'),
+     I('Wer die Waschmaschine benutzen möchte, …',['kann das auch am Sonntag tun.','muss sich vorher in eine Liste eintragen.','muss die Hausverwaltung anrufen.'],1,0,'„Tragen Sie sich bitte vorher in die Liste an der Tür ein.“')]},
+];
+EXAM.hoeren.teile2 = [
+  {title:'Teil 1 · Kurze Texte (2×)', instr:'Sie hören nun fünf kurze Texte. Sie hören jeden Text zweimal. Zu jedem Text lösen Sie zwei Aufgaben. Wählen Sie bei jeder Aufgabe die richtige Lösung.',
+   audio:[
+     {label:'Text 1', plays:2, lines:[['Herr Schulz','Guten Tag, Frau Yilmaz, hier spricht Schulz von der Autowerkstatt Schulz. Ihr Auto ist fertig. Wir haben die Bremsen erneuert, und das Licht hinten links funktioniert auch wieder. Sie können den Wagen heute bis 18 Uhr abholen. Morgen haben wir leider geschlossen, ab Montag sind wir dann wieder ab 7 Uhr für Sie da. Sie können bar oder mit Karte bezahlen. Auf Wiederhören!']]},
+     {label:'Text 2', plays:2, lines:[['Durchsage','Achtung, eine Information für alle Fahrgäste der S-Bahn-Linie 3: Wegen Bauarbeiten fahren am Wochenende zwischen Hauptbahnhof und Flughafen keine Züge. Bitte benutzen Sie die Ersatzbusse. Sie fahren alle 15 Minuten vor dem Hauptbahnhof, Ausgang Nord, ab. Rechnen Sie mit etwa 20 Minuten längerer Fahrzeit.']]},
+     {label:'Text 3', plays:2, lines:[['Radio','Und jetzt ein Tipp für alle, die eine Ausbildung suchen: Am Samstag findet in der Stadthalle die große Ausbildungsmesse statt. Über 80 Betriebe aus der Region stellen sich vor, vom Krankenhaus bis zur Bäckerei. Der Eintritt ist frei. Bringen Sie am besten Ihren Lebenslauf mit, denn manche Firmen führen direkt vor Ort erste Gespräche.']]},
+     {label:'Text 4', plays:2, lines:[['Ansage','Willkommen beim Bürgeramt. Leider sind im Moment alle Leitungen besetzt. Termine für die Anmeldung einer Wohnung oder einen neuen Personalausweis buchen Sie am schnellsten online auf unserer Internetseite. Für Fragen zum Führerschein drücken Sie bitte die Eins. Für alle anderen Fragen bleiben Sie bitte in der Leitung.']]},
+     {label:'Text 5', plays:2, lines:[['Lukas','Hi Amira, Lukas hier. Wegen Samstag: Das Grillen im Park fällt leider ins Wasser, es soll den ganzen Tag regnen. Wir machen stattdessen einen Spieleabend bei mir. Bring doch bitte einen Salat mit, um die Getränke kümmere ich mich. Wir fangen um acht an. Sag mir bis Freitag Bescheid, ob du kommst!']]}],
+   items:[I('Frau Yilmaz kann ihr Auto heute abholen.','RF',0,0,'„Sie können den Wagen heute bis 18 Uhr abholen.“'),
+     I('Wenn Frau Yilmaz heute nicht kommt, kann sie das Auto … abholen.',['morgen ab 7 Uhr','am Montag ab 7 Uhr','heute nach 18 Uhr'],1,0,'„Morgen haben wir leider geschlossen, ab Montag … ab 7 Uhr“'),
+     I('Am Wochenende fahren keine S-Bahnen zum Flughafen.','RF',0,1,'„fahren am Wochenende zwischen Hauptbahnhof und Flughafen keine Züge“'),
+     I('Die Ersatzbusse fahren …',['alle 15 Minuten.','alle 20 Minuten.','nur am Samstag.'],0,1,'20 minutes is the extra travel time.'),
+     I('Für die Ausbildungsmesse muss man Eintritt bezahlen.','RF',1,2,'„Der Eintritt ist frei.“'),
+     I('Was sollen die Besucher mitbringen?',['ein Foto','ihren Lebenslauf','ihr Zeugnis'],1,2,'„Bringen Sie am besten Ihren Lebenslauf mit“'),
+     I('Einen Termin für die Anmeldung bekommt man am schnellsten im Internet.','RF',0,3,'„buchen Sie am schnellsten online“'),
+     I('Wer eine Frage zum Führerschein hat, soll …',['online einen Termin buchen.','in der Leitung bleiben.','die Eins drücken.'],2,3),
+     I('Lukas feiert am Samstag im Park.','RF',1,4,'„fällt ins Wasser“ = is cancelled because of rain. They meet at his place.'),
+     I('Was soll Amira mitbringen?',['Getränke','einen Salat','ein Spiel'],1,4,'„Bring doch bitte einen Salat mit“')]},
+  {title:'Teil 2 · Begrüßung (1×)', instr:'Sie hören nun einen Text. Sie hören den Text einmal. Dazu lösen Sie fünf Aufgaben. Wählen Sie bei jeder Aufgabe die richtige Lösung.\nSie beginnen eine Ausbildung in einem Krankenhaus und hören die Begrüßung am ersten Tag.',
+   audio:[{label:'Begrüßung', plays:1, lines:[['Herr Wolf',`Guten Morgen und herzlich willkommen im Klinikum Nordstadt! Ich bin Martin Wolf, der Leiter der Pflegeschule. Schön, dass Sie alle hier sind: Wir haben dieses Jahr 45 neue Auszubildende, so viele wie noch nie.
+Zuerst ein paar wichtige Informationen. Ihre Ausbildung dauert drei Jahre. Sie sind abwechselnd ein paar Wochen in der Schule und ein paar Wochen auf den Stationen. Die ersten sechs Wochen haben Sie nur Unterricht. Erst danach gehen Sie zum ersten Mal auf eine Station.
+Ihre Arbeitskleidung bekommen Sie heute Nachmittag im Keller, Raum 12. Bitte nehmen Sie Ihren Ausweis mit. Die Kleidung wird bei uns im Haus gewaschen, Sie müssen sie also nicht mit nach Hause nehmen.
+Mittagessen gibt es in der Kantine im Erdgeschoss. Für Auszubildende kostet ein Essen nur 2 Euro 50.
+Und noch etwas: Jeder von Ihnen bekommt einen Paten aus dem zweiten Ausbildungsjahr. Wenn Sie Fragen oder Probleme haben, ist er oder sie für Sie da. Ihre Paten lernen Sie gleich nach der Pause kennen. Jetzt gibt es aber erst einmal Kaffee!`]]}],
+   items:[I('Herr Wolf ist …',['der Leiter der Pflegeschule.','Arzt im Klinikum.','Auszubildender im zweiten Jahr.'],0,0),
+     I('In den ersten sechs Wochen …',['arbeiten die Auszubildenden auf einer Station.','haben die Auszubildenden Urlaub.','haben die Auszubildenden nur Unterricht.'],2,0,'„Die ersten sechs Wochen haben Sie nur Unterricht.“'),
+     I('Die Arbeitskleidung …',['muss man selbst kaufen.','wird im Klinikum gewaschen.','muss man zu Hause waschen.'],1,0,'„Die Kleidung wird bei uns im Haus gewaschen“'),
+     I('Ein Mittagessen für Auszubildende …',['kostet 2,50 Euro.','ist kostenlos.','gibt es im Keller.'],0,0,'The clothes are in the basement; the canteen is on the ground floor.'),
+     I('Was passiert nach der Pause?',['Die Auszubildenden holen ihre Kleidung.','Die Auszubildenden gehen auf eine Station.','Die Auszubildenden lernen ihre Paten kennen.'],2,0,'„Ihre Paten lernen Sie gleich nach der Pause kennen.“')]},
+  {title:'Teil 3 · Gespräch (1×)', instr:'Sie hören nun ein Gespräch. Sie hören das Gespräch einmal. Dazu lösen Sie sieben Aufgaben. Wählen Sie: Sind die Aussagen Richtig oder Falsch?\nSie sind im Baumarkt und hören, wie sich zwei Bekannte unterhalten.',
+   audio:[{label:'Gespräch', plays:1, lines:[['Jana','Malik! Was machst du denn hier im Baumarkt?'],['Malik','Hallo Jana! Ich kaufe Farbe. Ich bin letzte Woche umgezogen und will jetzt das Schlafzimmer streichen.'],
+     ['Jana','Umgezogen? Wohnst du nicht mehr in der WG?'],['Malik','Nein, ich habe endlich eine eigene Wohnung gefunden. Zwei Zimmer mit Balkon, direkt neben meiner Firma. Ich kann jetzt zu Fuß zur Arbeit gehen.'],
+     ['Jana','Super! War die Suche schwierig?'],['Malik','Und wie! Ich habe fast ein halbes Jahr gesucht und war bei über zwanzig Besichtigungen. Am Ende hat mir ein Kollege geholfen: Seine Tante vermietet die Wohnung.'],
+     ['Jana','Da hattest du Glück. Ist die Miete hoch?'],['Malik','Sie ist teurer als mein Zimmer in der WG, aber für die Lage ist sie okay. Und bei dir? Was gibt’s Neues?'],
+     ['Jana','Ich habe morgen ein Vorstellungsgespräch bei einer Bank. Ich bin ziemlich nervös.'],['Malik','Das schaffst du! Hast du dich gut vorbereitet?'],
+     ['Jana','Ich glaube schon. Ich habe mir die Internetseite genau angesehen und mit meiner Schwester geübt. Sie arbeitet in einer Personalabteilung.'],
+     ['Malik','Perfekt. Und danach feiern wir! Komm doch am Samstag zu meiner Einweihungsparty.'],['Jana','Gerne! Soll ich etwas mitbringen?'],
+     ['Malik','Nur gute Laune. Und vielleicht einen Pinsel, falls ich mit dem Streichen noch nicht fertig bin!']]}],
+   items:[I('Malik ist vor einem Monat umgezogen.','RF',1,0,'„letzte Woche“'),I('Malik wohnt nicht mehr in einer WG.','RF',0,0,'„ich habe endlich eine eigene Wohnung gefunden“'),
+     I('Malik fährt jetzt mit dem Bus zur Arbeit.','RF',1,0,'„Ich kann jetzt zu Fuß zur Arbeit gehen.“'),I('Malik hat die Wohnung mit Hilfe eines Kollegen gefunden.','RF',0,0,'The colleague’s aunt rents it out.'),
+     I('Die neue Wohnung ist billiger als das Zimmer in der WG.','RF',1,0,'„Sie ist teurer als mein Zimmer in der WG“'),I('Jana hat morgen ein Vorstellungsgespräch.','RF',0,0),
+     I('Janas Schwester hat ihr bei der Vorbereitung geholfen.','RF',0,0,'„mit meiner Schwester geübt“')]},
+  {title:'Teil 4 · Diskussion (2×)', instr:'Sie hören nun eine Diskussion. Sie hören die Diskussion zweimal. Dazu lösen Sie acht Aufgaben. Ordnen Sie die Aussagen zu: Wer sagt was?\nDer Moderator der Radiosendung „Treffpunkt Gesellschaft“ diskutiert mit Frau Keller, Lehrerin, und Herrn Haddad, Freiwilliger in einem Altenheim, über ein Freiwilliges Soziales Jahr nach der Schule.',
+   audio:[{label:'Diskussion', plays:2, lines:[['Moderator','Guten Abend und willkommen zu „Treffpunkt Gesellschaft“. Nach der Schule direkt studieren oder eine Ausbildung anfangen – oder erst einmal ein Freiwilliges Soziales Jahr machen? Darüber spreche ich mit Frau Keller, Lehrerin an einer Gesamtschule, und mit Herrn Haddad, der gerade sein Freiwilliges Jahr in einem Altenheim macht. Herr Haddad, warum haben Sie sich dafür entschieden?'],
+     ['Herr Haddad','Ehrlich gesagt wusste ich nach dem Abitur nicht, was ich machen soll. Ich wollte nicht einfach irgendetwas studieren und nach einem Semester aufhören. Im Altenheim lerne ich jeden Tag etwas Neues, und ich merke, dass mir die Arbeit mit Menschen wirklich Spaß macht.'],
+     ['Moderator','Frau Keller, empfehlen Sie Ihren Schülern so ein Jahr?'],
+     ['Frau Keller','Vielen schon. Die meisten Jugendlichen sind nach der Schule achtzehn oder neunzehn. In diesem Alter kennen viele ihre Stärken noch nicht. Ein Jahr in der Praxis hilft, die richtige Entscheidung zu treffen.'],
+     ['Moderator','Aber man verliert doch auch ein Jahr, oder?'],
+     ['Frau Keller','Das höre ich oft von Eltern. Ich sehe das anders: Wer sich bewusst für einen Beruf entscheidet, bricht seine Ausbildung seltener ab. Am Ende spart man also eher Zeit.'],
+     ['Herr Haddad','Und man bekommt ja auch etwas Geld. Nicht viel, aber ich kann davon mein Handy und meine Fahrkarte bezahlen.'],
+     ['Moderator','Gibt es auch Nachteile?'],
+     ['Herr Haddad','Die Arbeit ist manchmal hart, körperlich und auch emotional. Letzten Monat ist eine Bewohnerin gestorben, die ich sehr gern hatte. Das war schwer für mich.'],
+     ['Frau Keller','Deshalb ist es so wichtig, dass die Freiwilligen gut begleitet werden. Sie brauchen feste Ansprechpartner und Seminare, in denen sie über ihre Erfahrungen sprechen können.'],
+     ['Moderator','Herr Haddad, wissen Sie jetzt, was Sie nach dem Jahr machen?'],
+     ['Herr Haddad','Ja, ich bewerbe mich gerade für eine Ausbildung zum Pflegefachmann. Ohne dieses Jahr wäre ich nie auf diese Idee gekommen.'],
+     ['Moderator','Vielen Dank Ihnen beiden!']]}],
+   items:(() => { const W = ['Moderator','Frau Keller','Herr Haddad']; return [
+     I('Die Arbeit mit Menschen macht mir Freude.',W,2,0,'„dass mir die Arbeit mit Menschen wirklich Spaß macht“'),
+     I('Viele junge Leute wissen nach der Schule noch nicht, was sie gut können.',W,1,0,'„kennen viele ihre Stärken noch nicht“'),
+     I('Mit einem Freiwilligen Jahr verliert man Zeit.',W,0,0,'„Aber man verliert doch auch ein Jahr, oder?“'),
+     I('Wer seinen Beruf bewusst wählt, hört seltener mit der Ausbildung auf.',W,1,0,'„bricht seine Ausbildung seltener ab“'),
+     I('Man verdient während des Freiwilligen Jahres ein bisschen Geld.',W,2,0,'„man bekommt ja auch etwas Geld“'),
+     I('Die Arbeit kann einen auch traurig machen.',W,2,0,'„körperlich und auch emotional … Das war schwer für mich.“'),
+     I('Freiwillige brauchen Unterstützung und Gespräche.',W,1,0,'„feste Ansprechpartner und Seminare“'),
+     I('Ohne das Freiwillige Jahr hätte ich einen anderen Beruf gewählt.',W,2,0,'„Ohne dieses Jahr wäre ich nie auf diese Idee gekommen.“')]; })()},
+];
 
 // Validate and normalize a reading or exam task. Throws when unusable.
 function validTask(r){
@@ -2733,7 +2866,7 @@ function vPruefung(){
     ${hist.length ? `<h4>Your results</h4><div class="hist">${hist.map(h => `<div><span>${esc(h.d)} · ${esc(h.m)}</span><span class="${h.s >= 60 ? 'pass' : 'fail'}">${h.s}/100</span></div>`).join('')}</div>` : ''}
   </section>
   ${modCard('lesen', 'A blog, newspaper articles, ads, opinions and rules. Read fast and answer exactly.')}
-  ${modCard('hoeren', 'Announcements, a guided tour, a conversation and a radio discussion, read aloud by your device. Some texts play only once, like in the exam.')}
+  ${modCard('hoeren', 'Announcements, a guided tour or talk, a conversation and a radio discussion, read aloud by your device. Some texts play only once, like in the exam.')}
   <section class="card stack">
     <div class="row" style="justify-content:space-between"><h3>Schreiben</h3><span class="tag">60 min · 3 Aufgaben</span></div>
     <p class="muted" style="margin:0">An informal e-mail (about 80 words, 40 points), a forum opinion (about 80 words, 40 points) and a formal e-mail (about 40 words, 20 points). The app checks each text, you tick the task points you covered and compare with a model answer.</p>
@@ -2755,7 +2888,7 @@ const backToExam = () => { view = 'pruefung'; render(); window.scrollTo(0,0); };
 function practiceTeil(key, i, si){
   const m = EXAM[key];
   activity = true; nav();
-  runTask(examSets(key)[si][i], {eyebrow:`Goethe B1 · ${m.name} · Set ${si + 1}`, title:m.teile[i].title, passLine:true, onScored:c => addXP(3*c), onDone:backToExam});
+  runTask(examSets(key)[si][i], {eyebrow:`Goethe B1 · ${m.name} · Set ${si + 1}`, title:examSets(key)[si][i].title, passLine:true, onScored:c => addXP(3*c), onDone:backToExam});
 }
 function runModule(key, si){
   const m = EXAM[key], teile = examSets(key)[si], n = teile.length, res = [], started = Date.now();
@@ -2763,7 +2896,7 @@ function runModule(key, si){
   activity = true; nav();
   const step = i => {
     if (i >= n) return finish();
-    runTask(teile[i], {eyebrow:`Goethe B1 · ${m.name} · Set ${si + 1} · Teil ${i+1} of ${n}`, title:m.teile[i].title, deadline, passLine:true,
+    runTask(teile[i], {eyebrow:`Goethe B1 · ${m.name} · Set ${si + 1} · Teil ${i+1} of ${n}`, title:teile[i].title, deadline, passLine:true,
       onScored:(c, tot) => { res[i] = {c, tot}; }, onDone:() => { activity = true; step(i + 1); }});
   };
   function finish(){
@@ -2775,7 +2908,7 @@ function runModule(key, si){
     $main.innerHTML = `<section class="card stack" style="text-align:center;align-items:center">
       <h2><span class="hl">${pts >= 60 ? 'Bestanden!' : 'Noch nicht bestanden'}</span></h2>
       <div class="score">${pts}/100</div><div class="tag">${c} of ${tot} right · ${used} of ${m.min} minutes</div>
-      <div class="hist" style="width:100%;text-align:left">${res.map((r, i) => `<div><span>${esc(m.teile[i].title)}</span><span>${r.c}/${r.tot}</span></div>`).join('')}</div>
+      <div class="hist" style="width:100%;text-align:left">${res.map((r, i) => `<div><span>${esc(teile[i].title)}</span><span>${r.c}/${r.tot}</span></div>`).join('')}</div>
       <p style="margin:0">${pts >= 60 ? 'That would pass. Aim for 70 or more, so a bad day in the real exam still passes.' : 'You need 60 points. Practise the parts with the lowest score one by one, then try the full module again.'}</p>
       <button class="btn" id="mdone">Back to Prüfung</button></section>`;
     document.getElementById('mdone').onclick = () => { stopActivity(); backToExam(); };
