@@ -3173,6 +3173,126 @@ const CALLS = [
     {c:'Die Einarbeitung dauert vier Wochen, und wir arbeiten zwischen sieben und zweiundzwanzig Uhr. Wir melden uns nächste Woche bei Ihnen.', en:'The induction takes four weeks, and we work between 7 am and 10 pm. We’ll get back to you next week.',
      task:'Thank her for the conversation, say you look forward to her answer, and say goodbye. You are face to face, so: Auf Wiedersehen.', model:'Vielen Dank für das Gespräch. Ich freue mich auf Ihre Antwort. Auf Wiedersehen!', keys:['danke/dank','gespräch','freue','wiedersehen']}]},
 ];
+CALLS.push(
+  {id:'c-passwort', title:'Passwort vergessen', who:'Herr Neumann', where:'NetzPlus Hotline', lesson:'cc-technik', steps:[
+    GREET('NetzPlus'),
+    {c:'Hallo, ich komme nicht mehr in mein Kundenkonto. Ich habe mein Passwort vergessen.', en:'Hello, I can’t get into my customer account any more. I’ve forgotten my password.',
+     task:'Say that is no problem and you can help. Ask which e-mail address he uses for the account.', model:'Das ist kein Problem, ich helfe Ihnen gern. Mit welcher E-Mail-Adresse sind Sie angemeldet?', keys:['kein problem/gern','helfe','mail']},
+    {c:'Mit thomas.neumann@web.de.', en:'With thomas.neumann@web.de.',
+     task:'Ask him politely to spell his surname.', model:'Danke. Könnten Sie mir Ihren Nachnamen bitte buchstabieren?', keys:['nachname/namen','buchstabier','bitte']},
+    {c:'N wie Nordpol, E wie Emil, U wie Ulrich, M wie Martha, A wie Anton, N wie Nordpol, N wie Nordpol.', en:'N as in Nordpol, E as in Emil, U as in Ulrich, M as in Martha, A as in Anton, N, N.',
+     task:'Thank him. Say you are now sending him an e-mail with a link to reset his password.', model:'Vielen Dank. Ich schicke Ihnen jetzt eine E-Mail mit einem Link. Damit können Sie Ihr Passwort zurücksetzen.', keys:['danke/dank','mail','link','passwort','zurücksetz/neu']},
+    {c:'Okay, die E-Mail ist da. Was muss ich jetzt machen?', en:'Okay, the e-mail is here. What do I have to do now?',
+     task:'Tell him to click the link and type a new password twice. It needs at least eight characters.', model:'Klicken Sie bitte auf den Link und geben Sie zweimal ein neues Passwort ein. Es muss mindestens acht Zeichen haben.', keys:['klicken','link','zweimal','acht/8','zeichen']},
+    {c:'Super, es hat funktioniert! Ich bin wieder drin.', en:'Great, it worked! I’m back in.',
+     task:'Say you are glad, ask if there is anything else, and end the call.', model:'Das freut mich! Kann ich sonst noch etwas für Sie tun? … Dann vielen Dank für Ihren Anruf. Auf Wiederhören!', keys:['freut','sonst noch', ...BYE]}]},
+  {id:'c-defekt', title:'Die Kaffeemaschine ist kaputt', who:'Frau Hoffmann', where:'HausTech Online-Shop', lesson:'cc-beschwerde', steps:[
+    GREET('HausTech'),
+    {c:'Guten Tag. Ich habe vor drei Monaten bei Ihnen eine Kaffeemaschine gekauft, und jetzt funktioniert sie nicht mehr.', en:'Good day. I bought a coffee machine from you three months ago, and now it doesn’t work any more.',
+     task:'Say you are sorry and ask what exactly the problem is.', model:'Oh, das tut mir leid. Was genau ist denn das Problem?', keys:['tut mir leid/leid','was','problem']},
+    {c:'Sie macht kein heißes Wasser mehr. Die Lampe blinkt nur.', en:'It doesn’t heat the water any more. The light just flashes.',
+     task:'Say the machine has a two-year guarantee, so the repair or a replacement is free for her.', model:'Die Kaffeemaschine hat zwei Jahre Garantie. Die Reparatur oder ein Ersatz ist für Sie also kostenlos.', keys:['garantie','zwei/2','kostenlos/gratis','reparatur/ersatz']},
+    {c:'Gut. Und wie schicke ich sie zurück?', en:'Good. And how do I send it back?',
+     task:'Say you are sending her a return label by e-mail. She should pack the machine and take it to the post office.', model:'Ich schicke Ihnen ein Rücksendeetikett per E-Mail. Bitte packen Sie die Maschine ein und bringen Sie sie zur Post.', keys:['rücksende/etikett','mail','packen/einpacken','post']},
+    {c:'Und wie lange dauert das?', en:'And how long does it take?',
+     task:'Say: as soon as the machine arrives, she gets a new one within five working days.', model:'Sobald die Maschine bei uns ist, bekommen Sie innerhalb von fünf Werktagen eine neue.', keys:['sobald/wenn','fünf/5','werktag/tage','neue']},
+    {c:'Na gut, das klingt fair. Danke.', en:'All right, that sounds fair. Thanks.',
+     task:'Give her the reference number KT 2291 and end the call politely.', model:'Gern. Ihre Vorgangsnummer ist KT 2291. Vielen Dank für Ihren Anruf und auf Wiederhören!', keys:['vorgangsnummer/nummer','2291/22', ...BYE]}]},
+  {id:'c-mahnung', title:'Eine Mahnung, obwohl bezahlt', who:'Herr Aydin', where:'Stromwerk Kundenservice', lesson:'cc-rechnung', steps:[
+    GREET('Stromwerk'),
+    {c:'Ich habe heute eine Mahnung bekommen, aber ich habe die Rechnung schon bezahlt! Das ärgert mich wirklich.', en:'I got a payment reminder today, but I’ve already paid the bill! That really annoys me.',
+     task:'Show you understand, say you will check it at once, and ask for his customer number.', model:'Das verstehe ich, Herr Aydin. Ich prüfe das sofort für Sie. Wie ist Ihre Kundennummer?', keys:['verstehe','prüfe/schaue/nachsehen','kundennummer']},
+    {c:'Die Nummer ist 7 7 1 0 4 2.', en:'The number is 7 7 1 0 4 2.',
+     task:'Ask when he paid and how: by bank transfer?', model:'Danke. Wann haben Sie die Rechnung bezahlt? Per Überweisung?', keys:['wann','bezahlt/gezahlt','überweisung']},
+    {c:'Ja, per Überweisung, am fünften Mai.', en:'Yes, by bank transfer, on the fifth of May.',
+     task:'Explain: the money arrived, but without the invoice number, so the system could not match the payment.', model:'Ich sehe die Zahlung jetzt. Das Geld ist angekommen, aber ohne Rechnungsnummer. Deshalb konnte unser System die Zahlung nicht zuordnen.', keys:['zahlung/geld','angekommen','rechnungsnummer','zuordnen']},
+    {c:'Ach so. Und muss ich jetzt die Mahngebühr bezahlen?', en:'I see. And do I have to pay the reminder fee now?',
+     task:'Say no: you are cancelling the fee of five euros, and his account is now settled.', model:'Nein, natürlich nicht. Ich storniere die Mahngebühr von fünf Euro. Ihr Konto ist jetzt ausgeglichen.', keys:['nein','storniere/lösche/streiche','mahngebühr/gebühr','ausgeglichen/in ordnung/erledigt']},
+    {c:'Prima, danke!', en:'Great, thanks!',
+     task:'Give him a tip: next time, write the invoice number in the payment reference. Then say goodbye.', model:'Ein Tipp für das nächste Mal: Schreiben Sie bitte die Rechnungsnummer in den Verwendungszweck. Vielen Dank für Ihren Anruf. Auf Wiederhören!', keys:['rechnungsnummer','verwendungszweck','wiederhören']}]},
+  {id:'c-termin', title:'Ein Termin mit dem Techniker', who:'Frau Krause', where:'NetzPlus Technik', lesson:'cc-technik', steps:[
+    GREET('NetzPlus'),
+    {c:'Guten Tag, Krause hier. Ich habe einen neuen Glasfaseranschluss bestellt. Wann kommt denn der Techniker?', en:'Good day, Krause here. I ordered a new fibre connection. When is the technician coming?',
+     task:'Say you will gladly check, and ask for her order number.', model:'Guten Tag, Frau Krause. Ich schaue gern nach. Wie ist Ihre Auftragsnummer, bitte?', keys:['schaue/prüfe','auftragsnummer/bestellnummer','bitte']},
+    {c:'A 6 6 1 9 0.', en:'A 6 6 1 9 0.',
+     task:'Offer two dates: Tuesday the 14th or Thursday the 16th, both between 8 and 12 o’clock.', model:'Danke. Ich kann Ihnen zwei Termine anbieten: Dienstag, den 14., oder Donnerstag, den 16., jeweils zwischen 8 und 12 Uhr.', keys:['termin','dienstag','donnerstag','zwischen','12/zwölf']},
+    {c:'Donnerstag passt mir gut.', en:'Thursday suits me well.',
+     task:'Confirm Thursday. Say someone must be at home and the technician needs access to the basement.', model:'Gut, dann trage ich Donnerstag, den 16., ein. Bitte beachten Sie: Es muss jemand zu Hause sein, und der Techniker braucht Zugang zum Keller.', keys:['donnerstag','zu hause/da sein','zugang','keller']},
+    {c:'Und was ist, wenn ich doch nicht kann?', en:'And what if I can’t make it after all?',
+     task:'Say she can change the appointment up to 24 hours before, online or by phone.', model:'Dann können Sie den Termin bis 24 Stunden vorher ändern, online oder telefonisch.', keys:['ändern/verschieben','24/vierundzwanzig','stunden','online/telefon']},
+    {c:'Alles klar, vielen Dank.', en:'All right, thank you very much.',
+     task:'Say she gets a text message one day before as a reminder. Then end the call.', model:'Gern. Sie bekommen einen Tag vorher eine SMS zur Erinnerung. Vielen Dank für Ihren Anruf. Auf Wiederhören!', keys:['sms','vorher', ...BYE]}]},
+  {id:'c-zustaendig', title:'Nicht zuständig: weiterverbinden', who:'Herr Lange', where:'MobilFon Kundenservice', lesson:'cc-telefon', steps:[
+    GREET('MobilFon'),
+    {c:'Ja, hallo, Lange von der Firma Bau-Lange. Wir haben zwanzig Firmenhandys bei Ihnen und brauchen …', en:'Yes, hello, Lange from Bau-Lange. We have twenty company phones with you and need …',
+     task:'The line breaks up. Say the connection is bad and ask him to repeat that.', model:'Entschuldigung, die Verbindung ist leider sehr schlecht. Könnten Sie das bitte wiederholen?', keys:['verbindung/leitung','schlecht','wiederholen']},
+    {c:'Ich sagte: Wir haben zwanzig Firmenhandys und brauchen zehn neue Verträge.', en:'I said: we have twenty company phones and need ten new contracts.',
+     task:'Say that unfortunately you are not responsible for business customers. There is a separate team for them.', model:'Vielen Dank. Für Geschäftskunden bin ich leider nicht zuständig. Dafür haben wir ein eigenes Team.', keys:['geschäftskunden/firmenkunden','nicht zuständig','team/abteilung']},
+    {c:'Ach so. Können Sie mich verbinden?', en:'I see. Can you put me through?',
+     task:'Say yes, of course, you are putting him through. Ask him to hold the line for a moment.', model:'Ja, natürlich. Ich verbinde Sie. Bleiben Sie bitte einen Moment am Apparat.', keys:['verbinde','moment','apparat/dran/leitung']},
+    {c:'(Nach einer Minute) Hallo? Ist da noch jemand?', en:'(After a minute) Hello? Is anyone still there?',
+     task:'Apologise for the wait: all your colleagues are on calls. Offer a call back within one hour.', model:'Entschuldigen Sie bitte die Wartezeit. Leider sind alle Kollegen im Gespräch. Darf das Team Sie innerhalb einer Stunde zurückrufen?', keys:['entschuldig','wartezeit/warten','kollegen','zurückrufen/rückruf','stunde']},
+    {c:'Ja, das ist gut. Meine Nummer ist 0221 5 8 8 3 0 0.', en:'Yes, that’s good. My number is 0221 5 8 8 3 0 0.',
+     task:'Repeat the number to check it, confirm the call back and say goodbye.', model:'Ich wiederhole: 0221 5 8 8 3 0 0. Das Team ruft Sie innerhalb einer Stunde zurück. Auf Wiederhören, Herr Lange!', keys:['wiederhole','0221/02','zurück','wiederhören']}]},
+  {id:'c-umtausch', title:'Die falsche Größe', who:'Frau Berger', where:'ModeMarkt Online-Shop', lesson:'cc-beschwerde', steps:[
+    GREET('ModeMarkt'),
+    {c:'Hallo, ich habe Schuhe in Größe 39 bestellt, aber bekommen habe ich Größe 41.', en:'Hello, I ordered shoes in size 39, but I got size 41.',
+     task:'Apologise for the mistake and ask for the order number.', model:'Oh, das tut mir leid, da ist uns ein Fehler passiert. Wie ist Ihre Bestellnummer, bitte?', keys:['tut mir leid/leid/entschuldig','fehler','bestellnummer']},
+    {c:'M K 8 0 2 5.', en:'M K 8 0 2 5.',
+     task:'Say of course you will exchange the shoes. She sends them back for free; the return label is in the parcel.', model:'Danke. Wir tauschen die Schuhe natürlich um. Sie schicken sie kostenlos zurück, das Rücksendeetikett liegt im Paket.', keys:['tausch/umtausch','kostenlos/gratis','zurück','etikett/rücksende']},
+    {c:'Muss ich warten, bis Sie die Schuhe zurückbekommen?', en:'Do I have to wait until you get the shoes back?',
+     task:'Say no, she doesn’t have to wait: you are sending size 39 today.', model:'Nein, Sie müssen nicht warten. Ich schicke Ihnen die Größe 39 heute schon los.', keys:['nein','warten','39/neununddreißig','heute']},
+    {c:'Das ist super. Wann kommen sie an?', en:'That’s great. When will they arrive?',
+     task:'Say in two to three working days; she gets the tracking number by e-mail.', model:'In zwei bis drei Werktagen. Die Sendungsnummer bekommen Sie per E-Mail.', keys:['werktag/tage','sendungsnummer','mail']},
+    {c:'Perfekt, danke schön!', en:'Perfect, thank you!',
+     task:'Thank her for her patience and end the call.', model:'Ich danke Ihnen für Ihre Geduld. Einen schönen Tag noch und auf Wiederhören!', keys:['geduld','schönen tag','wiederhören']}]},
+  {id:'c-umzug', title:'Umzug mit dem Internet', who:'Herr Schröder', where:'NetzPlus Kundenservice', lesson:'cc-kunde', steps:[
+    GREET('NetzPlus'),
+    {c:'Guten Tag. Ich ziehe nächsten Monat nach Hamburg. Kann ich meinen Internetvertrag mitnehmen?', en:'Good day. I’m moving to Hamburg next month. Can I take my internet contract with me?',
+     task:'Say yes, in most cases that works. Say you will check and ask for his customer number.', model:'Ja, das geht in den meisten Fällen. Ich prüfe das gern. Wie ist Ihre Kundennummer?', keys:['ja','prüfe/schaue','kundennummer']},
+    {c:'1 9 9 3 0 7.', en:'1 9 9 3 0 7.',
+     task:'Ask for his new address and the date he moves.', model:'Danke. Wie ist Ihre neue Adresse, und wann ziehen Sie um?', keys:['adresse/anschrift','wann','ziehen/umzug']},
+    {c:'Elbstraße 8, 20095 Hamburg. Am ersten Juli.', en:'Elbstraße 8, 20095 Hamburg. On the first of July.',
+     task:'Give the good news: at the new address his internet is available at the same speed.', model:'Ich habe gute Nachrichten: An Ihrer neuen Adresse ist Ihr Internet mit der gleichen Geschwindigkeit verfügbar.', keys:['gute nachricht','adresse','gleiche/selbe','geschwindigkeit','verfügbar']},
+    {c:'Super. Kostet der Umzug etwas?', en:'Great. Does the move cost anything?',
+     task:'Say there is a one-off fee of 49.95 euros for the move, but his contract continues on the same terms.', model:'Für den Umzug berechnen wir einmalig 49,95 Euro. Ihr Vertrag läuft aber zu den gleichen Konditionen weiter.', keys:['einmalig','49/neunundvierzig','euro/€','vertrag']},
+    {c:'Okay, das ist in Ordnung. Dann machen wir das so.', en:'Okay, that’s fine. Then let’s do that.',
+     task:'Confirm the move for 1 July, say he gets a confirmation by post, and say goodbye.', model:'Sehr gern. Ich trage den Umzug zum ersten Juli ein. Sie bekommen eine Bestätigung per Post. Auf Wiederhören, Herr Schröder!', keys:['umzug','juli','bestätigung','wiederhören']}]},
+  {id:'c-sim', title:'Das Handy ist gestohlen', who:'Frau Haddad', where:'MobilFon Kundenservice', lesson:'cc-kunde', steps:[
+    GREET('MobilFon'),
+    {c:'Hilfe! Mein Handy wurde gestohlen, gerade eben in der U-Bahn!', en:'Help! My phone was stolen, just now on the underground!',
+     task:'Stay calm. Say you are sorry and you will block her SIM card at once. Ask for her phone number.', model:'Oh, das tut mir sehr leid. Ich sperre Ihre SIM-Karte sofort. Wie ist Ihre Rufnummer?', keys:['leid','sperre','sim','rufnummer/nummer']},
+    {c:'0176 4 4 2 1 9 8 5.', en:'0176 4 4 2 1 9 8 5.',
+     task:'Ask for her date of birth, for data protection.', model:'Danke. Aus Datenschutzgründen brauche ich noch Ihr Geburtsdatum.', keys:['datenschutz','geburtsdatum']},
+    {c:'Der dreißigste November 1995.', en:'The thirtieth of November 1995.',
+     task:'Confirm that her SIM card is now blocked. Nobody can make calls with her number any more.', model:'Danke. Ihre SIM-Karte ist jetzt gesperrt. Niemand kann jetzt mit Ihrer Nummer telefonieren.', keys:['gesperrt','niemand','telefonieren/anrufen']},
+    {c:'Gott sei Dank. Und wie bekomme ich eine neue Karte?', en:'Thank God. And how do I get a new card?',
+     task:'Say you are sending a new SIM card with the same number. It arrives in two days and costs 9.95 euros.', model:'Ich schicke Ihnen eine neue SIM-Karte mit der gleichen Nummer. Sie kommt in zwei Tagen und kostet 9,95 Euro.', keys:['neue','gleiche/selbe','zwei/2','tag','9/neun']},
+    {c:'Okay. Sonst noch etwas?', en:'Okay. Anything else?',
+     task:'Advise her to report the theft to the police. Wish her all the best and end the call.', model:'Ich empfehle Ihnen, den Diebstahl bei der Polizei anzuzeigen. Alles Gute für Sie und auf Wiederhören!', keys:['polizei','diebstahl/anzeige/anzuzeigen','wiederhören']}]},
+  {id:'c-umfrage', title:'Sie rufen an: Kundenumfrage', who:'Frau Braun', where:'NetzPlus Kundenumfrage', lesson:'cc-alltag', out:1, steps:[
+    {c:'', task:'Outbound call: you call a customer. Greet, say your name and the company (NetzPlus), and check that you are speaking to Frau Braun.', model:'Guten Tag, hier ist Karim Benali von NetzPlus. Spreche ich mit Frau Braun?', keys:['guten tag/hallo','hier ist/mein name/ich bin','netzplus','frau braun']},
+    {c:'Ja, am Apparat. Worum geht es?', en:'Yes, speaking. What is it about?',
+     task:'Say you are calling about her new internet connection and ask if she has two minutes for a few short questions.', model:'Ich rufe wegen Ihres neuen Internetanschlusses an. Hätten Sie zwei Minuten Zeit für ein paar kurze Fragen?', keys:['wegen/zu','internet','zwei/2','minuten','fragen']},
+    {c:'Ja, kurz geht das.', en:'Yes, briefly is fine.',
+     task:'Thank her. Ask how satisfied she was with the installation, on a scale from 1 to 10.', model:'Vielen Dank. Wie zufrieden waren Sie mit der Installation, auf einer Skala von 1 bis 10?', keys:['zufrieden','installation','skala','10/zehn']},
+    {c:'Eine Acht. Der Techniker war sehr nett, aber er ist zwei Stunden zu spät gekommen.', en:'An eight. The technician was very nice, but he came two hours late.',
+     task:'Thank her for the honest answer, say you are sorry about the delay, and say you will pass her feedback on.', model:'Danke für Ihre ehrliche Antwort. Das mit der Verspätung tut mir leid. Ich gebe Ihr Feedback an das Technikteam weiter.', keys:['danke/dank','verspätung','leid','weiter']},
+    {c:'Gut. War es das?', en:'Good. Was that all?',
+     task:'Say yes, that was all. Thank her for her time and say goodbye.', model:'Ja, das war schon alles. Vielen Dank für Ihre Zeit. Auf Wiederhören, Frau Braun!', keys:['alles','zeit', ...BYE]}]},
+  {id:'c-telinterview', title:'Ein Telefoninterview', who:'Herr Roth', where:'TeleServ, Personalabteilung', lesson:'job-interview', steps:[
+    {c:'Guten Tag, hier ist Roth von der Firma TeleServ. Sie haben sich bei uns als Kundenberater beworben. Haben Sie kurz Zeit?', en:'Good day, this is Roth from TeleServ. You applied to us as a customer adviser. Do you have a moment?',
+     task:'Say hello, say yes, you have time, and thank him for the call.', model:'Guten Tag, Herr Roth! Ja, ich habe Zeit. Vielen Dank für Ihren Anruf.', keys:['guten tag/hallo','zeit','danke/dank']},
+    {c:'Schön. Seit wann lernen Sie Deutsch, und welches Niveau haben Sie?', en:'Nice. How long have you been learning German, and what level are you?',
+     task:'Say you have been learning German for one and a half years and you passed the B1 exam at the Goethe-Institut.', model:'Ich lerne seit anderthalb Jahren Deutsch. Ich habe die B1-Prüfung beim Goethe-Institut bestanden.', keys:['seit','jahr','b1/b 1/b eins','bestanden']},
+    {c:'Sehr gut. Und welche Sprachen sprechen Sie noch?', en:'Very good. And which other languages do you speak?',
+     task:'Say Arabic is your native language, and you also speak fluent French and some English.', model:'Arabisch ist meine Muttersprache. Außerdem spreche ich fließend Französisch und ein bisschen Englisch.', keys:['arabisch','muttersprache','fließend','französisch']},
+    {c:'Das passt gut, wir haben viele Kunden aus Frankreich und Nordafrika. Ab wann könnten Sie anfangen?', en:'That fits well, we have many customers from France and North Africa. When could you start?',
+     task:'Say you could start from the first of next month.', model:'Ich könnte ab dem Ersten des nächsten Monats anfangen.', keys:['könnte/kann','ab','monat','anfangen/beginnen']},
+    {c:'Prima. Ich möchte Sie gern zu einem Gespräch einladen. Passt Ihnen Mittwoch um 10 Uhr?', en:'Great. I’d like to invite you to an interview. Does Wednesday at 10 o’clock suit you?',
+     task:'Say yes, Wednesday at 10 suits you very well. Ask for the address.', model:'Ja, Mittwoch um 10 Uhr passt mir sehr gut. Wie ist die Adresse, bitte?', keys:['mittwoch','10/zehn','passt','adresse']},
+    {c:'Wir sind in der Friedrichstraße 120 in Berlin. Ich schicke Ihnen alles noch per E-Mail.', en:'We’re at Friedrichstraße 120 in Berlin. I’ll also send you everything by e-mail.',
+     task:'Thank him, say you look forward to the interview, and say goodbye the phone way.', model:'Vielen Dank, Herr Roth. Ich freue mich auf das Gespräch. Auf Wiederhören!', keys:['danke/dank','freue','gespräch','wiederhören']}]});
 WRITING.push(
   {id:'job-anschreiben', level:'B1', job:1, title:'Bewerbung als Kundenberater', situation:'Sie haben diese Anzeige gelesen: „Kundenberater (m/w/d) für unsere Hotline in Berlin gesucht. Deutsch B1, weitere Sprachen willkommen.“ Schreiben Sie ein kurzes Anschreiben an Frau Wagner von der Firma TeleServ.', points:['Warum Sie sich bewerben','Ihre Erfahrung und Ihre Sprachen','Ihre Stärken im Umgang mit Kunden','Ab wann Sie anfangen können, und Bitte um ein Gespräch'], words:100, letter:1, reg:'Sie',
    model:'Sehr geehrte Frau Wagner,\nhiermit bewerbe ich mich um die Stelle als Kundenberater in Ihrer Hotline in Berlin. Ich habe Ihre Anzeige im Internet gelesen und bin sehr interessiert, weil ich gern mit Menschen arbeite.\nIch habe zwei Jahre im Kundenservice einer Telefonfirma in Casablanca gearbeitet. Dort habe ich jeden Tag Anrufe angenommen, Fragen zu Rechnungen beantwortet und Beschwerden bearbeitet. Deshalb kenne ich die typischen Fragen von Kunden. Ich spreche Arabisch als Muttersprache, Französisch fließend und Deutsch auf dem Niveau B1.\nIch bin freundlich und geduldig und bleibe auch in schwierigen Gesprächen ruhig. Außerdem arbeite ich gern im Team.\nIch kann ab dem 1. März anfangen. Über eine Einladung zu einem Vorstellungsgespräch würde ich mich sehr freuen.\nMit freundlichen Grüßen\nKarim Benali'},
@@ -3233,7 +3353,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = '43ed051';  // build.py puts the build number here
+const APP_VERSION = 'b2d7a9f';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -4198,10 +4318,11 @@ function vTelefon(){
   const calls = state.calls || {};
   $main.innerHTML = `${backTo('Üben','ueben')}
   <section class="card stack"><h2>Telefon-Training</h2><p class="muted" style="margin:0">Role-play real calls. The app is the customer and speaks first; you are the customer adviser and answer out loud. ${SpeechRec ? 'Tap the microphone and the app checks the key words of your answer.' : 'Say your answer out loud, then compare it with a good answer.'} Put on headphones if you can.</p></section>
-  <section class="stack">${CALLS.map((c, i) => { const best = calls[c.id], l = LESSONS.find(x => x.id === c.lesson);
+  ${[['Im Kundenservice', c => c.lesson.startsWith('cc-')], ['Bewerbung', c => !c.lesson.startsWith('cc-')]].map(([h, f]) => `<h3 style="margin-top:4px">${h}</h3>
+  <section class="stack">${CALLS.filter(f).map(c => { const i = CALLS.indexOf(c), best = calls[c.id], l = LESSONS.find(x => x.id === c.lesson);
     return `<button class="lesson ${best >= 80 ? 'done' : ''}" data-call="${i}"><span class="num">${icon(c.face ? 'dialog' : 'phone')}</span>
       <span style="min-width:0"><b>${esc(c.title)}</b><span>${esc(c.who)} · ${esc(c.where)} · ${c.steps.length} turns${l ? ` · words: ${esc(l.title)}` : ''}</span></span>
-      <span class="tag">${best != null ? best + '%' : ''}</span></button>`; }).join('')}</section>`;
+      <span class="tag">${best != null ? best + '%' : ''}</span></button>`; }).join('')}</section>`).join('')}`;
   $main.querySelectorAll('[data-call]').forEach(b => b.onclick = () => runCall(CALLS[+b.dataset.call], () => { view = 'telefon'; render(); toTop(); }));
 }
 function runCall(sc, onDone){
@@ -4214,15 +4335,16 @@ function runCall(sc, onDone){
     $main.innerHTML = `<section class="card call stack">
       <div class="callbar"><span class="cav">${icon(sc.face ? 'dialog' : 'phone')}</span><div><b>${esc(sc.who)}</b><small>${esc(sc.where)}</small></div>
         <span class="tag">${i + 1} / ${n}</span><button class="linkbtn" id="hang">${icon('x')}${sc.face ? 'End' : 'Auflegen'}</button></div>
-      <div class="thread">${thread.join('')}${s.c ? `<div class="bub them ${showText ? '' : 'hide'}" id="cur"><p>${esc(s.c)}</p>${showText && s.en ? `<small>${esc(s.en)}</small>` : ''}</div>` : `<div class="ring">${icon('phone')}Das Telefon klingelt …</div>`}</div>
+      <div class="thread">${thread.join('')}${s.c ? `<div class="bub them ${showText ? '' : 'hide'}" id="cur"><p>${esc(s.c)}</p>${showText && s.en ? `<small>${esc(s.en)}</small>` : ''}</div>` : `<div class="ring">${icon('phone')}${sc.out ? `Sie rufen ${esc(sc.who)} an …` : 'Das Telefon klingelt …'}</div>`}</div>
       ${s.c ? `<div class="row"><button class="linkbtn" id="again">${icon('say')}Hear it again</button><button class="linkbtn" id="tt">${icon(showText ? 'eyeoff' : 'eye')}${showText ? 'Hide the text (listening practice)' : 'Show the text'}</button></div>` : ''}
       <p class="tip" style="margin:0"><b>Your turn:</b> ${esc(s.task)}</p>
       <div class="row" id="act">${SpeechRec ? `<button class="btn go big" id="mic">${icon('mic')}Answer out loud</button>` : ''}<button class="btn ${SpeechRec ? 'ghost' : 'go big'}" id="show">Show a good answer</button></div>
       <div id="res" class="stack" aria-live="polite"></div></section>`;
-    if (s.c) say(s.c);
+    const spoken = s.c.replace(/\(.*?\)\s*/g, '');
+    if (spoken) say(spoken);
     if (i) (document.getElementById('cur') || $main.querySelector('.ring')).scrollIntoView({block:'start'});
     document.getElementById('hang').onclick = () => { stopActivity(); onDone(); };
-    const ag = document.getElementById('again'); if (ag) ag.onclick = () => say(s.c);
+    const ag = document.getElementById('again'); if (ag) ag.onclick = () => say(spoken);
     const tt = document.getElementById('tt'); if (tt) tt.onclick = () => { showText = !showText; state.callText = showText; save(); step(); };
     const mic = document.getElementById('mic'); if (mic) mic.onclick = () => listen(s, mic);
     document.getElementById('show').onclick = () => reveal(s, null);
