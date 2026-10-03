@@ -114,9 +114,15 @@ svg.i{width:18px;height:18px;flex:none;stroke-width:1.9}
 #main{display:flex;flex-direction:column;gap:14px;min-width:0}
 
 @media (max-width:900px){
-  body{padding-block:12px calc(92px + env(safe-area-inset-bottom,0px));background-attachment:scroll}
-  .shell{grid-template-columns:minmax(0,1fr);padding:0;background:none;gap:12px}
-  .side{position:fixed;inset:auto 0 0 0;top:auto;min-height:0;z-index:20;border-radius:20px 20px 0 0;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));flex-direction:row}
+  /* App shell. The page itself never scrolls: only .mainwrap does, and the tab bar is a normal item at the bottom.
+     Nothing is position:fixed against the window, so a phone browser's sliding address bar cannot move or hide the bar. */
+  html,body{height:100%;overflow:hidden}
+  @supports (height:100dvh){html{height:100dvh}}
+  body{padding:0;background-attachment:scroll}
+  .shell{height:100%;max-width:none;margin:0;display:flex;flex-direction:column;padding:0;gap:0;background:none}
+  .mainwrap{order:1;flex:1 1 0;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:0 16px 16px}
+  .topbar{position:sticky;top:8px;z-index:5;margin-top:12px}
+  .side{order:2;align-self:stretch;position:static;flex:none;min-height:0;z-index:20;border-radius:20px 20px 0 0;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));flex-direction:row;box-shadow:0 -10px 26px -16px rgba(120,40,20,.4)}
   .side .brand,.side .navlabel,.side .secondary,.side .side-foot{display:none}
   .navgroup.primary{flex-direction:row;justify-content:space-around;width:100%}
   .navgroup.primary button{flex-direction:column;gap:3px;font-size:.68rem;padding:7px 4px;border-radius:14px;min-width:58px;align-items:center}
@@ -2191,6 +2197,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
+const APP_VERSION = '672c269';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -2273,10 +2280,10 @@ function nav(){
 document.getElementById('tabs').addEventListener('click', e => {
   const m = e.target.closest('button[data-mode]'); if (m) return setMode(m.dataset.mode);  // button only: <html data-mode> would match every tap
   const b = e.target.closest('[data-view]'); if (!b) return;
-  view = b.dataset.view; stopActivity(); render(); window.scrollTo(0,0);
+  view = b.dataset.view; stopActivity(); render(); toTop();
 });
 document.getElementById('tabs').addEventListener('change', e => { if (e.target.id === 'soundSw'){ state.sound = e.target.checked; save(); } });
-document.getElementById('moveBtn').addEventListener('click', () => { stopActivity(); view = 'daten'; render(); window.scrollTo(0,0); });
+document.getElementById('moveBtn').addEventListener('click', () => { stopActivity(); view = 'daten'; render(); toTop(); });
 document.getElementById('modeBtn').addEventListener('click', () => setMode(curMode() === 'dark' ? 'light' : 'dark'));
 function chips(){
   const t = today(), s = streakInfo(state.met, t);
@@ -2294,8 +2301,12 @@ function setTitle(){
   document.getElementById('vtitle').innerHTML = esc(t) + (view === 'heute' ? '<span class="nm">, Mehdi</span>' : ''); document.getElementById('vsub').textContent = sub;
 }
 function stopActivity(){ activity = false; keyHandler = null; clearInterval(blitzTimer); clearInterval(clockTimer); for (const c of ctls) c.abort(); ctls.clear(); try { speechSynthesis.cancel(); } catch(e) {} }
+const toTop = () => { window.scrollTo(0, 0); const w = document.querySelector('.mainwrap'); if (w) w.scrollTop = 0; };
+// When a new version has been installed in the background, reload at the next quiet moment (never in the middle of a lesson or exam).
+function maybeReload(){ if (window.__updated && !activity){ location.reload(); return true; } return false; }
 let rendered = false;
 function render(){
+  if (maybeReload()) return;
   const go = () => { nav(); chips(); setTitle(); ({heute:vHeute, pfad:vPfad, ueben:vUeben, pruefung:vPruefung, tabelle:vTabelle, karten:vKarten, lesen:vLesen, schreiben:vSchreiben, daten:vDaten, fortschritt:vFortschritt})[view](); };
   go();
   // A short fade of the content. (document.startViewTransition snapshots the whole screen, fixed bottom bar included, and froze phones for about a second.)
@@ -2303,7 +2314,7 @@ function render(){
   rendered = true;
 }
 const backTo = (label, v) => `<div class="row"><button class="linkbtn" data-goto="${v}">${icon('back')}${label}</button></div>`;
-document.addEventListener('click', e => { const b = e.target.closest('[data-goto]'); if (b){ stopActivity(); view = b.dataset.goto; render(); window.scrollTo(0,0); } });
+document.addEventListener('click', e => { const b = e.target.closest('[data-goto]'); if (b){ stopActivity(); view = b.dataset.goto; render(); toTop(); } });
 
 const nextLesson = () => LESSONS.find(l => !state.done[l.id] && !(l.primer && Object.values(state.done).some(Boolean)));
 const dueCards = () => Object.keys(state.cards).filter(id => VBYID[id] && state.cards[id].d <= today());
@@ -2412,7 +2423,7 @@ function vHeute(){
     if (a === 'exam'){ practiceExam(ne); return; }
     if (a === 'schreiben'){ openWriting(nw, 'schreiben'); return; }
     if (a === 'lesen' && nr){ startReading(nr, nr.id); return; }
-    view = a; render(); window.scrollTo(0,0);
+    view = a; render(); toTop();
   });
 }
 function practiceExam(x){ runModule(x.k, x.si); }
@@ -2538,7 +2549,7 @@ function vPfad(){
 }
 
 function openLesson(l, onDone){
-  activity = true; nav(); window.scrollTo(0,0);
+  activity = true; nav(); toTop();
   const i = LESSONS.indexOf(l);
   setHead(l.title, `Lernpfad / ${l.level} / Lektion ${i + 1}`);
   $main.innerHTML = `
@@ -2897,7 +2908,7 @@ function speakLines(lines){
 
 // ---- one reading or listening task: answer everything, then check ----
 function runTask(task, {eyebrow = '', title = '', deadline = null, passLine = false, onScored, onDone}){
-  activity = true; nav(); window.scrollTo(0,0); setHead(title || task.title, eyebrow);
+  activity = true; nav(); toTop(); setHead(title || task.title, eyebrow);
   const audio = task.audio && task.audio.length > 0, blocks = audio ? task.audio : task.texts;
   const ads = !audio && blocks.length >= 8;
   const sel = {}, plays = blocks.map(b => b.plays || 1);
@@ -2976,6 +2987,7 @@ function vDaten(){
   const when = t => t ? new Date(t).toLocaleString('de-DE', {day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'}) : 'not yet';
   const sum = s => `<b>${s.xp}</b> XP · <b>${s.lessons}</b> of ${LESSONS.length} lessons done · <b>${s.days}</b> days at goal`;
   $main.innerHTML = `
+  <p class="muted" style="margin:0 4px;font-size:.84rem">App version ${esc(APP_VERSION)}. It updates itself when you open it with internet.</p>
   <section class="card stack"><h2>Gemini</h2>
     <p style="margin:0">Optional. The app works fully without it. With a free key from Google (and internet), it can <b>explain the mistakes in your writing</b>, <b>write new reading texts</b> and <b>write new exam sets</b>.</p>
     <ol class="steps"><li>Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> and sign in with your Google account.</li><li>Tap <b>Create API key</b> and copy the key.</li><li>Paste it below and tap <b>Save</b>.</li></ol>
@@ -3029,7 +3041,7 @@ function vDaten(){
     document.getElementById('pload').onclick = () => {
       state = normalize(s); save();
       toast(`Progress loaded: ${it.xp} XP, ${it.lessons} lessons.`);
-      view = 'heute'; render(); window.scrollTo(0,0);
+      view = 'heute'; render(); toTop();
     };
   };
 }
@@ -3069,7 +3081,7 @@ async function genReading(level, topic){
 function startReading(task, id){
   runTask(task, {eyebrow:`Lesen · ${task.level}`, title:task.title,
     onScored:(c, t) => { if (id) state.read[id] = {s:c, t}; addXP(3*c + 5); },
-    onDone:() => { view = 'lesen'; render(); window.scrollTo(0,0); }});
+    onDone:() => { view = 'lesen'; render(); toTop(); }});
 }
 
 // ---- Schreiben ----
@@ -3147,14 +3159,14 @@ function bindCheck(box, w, onEst){
   pts.forEach(p => p.onchange = upd); upd();
 }
 function openWriting(w, back){
-  activity = true; nav(); window.scrollTo(0,0); setHead(w.title, `Schreiben / ${w.level}`);
+  activity = true; nav(); toTop(); setHead(w.title, `Schreiben / ${w.level}`);
   $main.innerHTML = `<div class="row"><button class="linkbtn" id="wback">${icon('back')}Back</button></div>${editorHtml(w)}
     <button class="btn big" id="wcheck">Prüfen · check my text</button>
     ${getKey() ? '<button class="btn ghost big" id="wai">Explain my mistakes with Gemini</button>' : '<p class="muted" style="font-size:.85rem;margin:0">Want every mistake explained and a corrected text? Add a free Gemini key in <button class="linkbtn" data-goto="daten" style="display:inline;padding:0">Settings</button>.</p>'}
     <p class="muted" style="font-size:.85rem;margin:0">Your draft is saved on this device while you type.</p>`;
   const ta = bindEditor(w), btn = document.getElementById('wcheck'), res = document.getElementById('res-' + w.id), aib = document.getElementById('wai'), aires = document.getElementById('ai-' + w.id);
   let rewarded = false;
-  document.getElementById('wback').onclick = () => { stopActivity(); view = back; render(); window.scrollTo(0,0); };
+  document.getElementById('wback').onclick = () => { stopActivity(); view = back; render(); toTop(); };
   btn.onclick = () => {
     if (wordCount(ta.value) < 3){ toast('Write a few sentences first.'); ta.focus(); return; }
     res.innerHTML = checkHtml(w, ta.value);
@@ -3215,7 +3227,7 @@ function vPruefung(){
   document.getElementById('wexam').onclick = runWriteExam;
 }
 const examSets = key => [EXAM[key].teile, EXAM[key].teile2].filter(Boolean);
-const backToExam = () => { view = 'pruefung'; render(); window.scrollTo(0,0); };
+const backToExam = () => { view = 'pruefung'; render(); toTop(); };
 async function practiceTeil(key, i, si){
   const m = EXAM[key];
   activity = true; nav();
@@ -3246,7 +3258,7 @@ function runModule(key, si){
       onScored:(c, tot) => { res[i] = {c, tot}; }, onDone:() => { activity = true; step(i + 1); }});
   };
   function finish(){
-    activity = true; nav(); window.scrollTo(0,0);
+    activity = true; nav(); toTop();
     const c = res.reduce((a, r) => a + r.c, 0), tot = res.reduce((a, r) => a + r.tot, 0);
     const pts = Math.round(c / tot * 100), used = Math.round((Date.now() - started) / 60000);
     state.exams = (state.exams || []).concat({d:today(), m:`${m.name} · ${ai ? 'Gemini' : 'Set ' + (si + 1)}`, s:pts}).slice(-30);
@@ -3262,7 +3274,7 @@ function runModule(key, si){
   step(0);
 }
 function runWriteExam(){
-  activity = true; nav(); window.scrollTo(0,0); setHead('Schreiben · 60 Minuten', 'Prüfung / Goethe B1');
+  activity = true; nav(); toTop(); setHead('Schreiben · 60 Minuten', 'Prüfung / Goethe B1');
   const tasks = [1, 2, 3].map(n => rnd(WRITING.filter(w => w.exam === n)));
   $main.innerHTML = `<div class="row"><button class="linkbtn" id="xquit">${icon('back')}Back</button><span class="clock" id="clock"></span></div>
     <section class="card"><h2>Schreiben · 60 Minuten</h2>
@@ -3301,5 +3313,11 @@ window.addEventListener('pageshow', () => chips());
 render();
 </script>
 
-<script>if ('serviceWorker' in navigator) addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));</script>
+<script>
+if ('serviceWorker' in navigator) {
+  const had = !!navigator.serviceWorker.controller;   // true when this page already runs from an installed copy
+  addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  navigator.serviceWorker.addEventListener('controllerchange', () => { if (had) { window.__updated = true; maybeReload(); } });
+}
+</script>
 </body></html>
