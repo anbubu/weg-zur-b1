@@ -1,5 +1,5 @@
 // Offline helper for Weg zur B1. build.py fills in the version and the file list.
-const CACHE = 'wzb1-47995cc5f945';
+const CACHE = 'wzb1-d7afce258a42';
 const FILES = ["./", "apple-touch-icon.png", "fonts.css", "fonts/f0.woff2", "fonts/f1.woff2", "fonts/f2.woff2", "fonts/f3.woff2", "icon-192.png", "icon-512.png", "icon-maskable-512.png", "index.html", "lucide.min.js", "manifest.webmanifest"];
 
 self.addEventListener('install', e => {

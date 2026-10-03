@@ -4486,7 +4486,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = 'a410b7e';  // build.py puts the build number here
+const APP_VERSION = '2beea66';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -4611,6 +4611,19 @@ function setTitle(){
 function stopActivity(){ activity = false; keyHandler = null; clearInterval(blitzTimer); clearInterval(clockTimer); for (const c of ctls) c.abort(); ctls.clear(); try { speechSynthesis.cancel(); } catch(e) {} }
 const toTop = () => { window.scrollTo(0, 0); const w = document.querySelector('.mainwrap'); if (w) w.scrollTop = 0; };
 // When a new version has been installed in the background, reload at the next quiet moment (never in the middle of a lesson or exam).
+document.addEventListener('click', async e => {
+  const b = e.target.closest('#updBtn'); if (!b) return;
+  if (!('serviceWorker' in navigator)){ toast('Updates need the installed app.'); return; }
+  b.disabled = true; b.textContent = 'Checking …';
+  try {
+    const reg = await navigator.serviceWorker.getRegistration();
+    if (!reg){ toast('Open the app once with internet first.'); return; }
+    await reg.update();
+    if (reg.installing || reg.waiting){ toast('New version found. It downloads now, and the app restarts by itself.'); }
+    else toast('You have the newest version.');
+  } catch(err){ toast('No internet. Try again when you are online.'); }
+  finally { b.disabled = false; b.textContent = 'Check for updates'; }
+});
 function maybeReload(){ if (window.__updated && !activity){ location.reload(); return true; } return false; }
 let rendered = false;
 function render(){
@@ -5441,7 +5454,7 @@ function vDaten(){
   const when = t => t ? new Date(t).toLocaleString('de-DE', {day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'}) : 'not yet';
   const sum = s => `<b>${s.xp}</b> XP · <b>${s.lessons}</b> of ${LESSONS.length} lessons done · <b>${s.days}</b> days at goal`;
   $main.innerHTML = `
-  <p class="muted" style="margin:0 4px;font-size:.84rem">App version ${esc(APP_VERSION)}. It updates itself when you open it with internet.</p>
+  <div class="row" style="margin:0 4px;align-items:center"><p class="muted" style="margin:0;font-size:.84rem;flex:1;min-width:0">App version ${esc(APP_VERSION)}. It updates itself when you open it with internet.</p><button class="btn ghost" id="updBtn">Check for updates</button></div>
   <section class="card stack"><h2>Gemini</h2>
     <p style="margin:0">Optional. The app works fully without it. With a free key from Google (and internet), it can <b>explain the mistakes in your writing</b>, <b>write new reading texts</b> and <b>write new exam sets</b>.</p>
     <ol class="steps"><li>Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> and sign in with your Google account.</li><li>Tap <b>Create API key</b> and copy the key.</li><li>Paste it below and tap <b>Save</b>.</li></ol>
@@ -5873,7 +5886,13 @@ render();
 <script>
 if ('serviceWorker' in navigator) {
   const had = !!navigator.serviceWorker.controller;   // true when this page already runs from an installed copy
-  addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+  // Android often resumes the installed app from the background without reloading it, and the browser only looks for a
+  // new version on a real page load. So look actively: whenever the app comes to the front, and every hour while it is open.
+  addEventListener('load', () => navigator.serviceWorker.register('sw.js').then(reg => {
+    const check = () => reg.update().catch(() => {});
+    document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'visible') check(); });
+    setInterval(check, 3600000);
+  }).catch(() => {}));
   navigator.serviceWorker.addEventListener('controllerchange', () => { if (had) { window.__updated = true; maybeReload(); } });
 }
 </script>
