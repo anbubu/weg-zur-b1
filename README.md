@@ -24,7 +24,11 @@ Copy your code now and then as a backup too: if a phone is lost or reset, the co
 
 ## Where to start
 
-Open the app and press the big button on **Heute**. It always shows one next step. If you are new, it starts with a short lesson on how German sounds. The **Lernpfad** has seven stages, from your first greetings to the start of B1, then B1 exam training. **Fortschritt** shows your streak, weekly chart and weak spots.
+Open the app and press the big button on **Heute**. It shows today's **study plan**: blocks with minutes, which add up to 30 minutes, 1 hour or 2 hours (you choose at the top of the card). A 2-hour day looks like this: flashcards, a lesson, the matching pages in your book, a break, a video, mixed practice, a reading text and a writing task. Time in lessons and exercises counts by itself. Book and video blocks count when you tick them. Reaching the minutes goal keeps your streak.
+
+If you are new, the first lesson is about how German sounds.
+
+**Nachschlagen** (the magnifying glass at the top) searches everything at once: lessons, the grammar table, words, example sentences, the reading texts, book pages and videos. Accents don't matter. The **Lernpfad** has seven stages, from your first greetings to the start of B1, then B1 exam training. **Fortschritt** shows your streak, weekly chart and weak spots.
 
 ## Gemini (optional)
 

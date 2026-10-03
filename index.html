@@ -311,6 +311,41 @@ a.resrow:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
 .ticks{display:flex;flex-direction:column;gap:8px}
 .ticks label{display:flex;gap:10px;align-items:flex-start;cursor:pointer}
 .ticks input{width:18px;height:18px;margin:2px 0 0;flex:none;accent-color:var(--accent-fill)}
+.plancard .chead{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.plancard .seg-tabs{background:var(--panel2);box-shadow:none}
+.plancard .seg-tabs button{padding:6px 12px;font-weight:600;cursor:pointer}
+.btn .bmin{margin-left:auto;margin-right:12px;font:600 .8rem var(--fm);opacity:.8}
+.blocks{list-style:none;margin:18px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
+.blk{display:grid;grid-template-columns:auto minmax(0,1fr) auto auto;gap:12px;align-items:start;background:var(--panel2);border-radius:var(--r-card);padding:12px 14px}
+.blk.next{box-shadow:inset 0 0 0 1.5px var(--accent)}
+.blk.done .bt{opacity:.6}
+.blk.rest{background:transparent;box-shadow:inset 0 0 0 1px var(--line)}
+.tick{width:26px;height:26px;margin-top:1px;border-radius:50%;border:1.5px solid var(--muted);background:var(--panel);color:var(--on-accent);display:grid;place-items:center;cursor:pointer;padding:0}
+.tick[aria-pressed="true"]{background:var(--accent-fill);border-color:var(--accent-fill)}
+.tick svg.i{width:15px;height:15px}
+.bt{display:flex;flex-direction:column;gap:3px;min-width:0}
+.bt > b{font-size:.95rem;font-weight:600}
+.bt > span{font-size:.84rem;color:var(--muted)}
+.ref{display:flex;gap:8px;align-items:flex-start;margin-top:5px;font-size:.84rem;color:var(--ink);text-decoration:none}
+.ref svg.i{flex:none;width:15px;height:15px;color:var(--accent);margin-top:2px}
+.ref small{color:var(--muted);font-family:var(--fm);font-size:.74rem}
+a.ref:hover{text-decoration:underline}
+.bm{font:600 .8rem var(--fm);color:var(--muted);white-space:nowrap;padding-top:3px}
+.btn.sm{padding:7px 14px;font-size:.82rem}
+@media (max-width:560px){.blk{grid-template-columns:auto minmax(0,1fr) auto}.blk .btn.sm{grid-column:2 / -1;justify-self:start}}
+#sq{font:inherit;font-size:1rem;padding:12px 14px;border:1px solid var(--line);border-radius:var(--r-field);background:var(--panel2);color:var(--ink);width:100%}
+.sugg{border:0;background:var(--panel2);color:var(--ink);font:600 .82rem var(--f);padding:7px 13px;border-radius:999px;cursor:pointer}
+.sugg:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.hits{display:flex;flex-direction:column;gap:6px}
+.hit{display:flex;gap:12px;align-items:center;text-align:left;border:0;background:var(--panel2);border-radius:var(--r-card);padding:11px 14px;color:var(--ink);font:inherit;text-decoration:none;width:100%}
+button.hit,a.hit{cursor:pointer}
+button.hit:hover,a.hit:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.hit > svg.i{flex:none;color:var(--accent)}
+.hit > span{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+.hit small{color:var(--muted);font-size:.82rem}
+details.hit{display:block}
+details.hit summary{cursor:pointer}
+details.hit .intro{margin-top:10px}
 .today{display:flex;flex-direction:column;gap:14px;max-width:760px;margin-inline:auto;width:100%}
 .step h2{font-size:1.6rem;letter-spacing:-.03em}
 .todayplan{display:flex;gap:8px;align-items:flex-start;margin:14px 0 0;color:var(--muted);font-size:.92rem}
@@ -492,8 +527,8 @@ textarea.write{width:100%;min-height:230px;resize:vertical;line-height:1.65;font
   <div class="mainwrap">
     <header class="topbar">
       <div class="tb-title"><h1 id="vtitle">Heute</h1><p id="vsub"></p></div>
-      <div class="chips"><span class="chip" id="chipStreak" title="Days in a row"></span><span class="chip" id="chipXp" title="XP today / daily goal"></span>
-        <button class="iconbtn always" id="moveBtn" aria-label="Settings and moving progress" title="Settings"></button><button class="iconbtn" id="modeBtn" aria-label="Switch light or dark"></button><span class="avatar" aria-hidden="true">M</span></div>
+      <div class="chips"><span class="chip" id="chipStreak" title="Days in a row"></span><span class="chip" id="chipXp" title="Minutes studied today / daily goal"></span>
+        <button class="iconbtn always" id="searchBtn" aria-label="Look something up" title="Look something up"></button><button class="iconbtn always" id="moveBtn" aria-label="Settings and moving progress" title="Settings"></button><button class="iconbtn" id="modeBtn" aria-label="Switch light or dark"></button><span class="avatar" aria-hidden="true">M</span></div>
     </header>
     <main id="main" class="stack"></main>
   </div>
@@ -2091,6 +2126,67 @@ const STAGES = [
   {name:'Auf dem Weg zur B1', can:'Handle offices, work and polite requests, and use longer sentences.', ids:['a2-reflexiv','a2-imperativ','a2-wenn-ob','behoerden','a2-konjunktiv','a2-verbprep','betrieb']},
 ];
 const stageOf = l => STAGES.find(st => st.ids.includes(l.id));
+// ---- the study plan: a day made of blocks that add up to 30, 60 or 120 minutes ----
+const PLAN_MIN = {
+  30:  {cards:5, lesson:15, practice:10},
+  60:  {cards:8, lesson:20, book:15, video:10, practice:7},
+  120: {cards:10, lesson:25, book:30, rest:5, video:15, practice:15, reading:15, writing:10},
+};
+const PLAN_ORDER = ['cards', 'lesson', 'book', 'rest', 'video', 'practice', 'reading', 'writing'];
+// c: {due: words due today, lesson: next lesson or null, reading: {id,title,level} or null, writing: {id,title} or null, weak: has weak spots}
+function planBlocks(size, c){
+  const m = PLAN_MIN[size] || PLAN_MIN[120], res = c.lesson ? RES[c.lesson.id] : null, out = [];
+  const make = {
+    cards:    () => ({t:'app', act:'cards', title:'Flashcards', sub:`${Math.min(c.due, 15)} word${c.due === 1 ? '' : 's'} to review`}),
+    lesson:   () => c.lesson ? {t:'app', act:'lesson', id:c.lesson.id, title:`Lesson: ${c.lesson.title}`, sub:c.lesson.sub}
+                             : {t:'app', act:'practice', title:'Grammar training', sub:'Mixed questions on cases and verb forms'},
+    book:     () => res && res.b.length ? {t:'book', title:'In your book', sub:'Read the pages and do the exercises. Tick it when you are done.', refs:res.b.slice(0, 3)}
+                : c.lesson ? {t:'book', title:'Write it down', sub:'Read the lesson again and write 10 sentences of your own in a notebook.', refs:[]}
+                : {t:'book', title:'In your book: B1 grammar', sub:'Grammatik Aktiv, units 49 to 80: one unit today, with its exercises.', refs:[['ga', '49', 'Präteritum (the B1 units start here)', 116]]},
+    rest:     () => ({t:'rest', title:'Break', sub:'Stand up, drink some water, rest your eyes.'}),
+    video:    () => res ? {t:'video', title:'Watch', sub:'Pause often and repeat what you hear. Tick it when you are done.', video:res.v[0]}
+                        : {t:'video', title:'Watch and listen', sub:'Pick a Nicos Weg episode or an Easy German video on a topic you like. Pause and repeat.', video:null},
+    practice: () => ({t:'app', act:'practice', title:c.weak ? 'Practise your weak spots' : 'Mixed practice', sub:'Questions mixed from everything you have learned'}),
+    reading:  () => c.reading ? {t:'app', act:'reading', id:c.reading.id, title:`Read: ${c.reading.title}`, sub:`${c.reading.level} · answer the questions, then listen to the text`}
+                              : {t:'app', act:'goto', id:'pruefung', title:'Practice exam: Lesen', sub:'Open Prüfung and do one part'},
+    writing:  () => c.writing ? {t:'app', act:'writing', id:c.writing.id, title:`Write: ${c.writing.title}`, sub:'Write first, then check your text'}
+                              : {t:'app', act:'goto', id:'schreiben', title:'Writing', sub:'Pick a task in Schreiben'},
+  };
+  for (const key of PLAN_ORDER){
+    if (!m[key] || (key === 'cards' && !c.due)) continue;
+    // with nothing to review, the flashcard minutes go to practice
+    out.push(Object.assign({key, min: m[key] + (key === 'practice' && !c.due ? m.cards : 0)}, make[key]()));
+  }
+  return out;
+}
+const minutesOn = (s, k) => Math.floor(((s.secs || {})[k] || 0) / 60) + ((s.credit || {})[k] || 0);
+
+// ---- search: lessons, grammar table, words, examples, sentences from the texts, book pages, videos ----
+const fold = t => String(t).toLowerCase().normalize('NFD').replace(/\p{M}/gu, '').replace(/ß/g, 'ss');
+const plainText = h => String(h).replace(/<[^>]*>/g, ' ').replace(/&nbsp;/g, ' ').replace(/\s+/g, ' ').trim();
+function buildSearchIndex(extra){
+  const docs = [], add = d => { d.ft = fold(d.title); d.words = ' ' + fold(d.title + ' ' + (d.sub || '') + ' ' + (d.text || '')).replace(/[^a-z0-9]+/g, ' '); docs.push(d); };
+  for (const l of LESSONS){
+    add({type:'lesson', id:l.id, title:l.title, sub:l.sub, text:plainText(l.intro)});
+    l.ex.forEach(([de, en]) => add({type:'example', title:de, sub:en, id:l.id}));
+    for (const [b, ch, sec, p] of (RES[l.id] || {b:[]}).b) add({type:'book', title:`${BOOKS[b].name} · ${BOOKS[b].ch} ${ch}`, sub:`${sec} · p. ${p} (PDF ${p + BOOKS[b].pdf})`, text:l.title, id:l.id});
+    for (const [vid, title, ch] of (RES[l.id] || {v:[]}).v) add({type:'video', title, sub:ch, text:l.title, vid, id:l.id});
+  }
+  for (const v of VOCAB) add({type:'word', id:v.id, title:(G[v.g] ? G[v.g] + ' ' : '') + v.de, sub:v.en, say:v.de});
+  for (const r of LIBRARY) for (const t of r.texts) for (const sent of plainText(t.body).split(/(?<=[.!?])\s+/)) if (sent.length > 25) add({type:'sentence', title:sent, sub:`${r.title} (${r.level})`, id:r.id});
+  for (const d of (extra || [])) add(Object.assign({}, d));
+  return docs;
+}
+const SEARCH_ORDER = [['lesson', 4], ['table', 4], ['word', 8], ['example', 6], ['sentence', 6], ['book', 5], ['video', 4]];
+function searchIndex(docs, q){
+  const toks = fold(q).split(/\s+/).filter(Boolean);
+  if (!toks.length || fold(q).trim().length < 2) return [];
+  const tw = d => ' ' + d.ft.replace(/[^a-z0-9]+/g, ' ');
+  const score = d => toks.reduce((a, t) => a + (d.ft.startsWith(t) ? 4 : tw(d).includes(' ' + t) ? 3 : d.ft.includes(t) ? 2 : 1), 0);
+  // a word matches inside a title anywhere, but in the longer text only at the start of a word
+  const hits = docs.filter(d => toks.every(t => d.ft.includes(t) || d.words.includes(' ' + t))).map((d, i) => ({d, i, s:score(d)}));
+  return SEARCH_ORDER.map(([type, max]) => ({type, items:hits.filter(h => h.d.type === type).sort((a, b) => b.s - a.s || a.i - b.i).slice(0, max).map(h => h.d)})).filter(g => g.items.length);
+}
 const kindClass = l => l.kind.startsWith('Wortschatz') ? 'k-vocab' : 'k-gram';
 const coverHtml = l => esc(COVERS[l.id] || l.title).replace(/^(der|die|das) /, (m, a) => `<span class="${({der:'m', die:'f', das:'n'})[a]}">${a}</span> `);
 
@@ -2183,7 +2279,7 @@ const LUC = {heute:'House', pfad:'Route', ueben:'Dumbbell', pruefung:'Graduation
   say:'Volume2', flame:'Flame', play:'Play', sun:'Sun', moon:'Moon', x:'X', back:'ArrowLeft', next:'ArrowRight', check:'Check', clock:'Clock', list:'ListChecks',
   target:'Target', zap:'Zap', brain:'Brain', chevL:'ChevronLeft', chevR:'ChevronRight', cloud:'Cloud', device:'Smartphone', snow:'Snowflake', trophy:'Trophy',
   shapes:'Shapes', dialog:'MessagesSquare', repeat:'Repeat', timer:'Timer', spell:'SpellCheck', headphones:'Headphones', sparkles:'Sparkles',
-  book:'BookMarked', video:'CirclePlay', ext:'ArrowUpRight', move:'ArrowLeftRight', copy:'ClipboardCopy', gear:'Settings', trend:'TrendingUp', fortschritt:'TrendingUp'};
+  book:'BookMarked', video:'CirclePlay', ext:'ArrowUpRight', move:'ArrowLeftRight', copy:'ClipboardCopy', gear:'Settings', trend:'TrendingUp', fortschritt:'TrendingUp', search:'Search', suche:'Search'};
 const iconCache = {};
 const icon = k => {
   if (iconCache[k]) return iconCache[k];
@@ -2193,11 +2289,11 @@ const icon = k => {
 };
 const VIEWS = [['heute','Heute','Today'],['pfad','Lernpfad','Learning path'],['ueben','Üben','Practice'],['pruefung','Prüfung','Exam'],['tabelle','Tabelle','Cheat sheet']];
 const PARENT = {karten:'ueben', lesen:'ueben', schreiben:'ueben'};
-const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['schreiben','Schreiben','Writing'],['fortschritt','Fortschritt','Progress']];
+const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['schreiben','Schreiben','Writing'],['fortschritt','Fortschritt','Progress'],['suche','Nachschlagen','Look something up']];
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = '672c269';  // build.py puts the build number here
+const APP_VERSION = '1e94de9';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -2206,7 +2302,7 @@ const today = () => dayKey(new Date());
 
 // ---- state + sync ----
 const LS = 'wegzurb1';
-function fresh(){ return {v:1, lscore:{}, xp:0, days:{}, met:{}, done:{}, cards:{}, best:{blitz:0}, read:{}, writing:{}, exams:[], stats:{}, lastLevel:'A1', goal:60, sound:true, updatedAt:0}; }
+function fresh(){ return {v:1, lscore:{}, xp:0, days:{}, met:{}, done:{}, cards:{}, best:{blitz:0}, read:{}, writing:{}, exams:[], stats:{}, lastLevel:'A1', goal:60, secs:{}, credit:{}, planMin:120, plan:null, sound:true, updatedAt:0}; }
 const normalize = s => Object.assign(fresh(), s || {});
 let state = fresh();
 try { state = normalize(JSON.parse(localStorage.getItem(LS))); } catch(e) {}
@@ -2221,12 +2317,23 @@ function save(){
 function addXP(n){
   const t = today();
   state.xp += n; state.days[t] = (state.days[t] || 0) + n;
-  if (!state.met[t] && state.days[t] >= state.goal){
-    state.met[t] = true;
-    toast(`Tagesziel geschafft! Streak: ${streakInfo(state.met, t).streak}`);
-  }
-  save(); chips();
+  checkGoal(); save(); chips();
 }
+// The daily goal is study time: minutes inside lessons and exercises (counted below) plus the book and video blocks you tick.
+function checkGoal(){
+  const t = today(), m = minutesOn(state, t);
+  if (!state.met[t] && m >= state.planMin){
+    state.met[t] = true;
+    toast(`Tagesziel geschafft: ${m} Minuten! Streak: ${streakInfo(state.met, t).streak}`);
+  }
+}
+let lastInput = Date.now(), tickN = 0;
+for (const ev of ['pointerdown', 'keydown', 'touchstart', 'scroll', 'wheel']) addEventListener(ev, () => { lastInput = Date.now(); }, {passive:true, capture:true});
+setInterval(() => {   // counts time only while a lesson or exercise is open, the page is visible and you touched it in the last 3 minutes
+  if (document.visibilityState !== 'visible' || !activity || Date.now() - lastInput > 180000) return;
+  const t = today(); state.secs[t] = (state.secs[t] || 0) + 5;
+  if (++tickN % 6 === 0){ save(); checkGoal(); chips(); }
+}, 5000);
 let toastT;
 function toast(msg){
   let el = document.querySelector('.toast');
@@ -2265,6 +2372,7 @@ function nav(){
         <button class="sync" data-view="daten">${icon('gear')}<span>Settings · saved on this device</span></button>
       </div>`;
     document.getElementById('moveBtn').innerHTML = icon('gear');
+    document.getElementById('searchBtn').innerHTML = icon('search');
     navBuilt = true;
   }
   const narrow = window.innerWidth <= 900, top = activity ? '' : PARENT[view] || view;
@@ -2283,15 +2391,16 @@ document.getElementById('tabs').addEventListener('click', e => {
   view = b.dataset.view; stopActivity(); render(); toTop();
 });
 document.getElementById('tabs').addEventListener('change', e => { if (e.target.id === 'soundSw'){ state.sound = e.target.checked; save(); } });
+document.getElementById('searchBtn').addEventListener('click', () => { stopActivity(); view = 'suche'; render(); toTop(); });
 document.getElementById('moveBtn').addEventListener('click', () => { stopActivity(); view = 'daten'; render(); toTop(); });
 document.getElementById('modeBtn').addEventListener('click', () => setMode(curMode() === 'dark' ? 'light' : 'dark'));
 function chips(){
   const t = today(), s = streakInfo(state.met, t);
   const cs = document.getElementById('chipStreak');
   cs.innerHTML = `${icon('flame')}${s.streak}`; cs.classList.toggle('lit', s.todayDone); cs.title = `${s.streak} days in a row`;
-  document.getElementById('chipXp').innerHTML = `${icon('target')}${state.days[t] || 0}/${state.goal}`;
+  document.getElementById('chipXp').innerHTML = `${icon('clock')}${minutesOn(state, t)}/${state.planMin} min`;
 }
-const TITLES = {pfad:['Lernpfad','Weg zur B1 / Lernpfad'], ueben:['Üben','Weg zur B1 / Üben'], fortschritt:['Fortschritt','Weg zur B1 / Your progress'], pruefung:['Prüfung','Weg zur B1 / Goethe-Zertifikat B1'],
+const TITLES = {pfad:['Lernpfad','Weg zur B1 / Lernpfad'], ueben:['Üben','Weg zur B1 / Üben'], fortschritt:['Fortschritt','Weg zur B1 / Your progress'], suche:['Nachschlagen','Weg zur B1 / Look something up'], pruefung:['Prüfung','Weg zur B1 / Goethe-Zertifikat B1'],
   tabelle:['Tabelle','Weg zur B1 / Grammatik auf einen Blick'], karten:['Karten','Üben / Karten'], lesen:['Lesen','Üben / Lesen'], schreiben:['Schreiben','Üben / Schreiben'], daten:['Einstellungen','Weg zur B1 / Gemini and your progress']};
 function setHead(t, sub){ document.getElementById('vtitle').textContent = t; document.getElementById('vsub').textContent = sub || ''; }
 function setTitle(){
@@ -2307,7 +2416,7 @@ function maybeReload(){ if (window.__updated && !activity){ location.reload(); r
 let rendered = false;
 function render(){
   if (maybeReload()) return;
-  const go = () => { nav(); chips(); setTitle(); ({heute:vHeute, pfad:vPfad, ueben:vUeben, pruefung:vPruefung, tabelle:vTabelle, karten:vKarten, lesen:vLesen, schreiben:vSchreiben, daten:vDaten, fortschritt:vFortschritt})[view](); };
+  const go = () => { nav(); chips(); setTitle(); ({heute:vHeute, pfad:vPfad, ueben:vUeben, pruefung:vPruefung, tabelle:vTabelle, karten:vKarten, lesen:vLesen, schreiben:vSchreiben, daten:vDaten, fortschritt:vFortschritt, suche:vSuche})[view](); };
   go();
   // A short fade of the content. (document.startViewTransition snapshots the whole screen, fixed bottom bar included, and froze phones for about a second.)
   if (rendered && !matchMedia('(prefers-reduced-motion: reduce)').matches){ $main.classList.remove('enter'); void $main.offsetWidth; $main.classList.add('enter'); }
@@ -2372,70 +2481,89 @@ function calHtml(){
   }
   return {label:`${MONTHS[mo]} ${y}`, cells};
 }
+// The day's blocks are fixed when the day's plan is first built, so finishing the lesson doesn't change the rest of the plan.
+function getPlan(){
+  const t = today();
+  if (!state.plan || state.plan.d !== t || state.plan.size !== state.planMin){
+    const nl = nextLesson(), lvl = LV[(nl || {level:'B1'}).level];
+    state.plan = {d:t, size:state.planMin, done:state.plan && state.plan.d === t ? state.plan.done : {},
+      blocks:planBlocks(state.planMin, {due:dueCards().length, lesson:nl, reading:nextReading(), writing:WRITING.find(w => !w.speak && !state.writing[w.id] && LV[w.level] <= lvl), weak:weakSpots().length > 0})};
+    save();
+  }
+  return state.plan;
+}
+function tickBlock(key, on){
+  const pl = state.plan;
+  if (on) pl.done[key] = true; else delete pl.done[key];
+  state.credit[pl.d] = pl.blocks.filter(b => pl.done[b.key] && (b.t === 'book' || b.t === 'video')).reduce((a, b) => a + b.min, 0);
+  checkGoal(); save(); chips();
+}
+function runBlock(b){
+  const back = () => { stopActivity(); view = 'heute'; render(); toTop(); };
+  const finish = () => { tickBlock(b.key, true); back(); };
+  if (b.act === 'cards') runCards(shuffle(dueCards()).slice(0, 15), {onDone:finish});
+  else if (b.act === 'lesson') openLesson(LESSONS.find(l => l.id === b.id), finish);
+  else if (b.act === 'practice') runQuiz(mixedDrill(Math.max(10, b.min * 2), weakSpots().length > 0), {title:b.title, onDone:finish});
+  else if (b.act === 'reading'){ const r = LIBRARY.find(x => x.id === b.id); startReading(r, r.id, finish); }
+  else if (b.act === 'writing') openWriting(WRITING.find(w => w.id === b.id), 'heute', () => tickBlock(b.key, true));
+  else if (b.act === 'goto'){ view = b.id; render(); toTop(); }
+}
 function vHeute(){
-  const t = today(), s = streakInfo(state.met, t), xpT = state.days[t] || 0, due = dueCards().length, nl = nextLesson(), weak = weakSpots();
+  const t = today(), s = streakInfo(state.met, t), nl = nextLesson(), mins = minutesOn(state, t), goal = state.planMin;
   const first = !state.xp && !Object.values(state.done).some(Boolean);
-  const nCards = Math.min(due, 15), nWeak = nl && weak.length ? 5 : 0, qn = nl ? nl.drills.reduce((a, d) => a + d[1], 0) : 10;
-  const mins = Math.max(5, Math.round((nCards * 20 + (nl ? 120 + qn * 25 : 250) + (nWeak ? 125 : 0)) / 60));
   const st = nl ? stageOf(nl) : null, sn = st ? STAGES.indexOf(st) + 1 : 0;
-  const plan = [nCards ? `${nCards} flashcard${nCards === 1 ? '' : 's'}` : '', nl ? 'the lesson' : '10 mixed questions', nWeak ? '5 questions on your weak spots' : ''].filter(Boolean).join(', ');
-  const nr = nextReading(), nw = WRITING.find(w => !w.speak && !state.writing[w.id]);
-  const done = new Set((state.exams || []).map(e => e.m));
-  const ne = ['lesen', 'hoeren'].flatMap(k => examSets(k).map((x, si) => ({k, si, label: `${EXAM[k].name} · Set ${si + 1}`}))).find(x => !done.has(x.label));
-  let card;
+  let card, plan = null, next = null;
   if (first){
     card = `<section class="card step">
       <h2>Willkommen!</h2>
-      <p style="margin:6px 0 0">You are starting from zero, and that is a good place to start. The plan is simple: one small step a day.</p>
-      <ol class="how"><li><b>Learn</b> one short lesson, about 10 minutes. The first one is about how German sounds.</li><li><b>Practise</b> it with questions. A mistake comes back until you get it right.</li><li><b>Come back tomorrow.</b> Your flashcards return the words at the right time, and your streak grows.</li></ol>
+      <p style="margin:6px 0 0">You are starting from zero, and that is a good place to start. The plan is simple: one step at a time, every day.</p>
+      <ol class="how"><li><b>Learn</b> one short lesson. The first one is about how German sounds.</li><li><b>Practise</b> it with questions. A mistake comes back until you get it right.</li><li><b>Come back tomorrow.</b> From then on you get a study plan for the day: lessons, flashcards, your books and videos. You choose how long it is, from 30 minutes to 2 hours.</li></ol>
       <div class="cta-row"><button class="btn wide" id="go">Start lesson 1: ${esc(nl.title)}${icon('play')}</button></div>
     </section>`;
-  } else if (nl){
-    card = `<section class="card step">
-      <h2>Lektion ${LESSONS.indexOf(nl) + 1}: ${esc(nl.title)}</h2>
-      <p class="muted" style="margin:2px 0 0">${esc(nl.sub)}</p>
-      <p class="todayplan">${icon('clock')}<span>Today: ${plan}. About ${mins} min.</span></p>
-      ${bookLine(nl) ? `<p class="resline">${icon('book')}<span>In your books: ${bookLine(nl)}</span></p>` : ''}
-      <div class="cta-row"><button class="btn wide" id="go">${s.todayDone ? 'Keep practising' : 'Los geht’s'}${icon('play')}</button></div>
-      <p class="muted" style="margin:14px 0 0;font-size:.86rem">Stage ${sn} of ${STAGES.length}: <b>${st.name}</b>. ${st.can}</p>
-    </section>`;
   } else {
-    card = `<section class="card step">
-      <h2>Alle Lektionen erledigt</h2>
-      <p class="muted" style="margin:2px 0 0">Now it is exam training: reading, writing and full practice exams.</p>
-      <p class="todayplan">${icon('clock')}<span>Today: ${plan}. About ${mins} min.</span></p>
-      <div class="cta-row"><button class="btn wide" id="go">${s.todayDone ? 'Keep practising' : 'Start training'}${icon('play')}</button></div>
-      <div class="nextlist">
-        ${nr ? `<button data-act="lesen">${icon('lesen')}<span><b>Read</b>${esc(nr.title)} (${nr.level})</span></button>` : ''}
-        ${nw ? `<button data-act="schreiben">${icon('schreiben')}<span><b>Write</b>${esc(nw.title)}</span></button>` : ''}
-        ${ne ? `<button data-act="exam">${icon('pruefung')}<span><b>Practice exam</b>${ne.label}</span></button>` : `<button data-act="pruefung">${icon('pruefung')}<span><b>Practice exam</b>Do one again</span></button>`}
-      </div></section>`;
+    plan = getPlan();
+    next = plan.blocks.find(b => b.t !== 'rest' && !plan.done[b.key]);
+    const row = b => {
+      const done = !!plan.done[b.key], refs = (b.refs || []).map(([bk, ch, sec, pg]) => `<span class="ref">${icon('book')}<span>${BOOKS[bk].short} ${ch}, p. ${pg} <small>PDF ${pg + BOOKS[bk].pdf}</small></span></span>`).join('');
+      const vid = b.video ? `<a class="ref" href="${vidUrl(b.video[0])}" target="_blank" rel="noopener">${icon('video')}<span>${esc(b.video[1])} <small>${esc(b.video[2])}</small></span>${icon('ext')}</a>` : '';
+      return `<li class="blk ${b.t === 'rest' ? 'rest' : ''} ${done ? 'done' : ''} ${b === next ? 'next' : ''}">
+        <button class="tick" data-tick="${b.key}" aria-pressed="${done}" aria-label="${done ? 'Mark as not done' : 'Mark as done'}: ${esc(b.title)}">${done ? icon('check') : ''}</button>
+        <div class="bt"><b>${esc(b.title)}</b><span>${esc(b.sub)}</span>${refs}${vid}</div>
+        <span class="bm">${b.t === 'rest' ? '' : b.min + ' min'}</span>
+        ${b.t === 'app' && !done ? `<button class="btn ghost sm" data-run="${b.key}">Start</button>` : ''}</li>`;
+    };
+    const pct = Math.min(100, Math.round(mins / goal * 100));
+    card = `<section class="card step plancard">
+      <div class="chead"><h2>Dein Plan für heute</h2>
+        <div class="seg-tabs" role="group" aria-label="Length of the plan">${[[30, '30 min'], [60, '1 hour'], [120, '2 hours']].map(([v, l]) => `<button data-size="${v}" aria-pressed="${goal === v}">${l}</button>`).join('')}</div></div>
+      ${st ? `<p class="muted" style="margin:6px 0 0;font-size:.88rem">Stage ${sn} of ${STAGES.length}: <b>${st.name}</b>. ${st.can}</p>` : '<p class="muted" style="margin:6px 0 0;font-size:.88rem">All lessons are done. Now it is exam training: reading, writing, listening and full practice exams.</p>'}
+      <div class="progline" style="margin-top:16px"><span>Studied today</span><b>${mins} / ${goal} min</b></div><div class="bar"><i style="width:${pct}%"></i></div>
+      ${next ? `<div class="cta-row"><button class="btn wide" id="go"><span>${next.t === 'app' ? 'Next: ' : 'Done: '}${esc(next.title)}</span><span class="bmin">${next.min} min</span>${icon(next.t === 'app' ? 'play' : 'check')}</button></div>`
+             : `<p class="pass" style="margin:16px 0 0"><b>Plan complete.</b> ${mins >= goal ? 'Daily goal reached. Your streak is safe.' : 'Well done. Add a longer plan above if you want to keep going.'}</p>`}
+      <ol class="blocks">${plan.blocks.map(row).join('')}</ol>
+      <p class="muted" style="margin:12px 0 0;font-size:.82rem">Time in lessons and exercises counts by itself. Book and video blocks count when you tick them.</p>
+    </section>`;
   }
   $main.innerHTML = `<div class="today">${card}
     <section class="card daily">
       <div class="dstreak" title="${s.streak} days in a row">${icon('flame')}<b>${s.streak}</b><span>${s.streak === 1 ? 'day' : 'days'} in a row</span></div>
-      <div class="dgoal"><div class="progline"><span>Daily goal</span><b>${xpT} / ${state.goal} XP</b></div><div class="bar"><i style="width:${Math.min(100, Math.round(xpT / state.goal * 100))}%"></i></div></div>
+      <div class="dgoal"><div class="progline"><span>Daily goal</span><b>${mins} / ${goal} min</b></div><div class="bar"><i style="width:${Math.min(100, Math.round(mins / goal * 100))}%"></i></div></div>
     </section>
-    <div class="row more"><button class="linkbtn" data-goto="fortschritt">${icon('trend')}See my progress</button><button class="linkbtn" data-goto="ueben">${icon('ueben')}Practise something else</button></div></div>`;
-  document.getElementById('go').onclick = startSession;
-  $main.querySelectorAll('[data-act]').forEach(b => b.onclick = () => {
-    const a = b.dataset.act;
-    if (a === 'exam'){ practiceExam(ne); return; }
-    if (a === 'schreiben'){ openWriting(nw, 'schreiben'); return; }
-    if (a === 'lesen' && nr){ startReading(nr, nr.id); return; }
-    view = a; render(); toTop();
-  });
+    <div class="row more"><button class="linkbtn" data-goto="fortschritt">${icon('trend')}See my progress</button><button class="linkbtn" data-goto="suche">${icon('suche')}Look something up</button><button class="linkbtn" data-goto="ueben">${icon('ueben')}Practise something else</button></div></div>`;
+  document.getElementById('go').onclick = first ? startSession : () => { if (next.t === 'app') runBlock(next); else { tickBlock(next.key, true); render(); } };
+  $main.querySelectorAll('[data-tick]').forEach(b => b.onclick = () => { tickBlock(b.dataset.tick, b.getAttribute('aria-pressed') !== 'true'); render(); });
+  $main.querySelectorAll('[data-run]').forEach(b => b.onclick = () => runBlock(plan.blocks.find(x => x.key === b.dataset.run)));
+  $main.querySelectorAll('[data-size]').forEach(b => b.onclick = () => { state.planMin = +b.dataset.size; save(); chips(); render(); });
 }
-function practiceExam(x){ runModule(x.k, x.si); }
 
 function vFortschritt(){
-  const t = today(), s = streakInfo(state.met, t), xpT = state.days[t] || 0, due = dueCards().length, nl = nextLesson(), weak = weakSpots();
+  const t = today(), s = streakInfo(state.met, t), xpT = minutesOn(state, t), due = dueCards().length, nl = nextLesson(), weak = weakSpots();
   const done = LESSONS.filter(l => state.done[l.id]).length, pct = Math.round(done / LESSONS.length * 100);
   const qn = nl ? nl.drills.reduce((a, d) => a + d[1], 0) : 10;
   const mins = Math.max(5, Math.round((Math.min(due, 15) * 20 + (nl ? 120 + qn * 25 : 250) + (nl && weak.length ? 125 : 0)) / 60));
   // last 7 days of XP
-  const week = Array.from({length:7}, (_, i) => { const k = addDays(t, i - 6), [yy, mm, dd] = k.split('-').map(Number); return {k, xp:state.days[k] || 0, met:!!state.met[k], dow:DOW[new Date(yy, mm - 1, dd).getDay()]}; });
-  const top = Math.max(state.goal, ...week.map(w => w.xp)), ymax = Math.ceil(top / 20) * 20 || 20, wsum = week.reduce((a, w) => a + w.xp, 0);
+  const week = Array.from({length:7}, (_, i) => { const k = addDays(t, i - 6), [yy, mm, dd] = k.split('-').map(Number); return {k, xp:minutesOn(state, k), met:!!state.met[k], dow:DOW[new Date(yy, mm - 1, dd).getDay()]}; });
+  const top = Math.max(state.planMin, ...week.map(w => w.xp)), ymax = Math.ceil(top / 30) * 30 || 30, wsum = week.reduce((a, w) => a + w.xp, 0);
   // last 28 days for the streak matrix
   const dots = Array.from({length:35}, (_, i) => addDays(t, i - 34)).map(k => `<i class="${state.met[k] ? 'on' : s.frozen[k] ? 'frz' : ''}${k === t ? ' today' : ''}" title="${k}"></i>`).join('');
   const lv = l => { const all = LESSONS.filter(x => x.level === l); return Math.round(all.filter(x => state.done[x.id]).length / all.length * 100); };
@@ -2448,9 +2576,9 @@ function vFortschritt(){
   <div class="bento prog">
     <section class="card b-goal">
       <div class="chead"><h3>Tagesziel</h3>
-        <span class="goalsel"><label class="tag" for="goal" style="position:absolute;left:-9999px">Daily goal</label><select id="goal">${[30,60,100,150].map(g => `<option value="${g}" ${state.goal === g ? 'selected' : ''}>${g} XP</option>`).join('')}</select></span></div>
-      <div class="gauge">${gaugeSvg(xpT / state.goal, s.todayDone)}<div class="read"><b>${xpT}</b><small>of ${state.goal} XP</small></div></div>
-      <p class="muted" style="text-align:center;margin:10px 0 0;font-size:.86rem">${s.todayDone ? 'Goal reached. Your streak is safe today.' : `${state.goal - xpT} XP to keep your streak`}</p>
+        <span class="goalsel"><label class="tag" for="goal" style="position:absolute;left:-9999px">Daily goal</label><select id="goal">${[[30, '30 min'], [60, '1 hour'], [120, '2 hours']].map(([g, l]) => `<option value="${g}" ${state.planMin === g ? 'selected' : ''}>${l}</option>`).join('')}</select></span></div>
+      <div class="gauge">${gaugeSvg(xpT / state.planMin, s.todayDone)}<div class="read"><b>${xpT}</b><small>of ${state.planMin} min</small></div></div>
+      <p class="muted" style="text-align:center;margin:10px 0 0;font-size:.86rem">${s.todayDone ? 'Goal reached. Your streak is safe today.' : `${state.planMin - xpT} min to keep your streak`}</p>
     </section>
     <section class="card b-streak">
       <div class="chead"><h3>Serie</h3><span class="tag">${icon('snow')} ${s.freezes} freeze${s.freezes === 1 ? '' : 's'}</span></div>
@@ -2462,15 +2590,15 @@ function vFortschritt(){
       <p class="muted" style="font-size:.8rem;margin:12px 0 0">A freeze saves your streak if you miss one day. You earn one every 7 days, up to 2.</p>
     </section>
     <section class="card b-stats">
-      <div class="chead"><h3>Lernstatistik</h3><span class="tag num-f">${wsum} XP this week</span></div>
+      <div class="chead"><h3>Lernstatistik</h3><span class="tag num-f">${wsum} min this week</span></div>
       <div class="chart">
         <div class="yax"><span>${ymax}</span><span>${ymax / 2}</span><span>0</span></div>
         <div class="bars">
-          <div class="goal-line" style="bottom:calc(26px + (100% - 26px) * ${(state.goal / ymax).toFixed(3)})" title="Daily goal"></div>
+          <div class="goal-line" style="bottom:calc(26px + (100% - 26px) * ${(state.planMin / ymax).toFixed(3)})" title="Daily goal"></div>
           ${week.map((w, i) => `<div class="bcol ${w.k === t ? 'is-today' : ''}"><div class="track">${w.xp ? `<span class="tip-n">${w.xp}</span>` : ''}<div class="fill${w.met ? ' met' : ''}${w.k === t ? ' today' : ''}" style="--i:${i};height:${Math.max(w.xp ? 4 : 0, w.xp / ymax * 100)}%"></div></div><small>${w.dow}</small></div>`).join('')}
         </div>
       </div>
-      <div class="legend" style="margin-top:10px"><span><i style="background:var(--accent)"></i>XP</span><span><i style="background:var(--sun)"></i>goal reached</span><span><i style="border:1.5px dashed var(--faint);background:none"></i>daily goal</span></div>
+      <div class="legend" style="margin-top:10px"><span><i style="background:var(--accent)"></i>minutes</span><span><i style="background:var(--sun)"></i>goal reached</span><span><i style="border:1.5px dashed var(--faint);background:none"></i>daily goal</span></div>
     </section>
     <section class="card b-rings">
       <div class="chead"><h3>Fortschritt</h3></div>
@@ -2488,7 +2616,7 @@ function vFortschritt(){
       <div class="cal">${cal.cells}</div>
     </section>
   </div>`;
-  document.getElementById('goal').onchange = e => { state.goal = +e.target.value; save(); render(); };
+  document.getElementById('goal').onchange = e => { state.planMin = +e.target.value; save(); chips(); render(); };
   const wb = document.getElementById('weakBtn'); if (wb) wb.onclick = () => runQuiz(mixedDrill(10, true), {title:'Schwächen: your weak spots', onDone: render});
   document.getElementById('calPrev').onclick = () => { calOffset--; vFortschritt(); };
   document.getElementById('calNext').onclick = () => { if (calOffset < 0){ calOffset++; vFortschritt(); } };
@@ -2507,11 +2635,11 @@ function startSession(){
 }
 function sessionDone(){
   activity = true; nav();
-  const s = streakInfo(state.met, today()), xpT = state.days[today()] || 0;
+  const s = streakInfo(state.met, today()), xpT = minutesOn(state, today());
   $main.innerHTML = `<section class="card stack" style="text-align:center;align-items:center">
     <h2><span class="hl">Geschafft!</span></h2>
     <div class="streak-num">${s.streak}</div><div class="tag">${s.streak === 1 ? 'Tag' : 'Tage'} in Folge</div>
-    <p>${xpT} XP today${s.todayDone ? '. Daily goal reached.' : `. ${state.goal - xpT} XP more to reach your goal. Try a Blitz round.`}</p>
+    <p>${xpT} of ${state.planMin} minutes today${s.todayDone ? '. Daily goal reached.' : `. ${state.planMin - xpT} more to reach your goal. Back to your plan, or play a Blitz round.`}</p>
     <div class="row" style="justify-content:center"><button class="btn" id="home">Back to today</button>${s.todayDone ? '' : '<button class="btn ghost" id="bl">Play Blitz</button>'}</div></section>`;
   document.getElementById('home').onclick = () => { stopActivity(); view = 'heute'; render(); };
   const bl = document.getElementById('bl'); if (bl) bl.onclick = () => runBlitz(sessionDone);
@@ -2981,6 +3109,44 @@ function runTask(task, {eyebrow = '', title = '', deadline = null, passLine = fa
   };
 }
 
+// ---- Nachschlagen: one search over everything in the app ----
+let searchIdx = null, searchQ = '';
+function tabelleDocs(){   // the grammar table page, split into its headed sections
+  const keep = $main.innerHTML; vTabelle(); const html = $main.innerHTML; $main.innerHTML = keep;
+  const doc = new DOMParser().parseFromString('<div>' + html + '</div>', 'text/html'), out = [];
+  let cur = null;
+  doc.body.firstElementChild.querySelectorAll('h4, p, ul, .tablewrap').forEach(el => {
+    if (el.tagName === 'H4'){ cur = {type:'table', title:el.textContent.trim(), text:'', html:''}; out.push(cur); return; }
+    if (cur && el.parentElement.closest('.tablewrap, ul') === null){ cur.text += ' ' + el.textContent.replace(/\s+/g, ' '); cur.html += el.outerHTML; }
+  });
+  return out;
+}
+const HIT_NAMES = {lesson:'Lessons', table:'Grammar table', word:'Words', example:'Examples', sentence:'In the texts', book:'In your books', video:'Videos'};
+function vSuche(){
+  searchIdx = searchIdx || buildSearchIndex(tabelleDocs());
+  $main.innerHTML = `<section class="card stack"><h2>Nachschlagen</h2>
+    <p class="muted" style="margin:0">Search grammar, words, example sentences, texts, book pages and videos. German or English. Accents don’t matter: “uber” finds “über”.</p>
+    <input type="search" id="sq" placeholder="Try: Akkusativ, weil, mich, Wohnung …" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Search" value="${esc(searchQ)}">
+    <div class="row" style="gap:6px">${['Akkusativ', 'Dativ', 'weil', 'Perfekt', 'mich dich', 'Wohnung'].map(w => `<button class="sugg" data-s="${w}">${w}</button>`).join('')}</div></section>
+    <div id="sres" class="stack"></div>`;
+  const input = document.getElementById('sq'), out = document.getElementById('sres');
+  const hit = (g, d) => g === 'lesson' ? `<button class="hit" data-lesson="${d.id}">${icon('pfad')}<span><b>${esc(d.title)}</b><small>${esc(d.sub)}</small></span></button>`
+    : g === 'table' ? `<details class="hit"><summary><b>${esc(d.title)}</b></summary><div class="intro">${d.html}</div></details>`
+    : g === 'video' ? `<a class="hit" href="${vidUrl(d.vid)}" target="_blank" rel="noopener">${icon('video')}<span><b>${esc(d.title)}</b><small>${esc(d.sub)}</small></span>${icon('ext')}</a>`
+    : g === 'book' ? `<div class="hit">${icon('book')}<span><b>${esc(d.title)}</b><small>${esc(d.sub)}</small></span></div>`
+    : `<button class="hit" data-say="${esc(d.say || d.title)}">${icon('say')}<span><b>${esc(d.title)}</b><small>${esc(d.sub)}</small></span></button>`;
+  const show = () => {
+    searchQ = input.value;
+    const groups = searchIndex(searchIdx, searchQ);
+    out.innerHTML = !searchQ.trim() ? '' : groups.length ? groups.map(g => `<section class="card stack"><h3>${HIT_NAMES[g.type]}</h3><div class="hits">${g.items.map(d => hit(g.type, d)).join('')}</div></section>`).join('')
+      : `<section class="card"><p class="muted" style="margin:0">Nothing found for “${esc(searchQ.trim())}”. Try one word, or the German or the English word.</p></section>`;
+    out.querySelectorAll('[data-lesson]').forEach(b => b.onclick = () => openLesson(LESSONS.find(l => l.id === b.dataset.lesson), () => { stopActivity(); render(); }));
+  };
+  input.oninput = show;
+  $main.querySelectorAll('[data-s]').forEach(b => b.onclick = () => { input.value = b.dataset.s; show(); });
+  show();
+}
+
 // ---- settings: Gemini key and moving progress between devices ----
 function vDaten(){
   const me = progressSummary(state);
@@ -3078,10 +3244,10 @@ async function genReading(level, topic){
     if (activity) startReading(t, null);
   } catch(e){ if (!(e && e.code === 'cancelled')) errorView(geminiMsg(e), () => genReading(level, topic)); }
 }
-function startReading(task, id){
+function startReading(task, id, after){
   runTask(task, {eyebrow:`Lesen · ${task.level}`, title:task.title,
     onScored:(c, t) => { if (id) state.read[id] = {s:c, t}; addXP(3*c + 5); },
-    onDone:() => { view = 'lesen'; render(); toTop(); }});
+    onDone:after || (() => { view = 'lesen'; render(); toTop(); })});
 }
 
 // ---- Schreiben ----
@@ -3158,7 +3324,7 @@ function bindCheck(box, w, onEst){
   };
   pts.forEach(p => p.onchange = upd); upd();
 }
-function openWriting(w, back){
+function openWriting(w, back, onChecked){
   activity = true; nav(); toTop(); setHead(w.title, `Schreiben / ${w.level}`);
   $main.innerHTML = `<div class="row"><button class="linkbtn" id="wback">${icon('back')}Back</button></div>${editorHtml(w)}
     <button class="btn big" id="wcheck">Prüfen · check my text</button>
@@ -3171,7 +3337,7 @@ function openWriting(w, back){
     if (wordCount(ta.value) < 3){ toast('Write a few sentences first.'); ta.focus(); return; }
     res.innerHTML = checkHtml(w, ta.value);
     bindCheck(res.firstElementChild, w, e => { state.writing[w.id] = {s:e, d:today()}; save(); });
-    if (!rewarded){ rewarded = true; addXP(25); }
+    if (!rewarded){ rewarded = true; addXP(25); if (onChecked) onChecked(); }
     btn.textContent = 'Prüfen · check again';
     res.scrollIntoView({block:'start'});
   };
