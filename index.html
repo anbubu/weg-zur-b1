@@ -742,6 +742,10 @@ button.resrow:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
 .rpage{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;padding:12px;display:flex;align-items:flex-start;justify-content:center}
 .rpage.zoomed{justify-content:flex-start}
 .rpage canvas{display:block;background:#fff;border-radius:6px;box-shadow:0 10px 30px -12px rgba(0,0,0,.45);flex:none}
+.rread{flex:none;display:flex;align-items:center;gap:10px;padding:10px 14px;background:var(--accent-soft);color:var(--ink)}
+.rread:empty{display:none}.rread>div{flex:1;min-width:0;display:flex;flex-direction:column}.rread b{font-size:.95rem}.rread span{font-size:.82rem;color:var(--muted)}
+.rread .rk{flex:none;font:700 .85rem var(--fm);color:var(--ink);background:var(--panel);border-radius:999px;padding:4px 10px}
+.rread.out{background:var(--sun-soft)}.rread .btn{flex:none;padding:8px 14px;font-size:.85rem}
 .rmsg{margin:auto;max-width:420px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;padding:20px}
 .rnav .btn{padding:10px 16px;font-size:.9rem}
 .bookrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--panel2);border-radius:var(--r-card);padding:12px 14px}
@@ -2873,7 +2877,7 @@ function planBlocks(size, c){
                              : {t:'app', act:'practice', title:'Grammar training', sub:'Mixed questions on cases and verb forms'},
     book:     () => res && res.b.length ? {t:'book', title:'In your book', sub:'Read the pages and do the exercises. Tick it when you are done.', refs:res.b.slice(0, 3)}
                 : c.lesson ? {t:'book', title:'Write it down', sub:'Read the lesson again and write 10 sentences of your own in a notebook.', refs:[]}
-                : {t:'book', title:'In your book: B1 grammar', sub:'Grammatik Aktiv, units 49 to 80: one unit today, with its exercises.', refs:[['ga', '49', 'Präteritum (the B1 units start here)', 116]]},
+                : {t:'book', title:'In your book: B1 grammar', sub:'Grammatik Aktiv, units 49 to 80: one unit today, with its exercises.', refs:[['ga', '49', 'Präteritum (the B1 units start here)', 118]]},
     rest:     () => ({t:'rest', title:'Break', sub:'Stand up, drink some water, rest your eyes.'}),
     video:    () => res ? {t:'video', title:'Watch', sub:'Pause often and repeat what you hear. Tick it when you are done.', video:res.v[0]}
                         : {t:'video', title:'Watch and listen', sub:'Pick a Nicos Weg episode or an Easy German video on a topic you like. Pause and repeat.', video:null},
@@ -2912,7 +2916,7 @@ function buildSearchIndex(extra){
   for (const l of LESSONS){
     add({type:'lesson', id:l.id, title:l.title, sub:l.sub, text:plainText(l.intro) + ' ' + (SEARCH_TERMS[l.id] || '')});
     l.ex.forEach(([de, en]) => add({type:'example', title:de, sub:en, id:l.id}));
-    for (const [b, ch, sec, p] of (RES[l.id] || {b:[]}).b) add({type:'book', title:`${BOOKS[b].name} · ${BOOKS[b].ch} ${ch}`, sub:`${sec} · p. ${p} (PDF ${p + BOOKS[b].pdf})`, text:l.title, id:l.id});
+    for (const [b, ch, sec, p] of (RES[l.id] || {b:[]}).b) add({type:'book', title:`${BOOKS[b].name} · ${BOOKS[b].ch} ${ch}`, sub:`${sec} · ${pagesTxt(b, p)}`, text:l.title, id:l.id});
     for (const [vid, title, ch] of (RES[l.id] || {v:[]}).v) add({type:'video', title, sub:ch, text:l.title, vid, id:l.id});
   }
   for (const v of VOCAB) add({type:'word', id:v.id, title:(G[v.g] ? G[v.g] + ' ' : '') + v.de, sub:v.en, say:v.de});
@@ -2941,6 +2945,17 @@ const BOOKS = {
   beg: {name:'Begegnungen A1+', short:'Begegnungen', ch:'Kapitel', pdf:2, pages:240},
   men: {name:'Menschen A2.1', short:'Menschen', ch:'Lektion', pdf:0, pages:97},
 };
+// Where each reading ends (checked page by page in the PDFs). Grammatik Aktiv units are always 2 pages, Menschen lessons 4.
+// Begegnungen topics vary: first page -> [last page, heading to stop at on the last page, heading to start at on the first page].
+BOOKS.ga.len = 2; BOOKS.men.len = 4;
+BOOKS.beg.ends = {8:[10,'Das Alphabet'], 10:[12,'','Das Alphabet'], 18:[20], 25:[27], 29:[30,'','Die Nomengruppe'], 36:[40], 43:[46], 52:[52,'Lokale Präpositionen','Die Negation'],
+  66:[67,'In München'], 74:[76], 90:[95,'Im Restaurant'], 95:[97,'','Im Restaurant'], 105:[105], 110:[113], 142:[143], 144:[145,'Reisevorbereitungen'], 170:[177],
+  187:[189,'Verben'], 201:[205,'Entschuldigungen','Die Gesundheit']};
+function readRange(b, p){
+  const B = BOOKS[b], e = B.ends && B.ends[p];
+  return e ? {from:p, to:e[0], stop:e[1] || '', start:e[2] || ''} : {from:p, to:p + (B.len || 1) - 1, stop:'', start:''};
+}
+const pagesTxt = (b, p) => { const r = readRange(b, p); return r.to > r.from ? `p. ${r.from}–${r.to}` : `p. ${r.from}`; };
 const RES = {
   'b1-praeteritum': {b:[['ga','49','Präteritum',118]], v:[['PLHxKBjqfBE', 'How to use and build the Präteritum', 'YourGermanTeacher'], ['fB12-T5jC30', 'Verbs that always use the simple past', 'Easy German']]},
   'b1-plusquam': {b:[['ga','50','Plusquamperfekt',120]], v:[['nkagdTprcHU', 'The German past perfect (Plusquamperfekt)', 'YourGermanTeacher'], ['l5-E_TqF2a8', 'Plusquamperfekt: the past perfect tense', 'Learn German']]},
@@ -4458,7 +4473,7 @@ function readProgressCode(code){
 const progressSummary = s => ({xp:s.xp || 0, lessons:Object.keys(s.done || {}).filter(k => s.done[k]).length, days:Object.keys(s.met || {}).filter(k => s.met[k]).length, at:s.updatedAt || 0});
 // claude.ai drops the query string when an artifact opens an outside link, so links must be path-only: youtu.be, not ?v= or ?search_query=
 const vidUrl = id => 'https://youtu.be/' + id;
-const bookLine = l => (RES[l.id] ? RES[l.id].b : []).slice(0, 2).map(([b, ch, , p]) => `${BOOKS[b].short} ${ch}, p. ${p}`).join(' · ');
+const bookLine = l => (RES[l.id] ? RES[l.id].b : []).slice(0, 2).map(([b, ch, , p]) => `${BOOKS[b].short} ${ch}, ${pagesTxt(b, p)}`).join(' · ');
 </script>
 
 <script>
@@ -4517,7 +4532,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = 'be18de3';  // build.py puts the build number here
+const APP_VERSION = '14aecf4';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -4793,7 +4808,7 @@ function vHeute(){
     plan = getPlan();
     next = plan.blocks.find(b => b.t !== 'rest' && !plan.done[b.key]);
     const row = b => {
-      const done = !!plan.done[b.key], refs = (b.refs || []).map(([bk, ch, sec, pg]) => `<button class="ref" data-book="${bk}" data-pg="${pg}" data-ch="${esc(ch)}">${icon('book')}<span>${BOOKS[bk].short} ${ch}, p. ${pg} <small>Tap to open</small></span></button>`).join('');
+      const done = !!plan.done[b.key], refs = (b.refs || []).map(([bk, ch, sec, pg]) => `<button class="ref" data-book="${bk}" data-pg="${pg}" data-ch="${esc(ch)}" data-sec="${esc(sec)}">${icon('book')}<span>${BOOKS[bk].short} ${ch}, ${pagesTxt(bk, pg)} <small>Tap to open</small></span></button>`).join('');
       const vid = b.video ? `<a class="ref" href="${vidUrl(b.video[0])}" target="_blank" rel="noopener">${icon('video')}<span>${esc(b.video[1])} <small>${esc(b.video[2])}</small></span>${icon('ext')}</a>` : '';
       return `<li class="blk ${b.t === 'rest' ? 'rest' : ''} ${done ? 'done' : ''} ${b === next ? 'next' : ''}">
         <button class="tick" data-tick="${b.key}" aria-pressed="${done}" aria-label="${done ? 'Mark as not done' : 'Mark as done'}: ${esc(b.title)}">${done ? icon('check') : ''}</button>
@@ -5001,7 +5016,7 @@ function resHtml(l){
   if (!r) return '';
   return `<section class="card res"><h3>Dazu passend</h3><p class="muted">The same topic in your books and on YouTube.</p>
     ${r.b.length ? `<h4>In your books</h4><div class="reslist">
-      ${r.b.map(([b, ch, sec, p]) => `<button class="resrow" data-book="${b}" data-pg="${p}" data-ch="${esc(ch)}">${icon('book')}<div><b>${BOOKS[b].name} · ${BOOKS[b].ch} ${ch}</b><span>${sec}</span></div><span class="pg">p. ${p}<small>Open</small></span></button>`).join('')}
+      ${r.b.map(([b, ch, sec, p]) => `<button class="resrow" data-book="${b}" data-pg="${p}" data-ch="${esc(ch)}" data-sec="${esc(sec)}">${icon('book')}<div><b>${BOOKS[b].name} · ${BOOKS[b].ch} ${ch}</b><span>${sec}</span></div><span class="pg">${pagesTxt(b, p)}<small>Open</small></span></button>`).join('')}
     </div>` : ''}
     <h4>On YouTube</h4><div class="reslist">
       ${r.v.map(([id, title, ch]) => `<a class="resrow" href="${vidUrl(id)}" target="_blank" rel="noopener">${icon('video')}<div><b>${esc(title)}</b><span>${esc(ch)}</span></div>${icon('ext')}</a>`).join('')}
@@ -5529,18 +5544,19 @@ async function openPdf(blob){
 }
 const docs = {};   // open books stay open while the app runs
 let reader = null;
-async function openBook(id, printed, ch){
-  const B = BOOKS[id], had = !!reader;
+async function openBook(id, printed, ch, sec = ''){
+  const B = BOOKS[id], had = !!reader, rr = readRange(id, printed);
   closeBook(true);
   const el = document.createElement('div'); el.className = 'reader'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', B.name);
   el.innerHTML = `<div class="rbar"><button class="iconbtn" id="rClose" aria-label="Back to the app">${icon('back')}</button>
-      <div class="rtitle"><b>${esc(B.name)}</b><small id="rInfo">${esc(B.ch)} ${esc(ch)} · p. ${printed}</small></div>
+      <div class="rtitle"><b>${esc(B.name)}</b><small id="rInfo">${esc(B.ch)} ${esc(ch)} · ${pagesTxt(id, printed)}</small></div>
       <button class="iconbtn" id="rOut" aria-label="Smaller">${icon('zout')}</button><button class="iconbtn" id="rIn" aria-label="Bigger">${icon('zin')}</button></div>
+    <div class="rread" id="rRead"></div>
     <div class="rpage" id="rPage"><div class="rmsg"><p class="muted" style="margin:0">Opening the book …</p></div></div>
     <div class="rnav"><button class="btn ghost" id="rPrev">${icon('chevL')}<span></span></button><button class="btn ghost" id="rNext"><span></span>${icon('chevR')}</button></div>`;
   document.body.appendChild(el);
   if (!had) history.pushState({reader: 1}, '');
-  const r = reader = {el, id, page: Math.max(1, printed + B.pdf), zoom: 1, task: null};
+  const r = reader = {el, id, page: Math.max(1, printed + B.pdf), zoom: 1, task: null, rr, ch, sec};
   el.querySelector('#rClose').onclick = () => closeBook();
   const box = el.querySelector('#rPage'), msg = html => { box.innerHTML = `<div class="rmsg">${html}</div>`; el.querySelector('.rnav').hidden = true; el.querySelector('#rIn').hidden = el.querySelector('#rOut').hidden = true; };
   let rec;
@@ -5548,7 +5564,7 @@ async function openBook(id, printed, ch){
   if (reader !== r) return;
   if (!rec){
     msg(`${icon('book')}<h3 style="margin:0">${esc(B.name)} isn’t on this device yet</h3>
-      <p class="muted" style="margin:0">Add the PDF once in Settings, under “My books”. After that, every “p. ${printed}” in the app opens right here, at that page.</p>
+      <p class="muted" style="margin:0">Add the PDF once in Settings, under “My books”. After that, every page number in the app opens right here, at that page.</p>
       <button class="btn" id="rAdd">Add my books</button>`);
     el.querySelector('#rAdd').onclick = () => { closeBook(); stopActivity(); view = 'daten'; render(); setTimeout(() => { const b = document.getElementById('books'); if (b) b.scrollIntoView({block: 'start'}); }, 50); };
     return;
@@ -5559,7 +5575,8 @@ async function openBook(id, printed, ch){
   r.page = Math.min(r.page, r.doc.numPages);
   const show = n => { r.page = Math.max(1, Math.min(r.doc.numPages, n)); r.zoom = 1; drawPage(r); };
   el.querySelector('#rPrev').onclick = () => show(r.page - 1);
-  el.querySelector('#rNext').onclick = () => show(r.page + 1);
+  el.querySelector('#rNext').onclick = () => { if (r.page - B.pdf === r.rr.to){ closeBook(); toast(`Gut gemacht! ${pagesTxt(id, r.rr.from)} read.`); } else show(r.page + 1); };
+  el.querySelector('#rRead').onclick = e => { if (e.target.closest('#rBackTo')) show(r.rr.from + B.pdf); };
   el.querySelector('#rIn').onclick = () => { r.zoom = Math.min(3, r.zoom * 1.4); drawPage(r); };
   el.querySelector('#rOut').onclick = () => { r.zoom = Math.max(1, r.zoom / 1.4); drawPage(r); };
   let x0 = null;   // swipe left / right to turn the page (when not zoomed in)
@@ -5574,8 +5591,17 @@ async function drawPage(r){
   el.querySelector('.rnav').hidden = false;
   el.querySelector('#rInfo').textContent = `${printed >= 1 ? 'p. ' + printed + ' · ' : ''}PDF page ${r.page} of ${r.doc.numPages}`;
   el.querySelector('#rPrev span').textContent = r.page > 1 ? `p. ${printed - 1 >= 1 ? printed - 1 : r.page - 1}` : '';
-  el.querySelector('#rNext span').textContent = r.page < r.doc.numPages ? `p. ${printed + 1 >= 1 ? printed + 1 : r.page + 1}` : '';
-  el.querySelector('#rPrev').disabled = r.page <= 1; el.querySelector('#rNext').disabled = r.page >= r.doc.numPages;
+  // what to read: "Read p. 118–119", page 1 of 2, a hint where to start or stop on a shared page, a way back when you went past it
+  const rr = r.rr, cnt = rr.to - rr.from + 1, k = printed - rr.from + 1, inside = k >= 1 && k <= cnt, last = printed === rr.to;
+  const hint = k === 1 && rr.start ? `Start at the heading “${rr.start}”.` : last && rr.stop ? `Stop at the heading “${rr.stop}”.` : last && cnt > 1 ? 'Last page of your reading.' : '';
+  const rd = el.querySelector('#rRead'); rd.className = 'rread' + (inside ? '' : ' out');
+  rd.innerHTML = inside
+    ? `<div><b>Read ${pagesTxt(r.id, rr.from)}</b><span>${esc([r.sec, hint].filter(Boolean).join(' · '))}</span></div><span class="rk">${cnt > 1 ? `${k} / ${cnt}` : '1 page'}</span>`
+    : `<div><b>Not part of this reading</b><span>Your pages: ${pagesTxt(r.id, rr.from)}${r.sec ? ' · ' + esc(r.sec) : ''}</span></div><button class="btn ghost" id="rBackTo">Back to p. ${rr.from}</button>`;
+  el.querySelector('#rNext span').textContent = last ? 'Done' : r.page < r.doc.numPages ? `p. ${printed + 1 >= 1 ? printed + 1 : r.page + 1}` : '';
+  el.querySelector('#rNext').classList.toggle('go', last); el.querySelector('#rNext').classList.toggle('ghost', !last);
+  el.querySelector('#rNext').lastElementChild.outerHTML = icon(last ? 'check' : 'chevR');
+  el.querySelector('#rPrev').disabled = r.page <= 1; el.querySelector('#rNext').disabled = !last && r.page >= r.doc.numPages;
   if (r.task) r.task.cancel();
   const n = r.page, page = await r.doc.getPage(n);
   if (reader !== r || r.page !== n) return;
@@ -5598,7 +5624,7 @@ function closeBook(silent){
 }
 addEventListener('popstate', () => { if (reader) closeBook(true); });
 let rszT; addEventListener('resize', () => { clearTimeout(rszT); rszT = setTimeout(() => { if (reader && reader.doc) drawPage(reader); }, 150); });   // turning the phone re-fits the page   // the phone's back gesture closes the book, not the app
-document.addEventListener('click', e => { const b = e.target.closest('[data-book]'); if (b){ e.preventDefault(); openBook(b.dataset.book, +b.dataset.pg, b.dataset.ch); } });
+document.addEventListener('click', e => { const b = e.target.closest('[data-book]'); if (b){ e.preventDefault(); openBook(b.dataset.book, +b.dataset.pg, b.dataset.ch, b.dataset.sec || ''); } });
 async function booksCard(){
   const box = document.getElementById('booklist'); if (!box) return;
   const recs = {};
