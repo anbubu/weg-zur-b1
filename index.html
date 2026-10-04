@@ -4517,7 +4517,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = 'e2d7b6b';  // build.py puts the build number here
+const APP_VERSION = 'be18de3';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -5606,7 +5606,7 @@ async function booksCard(){
   if (!document.getElementById('booklist')) return;
   box.innerHTML = Object.entries(BOOKS).map(([id, B]) => { const r = recs[id], off = r && r.pages && Math.abs(r.pages - B.pages) > B.pages * .1;
     return `<div class="bookrow"><div><b>${esc(B.name)}</b><span class="${off ? 'warn' : ''}">${r ? `On this device · ${Math.round(r.size / 1048576)} MB${r.pages ? ` · ${r.pages} pages` : ''}${off ? ` · The app expects about ${B.pages} pages. Is this the right book?` : ''}` : 'Not added yet'}</span></div>
-      <label class="btn ${r ? 'ghost' : ''}" for="bf-${id}">${icon('fileup')}${r ? 'Replace' : 'Choose the PDF'}</label><input type="file" id="bf-${id}" data-bookfile="${id}" accept="application/pdf,.pdf">
+      <label class="btn ${r ? 'ghost' : ''}" for="bf-${id}">${icon('fileup')}${r ? 'Replace' : 'Choose the PDF'}</label><input type="file" id="bf-${id}" data-bookfile="${id}">
       ${r ? `<button class="btn ghost" data-bookdel="${id}" aria-label="Remove ${esc(B.name)}">${icon('trash')}</button>` : ''}</div>`; }).join('');
   box.querySelectorAll('[data-bookfile]').forEach(inp => inp.onchange = async () => {
     const f = inp.files[0], id = inp.dataset.bookfile; if (!f) return;
@@ -5646,6 +5646,7 @@ function vDaten(){
   </section>
   <section class="card stack" id="books"><h2>My books</h2>
     <p style="margin:0">Add the PDFs of your course books once. Then every page number in the app (“p. 118”) opens the book right at that page, inside the app.</p>
+    <p class="muted" style="margin:0;font-size:.86rem">On a phone, the file picker often opens on “Recent”, which can look empty. Tap ☰ (top left) or “Browse”, open your phone’s storage and go to the folder with your books, for example Download.</p>
     <p class="muted" style="margin:0;font-size:.86rem">The PDFs stay on this device only. They are not part of your progress code and are never uploaded. Add them again on each device you use.</p>
     <div class="stack" id="booklist" style="gap:8px"><p class="muted" style="margin:0">Loading …</p></div>
   </section>
