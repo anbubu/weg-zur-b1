@@ -728,7 +728,25 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 @media (max-width:900px){.navpill{border-radius:14px}}
 .btn.danger{background:var(--badbg);color:var(--bad);box-shadow:inset 0 0 0 2px var(--bad),0 4px 0 var(--bad)}
 .btn.danger:hover:not(:disabled){box-shadow:inset 0 0 0 2px var(--bad),0 4px 0 var(--bad)} .btn.danger:active:not(:disabled){box-shadow:inset 0 0 0 2px var(--bad),0 1px 0 var(--bad)}
-.model small{font-weight:700;color:var(--muted)}.model p{margin:2px 0 0;font-weight:600}
+.model small{font-weight:700;color:var(--muted)}
+button.ref{border:0;background:none;padding:0;font:inherit;font-size:.84rem;text-align:left;cursor:pointer}
+button.ref>span{text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
+button.resrow{border:0;width:100%;font:inherit;text-align:left;cursor:pointer}
+button.resrow:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
+.reader{position:fixed;inset:0;z-index:50;display:flex;flex-direction:column;background:var(--g3);color:var(--ink)}
+.rbar,.rnav{flex:none;display:flex;align-items:center;gap:8px;padding:10px 12px;background:var(--panel);border-bottom:1px solid var(--line)}
+.rbar{padding-top:calc(10px + env(safe-area-inset-top,0px))}
+.rnav{border-bottom:0;border-top:1px solid var(--line);padding-bottom:calc(10px + env(safe-area-inset-bottom,0px));justify-content:space-between}
+.reader .iconbtn{display:grid;flex:none}
+.rtitle{flex:1;min-width:0;display:flex;flex-direction:column}.rtitle b{font-size:.98rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.rtitle small{color:var(--muted);font-size:.8rem}
+.rpage{flex:1;min-height:0;overflow:auto;-webkit-overflow-scrolling:touch;padding:12px;display:flex;align-items:flex-start;justify-content:center}
+.rpage.zoomed{justify-content:flex-start}
+.rpage canvas{display:block;background:#fff;border-radius:6px;box-shadow:0 10px 30px -12px rgba(0,0,0,.45);flex:none}
+.rmsg{margin:auto;max-width:420px;text-align:center;display:flex;flex-direction:column;gap:12px;align-items:center;padding:20px}
+.rnav .btn{padding:10px 16px;font-size:.9rem}
+.bookrow{display:flex;gap:12px;align-items:center;flex-wrap:wrap;background:var(--panel2);border-radius:var(--r-card);padding:12px 14px}
+.bookrow>div{flex:1;min-width:180px}.bookrow b{display:block}.bookrow span{font-size:.84rem;color:var(--muted)}.bookrow .warn{color:var(--bad)}
+.bookrow input[type=file]{position:absolute;width:1px;height:1px;opacity:0;pointer-events:none}.model p{margin:2px 0 0;font-weight:600}
 /* ---------- motion system (calm, precise; one signature moment: finishing an exercise) ---------- */
 :root{--e-settle:cubic-bezier(.22,1,.36,1);--e-reveal:cubic-bezier(.16,1,.3,1);--e-move:cubic-bezier(.65,0,.35,1);--e-leave:cubic-bezier(.4,0,1,1);--e-lively:cubic-bezier(.34,1.3,.64,1);
   --t-instant:80ms;--t-quick:150ms;--t-base:240ms;--t-medium:360ms}
@@ -4485,7 +4503,7 @@ const LUC = {heute:'House', pfad:'Route', ueben:'Dumbbell', pruefung:'Graduation
   say:'Volume2', flame:'Flame', play:'Play', sun:'Sun', moon:'Moon', x:'X', back:'ArrowLeft', next:'ArrowRight', check:'Check', clock:'Clock', list:'ListChecks',
   target:'Target', zap:'Zap', brain:'Brain', chevL:'ChevronLeft', chevR:'ChevronRight', cloud:'Cloud', device:'Smartphone', snow:'Snowflake', trophy:'Trophy',
   shapes:'Shapes', dialog:'MessagesSquare', repeat:'Repeat', timer:'Timer', spell:'SpellCheck', headphones:'Headphones', sparkles:'Sparkles',
-  book:'BookMarked', video:'CirclePlay', ext:'ArrowUpRight', move:'ArrowLeftRight', copy:'ClipboardCopy', gear:'Settings', phone:'Phone', mic:'Mic', eye:'Eye', eyeoff:'EyeOff', trend:'TrendingUp', fortschritt:'TrendingUp', search:'Search', suche:'Search', reset:'RotateCcw'};
+  book:'BookMarked', video:'CirclePlay', ext:'ArrowUpRight', move:'ArrowLeftRight', copy:'ClipboardCopy', gear:'Settings', phone:'Phone', mic:'Mic', eye:'Eye', eyeoff:'EyeOff', trend:'TrendingUp', fortschritt:'TrendingUp', search:'Search', suche:'Search', reset:'RotateCcw', zin:'ZoomIn', zout:'ZoomOut', fileup:'FileUp', trash:'Trash2'};
 const iconCache = {};
 const icon = k => {
   if (iconCache[k]) return iconCache[k];
@@ -4499,7 +4517,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = 'c943026';  // build.py puts the build number here
+const APP_VERSION = 'e2d7b6b';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -4775,7 +4793,7 @@ function vHeute(){
     plan = getPlan();
     next = plan.blocks.find(b => b.t !== 'rest' && !plan.done[b.key]);
     const row = b => {
-      const done = !!plan.done[b.key], refs = (b.refs || []).map(([bk, ch, sec, pg]) => `<span class="ref">${icon('book')}<span>${BOOKS[bk].short} ${ch}, p. ${pg} <small>PDF ${pg + BOOKS[bk].pdf}</small></span></span>`).join('');
+      const done = !!plan.done[b.key], refs = (b.refs || []).map(([bk, ch, sec, pg]) => `<button class="ref" data-book="${bk}" data-pg="${pg}" data-ch="${esc(ch)}">${icon('book')}<span>${BOOKS[bk].short} ${ch}, p. ${pg} <small>Tap to open</small></span></button>`).join('');
       const vid = b.video ? `<a class="ref" href="${vidUrl(b.video[0])}" target="_blank" rel="noopener">${icon('video')}<span>${esc(b.video[1])} <small>${esc(b.video[2])}</small></span>${icon('ext')}</a>` : '';
       return `<li class="blk ${b.t === 'rest' ? 'rest' : ''} ${done ? 'done' : ''} ${b === next ? 'next' : ''}">
         <button class="tick" data-tick="${b.key}" aria-pressed="${done}" aria-label="${done ? 'Mark as not done' : 'Mark as done'}: ${esc(b.title)}">${done ? icon('check') : ''}</button>
@@ -4983,7 +5001,7 @@ function resHtml(l){
   if (!r) return '';
   return `<section class="card res"><h3>Dazu passend</h3><p class="muted">The same topic in your books and on YouTube.</p>
     ${r.b.length ? `<h4>In your books</h4><div class="reslist">
-      ${r.b.map(([b, ch, sec, p]) => `<div class="resrow">${icon('book')}<div><b>${BOOKS[b].name} · ${BOOKS[b].ch} ${ch}</b><span>${sec}</span></div><span class="pg">p. ${p}<small>PDF ${p + BOOKS[b].pdf}</small></span></div>`).join('')}
+      ${r.b.map(([b, ch, sec, p]) => `<button class="resrow" data-book="${b}" data-pg="${p}" data-ch="${esc(ch)}">${icon('book')}<div><b>${BOOKS[b].name} · ${BOOKS[b].ch} ${ch}</b><span>${sec}</span></div><span class="pg">p. ${p}<small>Open</small></span></button>`).join('')}
     </div>` : ''}
     <h4>On YouTube</h4><div class="reslist">
       ${r.v.map(([id, title, ch]) => `<a class="resrow" href="${vidUrl(id)}" target="_blank" rel="noopener">${icon('video')}<div><b>${esc(title)}</b><span>${esc(ch)}</span></div>${icon('ext')}</a>`).join('')}
@@ -5487,6 +5505,125 @@ function vSuche(){
   show();
 }
 
+// ---- my books: the learner's own PDFs, kept on this device only (IndexedDB), opened at the page a lesson points to ----
+const PDFJS = 'pdf.min.js', PDFJS_WORKER = 'pdf.worker.min.js';
+let bookDb = null;
+function bookStore(mode, fn){
+  bookDb = bookDb || new Promise((res, rej) => { const r = indexedDB.open('wzb1-books', 1); r.onupgradeneeded = () => r.result.createObjectStore('pdf'); r.onsuccess = () => res(r.result); r.onerror = () => rej(r.error); });
+  return bookDb.then(db => new Promise((res, rej) => { const tx = db.transaction('pdf', mode), q = fn(tx.objectStore('pdf')); tx.oncomplete = () => res(q && q.result); tx.onerror = tx.onabort = () => rej(tx.error); }));
+}
+const getBook = id => bookStore('readonly', st => st.get(id));
+let pdfjsReady = null;
+const loadPdfjs = () => pdfjsReady = pdfjsReady || new Promise((res, rej) => {
+  const sc = document.createElement('script'); sc.src = PDFJS;
+  sc.onload = () => { pdfjsLib.GlobalWorkerOptions.workerSrc = PDFJS_WORKER; res(pdfjsLib); };
+  sc.onerror = () => { pdfjsReady = null; rej(new Error('The PDF reader could not load. Open the app once with internet.')); };
+  document.head.appendChild(sc);
+});
+// Reads only the parts of the file a page needs, so a 100 MB book opens fast and doesn't fill the phone's memory.
+async function openPdf(blob){
+  const lib = await loadPdfjs();
+  const range = new lib.PDFDataRangeTransport(blob.size, null);
+  range.requestDataRange = (a, b) => blob.slice(a, b).arrayBuffer().then(d => range.onDataRange(a, new Uint8Array(d)));
+  return lib.getDocument({range, length: blob.size, disableAutoFetch: true, disableStream: true}).promise;
+}
+const docs = {};   // open books stay open while the app runs
+let reader = null;
+async function openBook(id, printed, ch){
+  const B = BOOKS[id], had = !!reader;
+  closeBook(true);
+  const el = document.createElement('div'); el.className = 'reader'; el.setAttribute('role', 'dialog'); el.setAttribute('aria-label', B.name);
+  el.innerHTML = `<div class="rbar"><button class="iconbtn" id="rClose" aria-label="Back to the app">${icon('back')}</button>
+      <div class="rtitle"><b>${esc(B.name)}</b><small id="rInfo">${esc(B.ch)} ${esc(ch)} · p. ${printed}</small></div>
+      <button class="iconbtn" id="rOut" aria-label="Smaller">${icon('zout')}</button><button class="iconbtn" id="rIn" aria-label="Bigger">${icon('zin')}</button></div>
+    <div class="rpage" id="rPage"><div class="rmsg"><p class="muted" style="margin:0">Opening the book …</p></div></div>
+    <div class="rnav"><button class="btn ghost" id="rPrev">${icon('chevL')}<span></span></button><button class="btn ghost" id="rNext"><span></span>${icon('chevR')}</button></div>`;
+  document.body.appendChild(el);
+  if (!had) history.pushState({reader: 1}, '');
+  const r = reader = {el, id, page: Math.max(1, printed + B.pdf), zoom: 1, task: null};
+  el.querySelector('#rClose').onclick = () => closeBook();
+  const box = el.querySelector('#rPage'), msg = html => { box.innerHTML = `<div class="rmsg">${html}</div>`; el.querySelector('.rnav').hidden = true; el.querySelector('#rIn').hidden = el.querySelector('#rOut').hidden = true; };
+  let rec;
+  try { rec = await getBook(id); } catch(e) {}
+  if (reader !== r) return;
+  if (!rec){
+    msg(`${icon('book')}<h3 style="margin:0">${esc(B.name)} isn’t on this device yet</h3>
+      <p class="muted" style="margin:0">Add the PDF once in Settings, under “My books”. After that, every “p. ${printed}” in the app opens right here, at that page.</p>
+      <button class="btn" id="rAdd">Add my books</button>`);
+    el.querySelector('#rAdd').onclick = () => { closeBook(); stopActivity(); view = 'daten'; render(); setTimeout(() => { const b = document.getElementById('books'); if (b) b.scrollIntoView({block: 'start'}); }, 50); };
+    return;
+  }
+  try { r.doc = docs[id] = docs[id] || await openPdf(rec.blob); }
+  catch(e){ if (reader === r) msg(`<p style="margin:0">${esc(e.message && /internet/.test(e.message) ? e.message : 'This PDF could not be opened. Choose it again in Settings → My books.')}</p>`); return; }
+  if (reader !== r) return;
+  r.page = Math.min(r.page, r.doc.numPages);
+  const show = n => { r.page = Math.max(1, Math.min(r.doc.numPages, n)); r.zoom = 1; drawPage(r); };
+  el.querySelector('#rPrev').onclick = () => show(r.page - 1);
+  el.querySelector('#rNext').onclick = () => show(r.page + 1);
+  el.querySelector('#rIn').onclick = () => { r.zoom = Math.min(3, r.zoom * 1.4); drawPage(r); };
+  el.querySelector('#rOut').onclick = () => { r.zoom = Math.max(1, r.zoom / 1.4); drawPage(r); };
+  let x0 = null;   // swipe left / right to turn the page (when not zoomed in)
+  box.addEventListener('touchstart', e => { x0 = e.touches.length === 1 && r.zoom === 1 ? [e.touches[0].clientX, e.touches[0].clientY] : null; }, {passive: true});
+  box.addEventListener('touchend', e => { if (!x0) return; const dx = e.changedTouches[0].clientX - x0[0], dy = e.changedTouches[0].clientY - x0[1]; if (Math.abs(dx) > 60 && Math.abs(dx) > Math.abs(dy) * 1.5) show(r.page + (dx < 0 ? 1 : -1)); x0 = null; });
+  r.key = e => { if (e.key === 'ArrowRight') show(r.page + 1); else if (e.key === 'ArrowLeft') show(r.page - 1); else if (e.key === 'Escape') closeBook(); };
+  addEventListener('keydown', r.key);
+  drawPage(r);
+}
+async function drawPage(r){
+  const B = BOOKS[r.id], el = r.el, box = el.querySelector('#rPage'), printed = r.page - B.pdf;
+  el.querySelector('.rnav').hidden = false;
+  el.querySelector('#rInfo').textContent = `${printed >= 1 ? 'p. ' + printed + ' · ' : ''}PDF page ${r.page} of ${r.doc.numPages}`;
+  el.querySelector('#rPrev span').textContent = r.page > 1 ? `p. ${printed - 1 >= 1 ? printed - 1 : r.page - 1}` : '';
+  el.querySelector('#rNext span').textContent = r.page < r.doc.numPages ? `p. ${printed + 1 >= 1 ? printed + 1 : r.page + 1}` : '';
+  el.querySelector('#rPrev').disabled = r.page <= 1; el.querySelector('#rNext').disabled = r.page >= r.doc.numPages;
+  if (r.task) r.task.cancel();
+  const n = r.page, page = await r.doc.getPage(n);
+  if (reader !== r || r.page !== n) return;
+  const base = page.getViewport({scale: 1}), fit = Math.min((box.clientWidth - 24) / base.width, r.zoom === 1 ? (box.clientHeight - 24) / base.height * 1.6 : Infinity);
+  const css = Math.max(.2, fit) * r.zoom, dpr = Math.min(window.devicePixelRatio || 1, 2.5);
+  let scale = css * dpr; const px = base.width * base.height * scale * scale; if (px > 1.6e7) scale *= Math.sqrt(1.6e7 / px);   // phones refuse very large canvases
+  const vp = page.getViewport({scale}), cv = document.createElement('canvas');
+  cv.width = Math.floor(vp.width); cv.height = Math.floor(vp.height); cv.style.width = Math.floor(base.width * css) + 'px'; cv.style.height = Math.floor(base.height * css) + 'px';
+  r.task = page.render({canvasContext: cv.getContext('2d'), viewport: vp});
+  try { await r.task.promise; } catch(e){ return; }   // cancelled: a newer page is on its way
+  if (reader !== r || r.page !== n) return;
+  box.classList.toggle('zoomed', r.zoom > 1); box.replaceChildren(cv); box.scrollTop = 0;
+}
+function closeBook(silent){
+  if (!reader) return;
+  if (reader.task) reader.task.cancel();
+  if (reader.key) removeEventListener('keydown', reader.key);
+  reader.el.remove(); reader = null;
+  if (!silent && history.state && history.state.reader) history.back();
+}
+addEventListener('popstate', () => { if (reader) closeBook(true); });
+let rszT; addEventListener('resize', () => { clearTimeout(rszT); rszT = setTimeout(() => { if (reader && reader.doc) drawPage(reader); }, 150); });   // turning the phone re-fits the page   // the phone's back gesture closes the book, not the app
+document.addEventListener('click', e => { const b = e.target.closest('[data-book]'); if (b){ e.preventDefault(); openBook(b.dataset.book, +b.dataset.pg, b.dataset.ch); } });
+async function booksCard(){
+  const box = document.getElementById('booklist'); if (!box) return;
+  const recs = {};
+  try { for (const id of Object.keys(BOOKS)) recs[id] = await getBook(id); } catch(e) {}
+  if (!document.getElementById('booklist')) return;
+  box.innerHTML = Object.entries(BOOKS).map(([id, B]) => { const r = recs[id], off = r && r.pages && Math.abs(r.pages - B.pages) > B.pages * .1;
+    return `<div class="bookrow"><div><b>${esc(B.name)}</b><span class="${off ? 'warn' : ''}">${r ? `On this device · ${Math.round(r.size / 1048576)} MB${r.pages ? ` · ${r.pages} pages` : ''}${off ? ` · The app expects about ${B.pages} pages. Is this the right book?` : ''}` : 'Not added yet'}</span></div>
+      <label class="btn ${r ? 'ghost' : ''}" for="bf-${id}">${icon('fileup')}${r ? 'Replace' : 'Choose the PDF'}</label><input type="file" id="bf-${id}" data-bookfile="${id}" accept="application/pdf,.pdf">
+      ${r ? `<button class="btn ghost" data-bookdel="${id}" aria-label="Remove ${esc(B.name)}">${icon('trash')}</button>` : ''}</div>`; }).join('');
+  box.querySelectorAll('[data-bookfile]').forEach(inp => inp.onchange = async () => {
+    const f = inp.files[0], id = inp.dataset.bookfile; if (!f) return;
+    const row = inp.closest('.bookrow').querySelector('span'); row.className = ''; row.textContent = 'Saving on this device …';
+    let pages = 0;
+    try { delete docs[id]; pages = (await openPdf(f)).numPages; } catch(e) {}
+    if (!pages){ row.className = 'warn'; row.textContent = 'This file can’t be read as a PDF. Choose the book’s PDF file.'; return; }
+    try {
+      if (navigator.storage && navigator.storage.persist) navigator.storage.persist().catch(() => {});   // ask the browser not to clear it when space runs low
+      await bookStore('readwrite', st => st.put({blob: f, name: f.name, size: f.size, pages, at: Date.now()}, id));
+      toast(`${BOOKS[id].short} added. Tap any page number to open it.`);
+    } catch(e){ row.className = 'warn'; row.textContent = 'Not enough space on this device to keep this PDF.'; return; }
+    booksCard();
+  });
+  box.querySelectorAll('[data-bookdel]').forEach(b => b.onclick = async () => { const id = b.dataset.bookdel; delete docs[id]; await bookStore('readwrite', st => st.delete(id)); toast(`${BOOKS[id].short} removed from this device.`); booksCard(); });
+}
+
 // ---- settings: Gemini key and moving progress between devices ----
 function vDaten(){
   const me = progressSummary(state);
@@ -5507,6 +5644,11 @@ function vDaten(){
       <label class="field" for="gmodel">Model (leave empty for the standard one: ${GEMINI_MODEL})<input type="text" id="gmodel" value="${esc(getModel() === GEMINI_MODEL ? '' : getModel())}" autocomplete="off" spellcheck="false"></label>
     </div></details>
   </section>
+  <section class="card stack" id="books"><h2>My books</h2>
+    <p style="margin:0">Add the PDFs of your course books once. Then every page number in the app (“p. 118”) opens the book right at that page, inside the app.</p>
+    <p class="muted" style="margin:0;font-size:.86rem">The PDFs stay on this device only. They are not part of your progress code and are never uploaded. Add them again on each device you use.</p>
+    <div class="stack" id="booklist" style="gap:8px"><p class="muted" style="margin:0">Loading …</p></div>
+  </section>
   <section class="card stack"><h2>Copy my progress</h2>
     <p class="muted" style="margin:0">This device: ${sum(me)}. Last saved ${when(me.at)}.</p>
     <p style="margin:0">Copy the code and send it to yourself, for example on WhatsApp or by e-mail. Then open the app on your other device, come to this page and paste it below.</p>
@@ -5524,6 +5666,7 @@ function vDaten(){
     <textarea class="write code" id="pin" spellcheck="false" autocomplete="off" placeholder="Paste a code that starts with WZB1." aria-label="Paste a progress code"></textarea>
     <div id="pcheck"></div>
   </section>`;
+  booksCard();
   const gmsg = document.getElementById('gmsg'), gkey = document.getElementById('gkey');
   document.getElementById('gsave').onclick = async () => {
     const k = gkey.value.trim();
