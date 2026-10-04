@@ -4632,7 +4632,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = '8e0c9b0';  // build.py puts the build number here
+const APP_VERSION = '833ff29';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -4687,7 +4687,10 @@ function toast(msg){
   clearTimeout(toastT); toastT = setTimeout(() => el.hidden = true, 2600);
 }
 let deVoice = null;
-function pickVoice(){ try { deVoice = speechSynthesis.getVoices().find(v => /^de/i.test(v.lang)) || null; } catch(e) {} }
+const VOICE_LS = 'wzb1:voice';
+const voiceScore = v => (/natural|neural|online|premium|enhanced|wavenet|studio/i.test(v.name) ? 4 : 0) + (/google/i.test(v.name) ? 2 : 0) + (/^de[-_]DE/i.test(v.lang) ? 1 : 0) - (/compact|eloquence|espeak/i.test(v.name) ? 3 : 0);
+const deVoices = () => { try { return speechSynthesis.getVoices().filter(v => /^de/i.test(v.lang)).sort((a, b) => voiceScore(b) - voiceScore(a)); } catch(e) { return []; } };
+function pickVoice(){ const vs = deVoices(); let pick = ''; try { pick = localStorage.getItem(VOICE_LS) || ''; } catch(e) {} deVoice = vs.find(v => v.name === pick) || vs[0] || null; }
 if ('speechSynthesis' in window){ pickVoice(); speechSynthesis.onvoiceschanged = pickVoice; }
 function say(text){
   if (!('speechSynthesis' in window) || !text) return;
@@ -5540,7 +5543,7 @@ function speakLines(lines){
   if (!('speechSynthesis' in window)) return false;
   try {
     speechSynthesis.cancel();
-    const voices = speechSynthesis.getVoices().filter(v => /^de/i.test(v.lang)), who = [...new Set(lines.map(l => l[0]))];
+    const ranked = deVoices(), voices = deVoice ? [deVoice, ...ranked.filter(v => v !== deVoice)] : ranked, who = [...new Set(lines.map(l => l[0]))];
     for (const [w, text] of lines) for (const t of text.split(/(?<=[.!?])\s+/).filter(x => x.trim())){
       const i = who.indexOf(w), u = new SpeechSynthesisUtterance(t);
       u.lang = 'de-DE'; u.rate = .95; u.pitch = [1, .8, 1.2][i % 3];
@@ -5794,6 +5797,17 @@ async function booksCard(){
   box.querySelectorAll('[data-bookdel]').forEach(b => b.onclick = async () => { const id = b.dataset.bookdel; delete docs[id]; await bookStore('readwrite', st => st.delete(id)); toast(`${BOOKS[id].short} removed from this device.`); booksCard(); });
 }
 
+function voiceCard(){
+  const row = document.getElementById('vrow'); if (!row) return;
+  const vs = deVoices();
+  if (!('speechSynthesis' in window)) { row.innerHTML = '<p class="muted" style="margin:0">This browser can’t read text aloud.</p>'; return; }
+  if (!vs.length) { row.innerHTML = '<p class="fail" style="margin:0">No German voice on this device yet. Install one (see below), then reopen the app.</p>'; speechSynthesis.onvoiceschanged = () => { pickVoice(); voiceCard(); }; return; }
+  row.innerHTML = `<label class="field" for="vsel" style="flex:1;min-width:200px">Voice<select id="vsel">${vs.map(v => `<option value="${esc(v.name)}" ${deVoice && v.name === deVoice.name ? 'selected' : ''}>${esc(v.name.replace(/^Microsoft\s+/, '').replace(/ - German \((.+)\)$/, ' ($1)'))}${voiceScore(v) >= 4 ? ' · natural' : ''}</option>`).join('')}</select></label>
+    <button class="btn ghost" id="vtest">${icon('say')}Test</button>`;
+  document.getElementById('vsel').onchange = e => { try { localStorage.setItem(VOICE_LS, e.target.value); } catch(x) {} pickVoice(); say('Hallo! So klinge ich auf Deutsch.'); };
+  document.getElementById('vtest').onclick = () => say('Hallo! Ich lese dir die Wörter, die Sätze und die Hörtexte vor.');
+}
+
 // ---- settings: Gemini key and moving progress between devices ----
 function vDaten(){
   const me = progressSummary(state);
@@ -5812,6 +5826,14 @@ function vDaten(){
       <p class="muted" style="margin:0">On Google’s free plan, Google may use what you send to improve its products. Don’t write private things in your practice texts.</p>
       <p class="muted" style="margin:0">The free plan has a daily limit. If you reach it, wait until the next day.</p>
       <label class="field" for="gmodel">Model (leave empty for the standard one: ${GEMINI_MODEL})<input type="text" id="gmodel" value="${esc(getModel() === GEMINI_MODEL ? '' : getModel())}" autocomplete="off" spellcheck="false"></label>
+    </div></details>
+  </section>
+  <section class="card stack" id="voice"><h2>German voice</h2>
+    <p style="margin:0">The voice that reads words, sentences and the Hören tasks aloud. Natural or Google voices sound the most real.</p>
+    <div class="row" id="vrow"></div>
+    <details><summary>No German voice, or it sounds robotic?</summary><div class="stack" style="margin-top:8px">
+      <p style="margin:0"><b>Android:</b> Settings → System → Languages → Text-to-speech output. Choose <b>Speech Services by Google</b>, tap the gear → <b>Install voice data</b> → <b>Deutsch (Deutschland)</b>, and download a voice. Then close and reopen the app.</p>
+      <p style="margin:0"><b>Windows:</b> Settings → Time &amp; language → Speech → Add voices → Deutsch. In Microsoft Edge the “Natural” online voices sound best.</p>
     </div></details>
   </section>
   <section class="card stack" id="books"><h2>My books</h2>
@@ -5837,7 +5859,7 @@ function vDaten(){
     <textarea class="write code" id="pin" spellcheck="false" autocomplete="off" placeholder="Paste a code that starts with WZB1." aria-label="Paste a progress code"></textarea>
     <div id="pcheck"></div>
   </section>`;
-  booksCard();
+  booksCard(); voiceCard();
   const gmsg = document.getElementById('gmsg'), gkey = document.getElementById('gkey');
   document.getElementById('gsave').onclick = async () => {
     const k = gkey.value.trim();
@@ -5996,6 +6018,11 @@ function vLesen(){
     return `<button class="lesson ${d ? 'done' : ''} ${r === nr ? 'next' : ''}" data-r="${i}"><span class="num" style="font-size:.95rem">${r.level}</span>
       <span style="min-width:0"><b>${esc(r.title)}</b><span>${r.items.length} questions · ${wordCount(r.texts.map(t => t.body).join(' '))} words</span></span>
       <span class="tag">${d ? `${d.s}/${d.t}` : r === nr ? 'next' : ''}</span></button>`; }).join('')}</section>`).join('')}
+  <section class="card stack"><h3>Real voices</h3><p class="muted" style="margin:0">Your device reads the texts here. Listen to real German speakers every week too.</p>
+    <div class="reslist">${[['https://learngerman.dw.com/de/langsam-gesprochene-nachrichten/s-60040332', 'Langsam gesprochene Nachrichten', 'Deutsche Welle: today’s news, read slowly, with the text'],
+       ['https://learngerman.dw.com/de/nicos-weg/c-36519687', 'Nicos Weg', 'Deutsche Welle: a video course from A1 to B1 with real actors'],
+       ['https://www.youtube.com/@EasyGerman', 'Easy German', 'Street interviews in real everyday German, with subtitles']]
+      .map(([u, t, sub]) => `<a class="resrow" href="${u}" target="_blank" rel="noopener">${icon('headphones')}<div><b>${t}</b><span>${sub}</span></div>${icon('ext')}</a>`).join('')}</div></section>
   ${getKey() ? `<section class="card stack"><h3>A new text from Gemini</h3><p class="muted" style="margin:0">Unlimited reading practice at your level, on any topic you like. Needs internet.</p>
     <div class="formrow">
       <label for="rlevel">Level<select id="rlevel">${['A1','A2','B1'].map(l => `<option ${l === state.lastLevel ? 'selected' : ''}>${l}</option>`).join('')}</select></label>
@@ -6131,13 +6158,14 @@ function openWriting(w, back, onChecked){
 // ---- Prüfung: Goethe B1 simulator ----
 function vPruefung(){
   const hist = (state.exams || []).slice(-8).reverse();
-  const modCard = (key, desc) => { const m = EXAM[key];
+  const modCard = (key, desc, extra = '') => { const m = EXAM[key];
     return `<section class="card stack">
       <div class="row" style="justify-content:space-between"><h3>${m.name}</h3><span class="tag">${m.min} min · ${m.teile.length} Teile · 30 Aufgaben</span></div>
       <p class="muted" style="margin:0">${desc}</p>
       <div class="row">${examSets(key).map((x, si) => `<button class="btn${si ? ' ghost' : ''}" data-mod="${key}:${si}">Full simulation · Set ${si + 1}</button>`).join('')}${getKey() ? `<button class="btn ghost" data-mod="${key}:ai">New set from Gemini</button>` : ''}</div>
       <details><summary>Practise one Teil</summary><div class="stack" style="margin-top:10px">${m.teile.map((t, i) => `<div class="row" style="justify-content:space-between">
         <span style="min-width:0">${esc(t.title)}</span><span class="row" style="gap:6px">${examSets(key).map((x, si) => `<button class="btn ghost" data-teil="${key}:${i}:${si}">Set ${si + 1}</button>`).join('')}${getKey() ? `<button class="btn ghost" data-teil="${key}:${i}:ai">New</button>` : ''}</span></div>`).join('')}${getKey() ? '' : '<p class="muted" style="margin:0">Add a free Gemini key in Settings to get new sets whenever you want.</p>'}</div></details>
+      ${extra}
     </section>`; };
   $main.innerHTML = `
   <section class="card"><h2>Prüfung simulieren</h2>
@@ -6145,7 +6173,14 @@ function vPruefung(){
     ${hist.length ? `<h4>Your results</h4><div class="hist">${hist.map(h => `<div><span>${esc(h.d)} · ${esc(h.m)}</span><span class="${h.s >= 60 ? 'pass' : 'fail'}">${h.s}/100</span></div>`).join('')}</div>` : ''}
   </section>
   ${modCard('lesen', 'A blog, newspaper articles, ads, opinions and rules. Read fast and answer exactly.')}
-  ${modCard('hoeren', 'Announcements, a guided tour or talk, a conversation and a radio discussion, read aloud by your device. Some texts play only once, like in the exam.')}
+  ${modCard('hoeren', 'Announcements, a guided tour or talk, a conversation and a radio discussion, read aloud by your device. Some texts play only once, like in the exam.', `<details><summary>Real exam recordings, free from the Goethe-Institut</summary><div class="reslist" style="margin-top:10px">
+        ${[['https://goethemp4s.akamaized.net/resources/files/mp468/pruefungstraining_1_hoeren_b1_erwachsene.mp4', 'Practice exam 1: Hören audio', 'Real speakers, real exam speed', 'video'],
+           ['https://www.goethe.de/pro/relaunch/prf/materialien/B1/b1_modellsatz_erwachsene.pdf', 'Practice exam 1: tasks and answers', 'PDF, all four modules', 'book'],
+           ['https://goethemp4s.akamaized.net/resources/files/mp468/pruefungstraining_2_hoeren_b1_erwachsene.mp4', 'Practice exam 2: Hören audio', 'Real speakers, real exam speed', 'video'],
+           ['https://www.goethe.de/pro/relaunch/prf/materialien/B1/B1_Uebungssatz_Erwachsene.pdf', 'Practice exam 2: tasks and answers', 'PDF, all four modules', 'book'],
+           ['https://bfu.goethe.de/b1_mod/index.php', 'Online practice exam', 'Click through it with audio, it marks your answers', 'pruefung']]
+          .map(([u, t, sub, ic]) => `<a class="resrow" href="${u}" target="_blank" rel="noopener">${icon(ic)}<div><b>${t}</b><span>${sub}</span></div>${icon('ext')}</a>`).join('')}
+        <p class="muted" style="margin:4px 0 0;font-size:.82rem">Play the audio once per Teil, like in the exam, and answer on the PDF. Then check with the answers at the end.</p></div></details>`)}
   <section class="card stack">
     <div class="row" style="justify-content:space-between"><h3>Schreiben</h3><span class="tag">60 min · 3 Aufgaben</span></div>
     <p class="muted" style="margin:0">An informal e-mail (about 80 words, 40 points), a forum opinion (about 80 words, 40 points) and a formal e-mail (about 40 words, 20 points). The app checks each text, you tick the task points you covered and compare with a model answer.</p>
