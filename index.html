@@ -726,6 +726,12 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 .navgroup.primary>button[aria-current="page"]{background:none}
 .navpill{position:absolute;left:0;top:0;border-radius:999px;background:var(--accent-soft);pointer-events:none;opacity:0}
 @media (max-width:900px){.navpill{border-radius:14px}}
+/* thumb-sized tap areas (the Playwright audit found controls under 32px on a phone) */
+.tick{position:relative}.tick::before{content:'';position:absolute;inset:-9px;border-radius:50%}
+.calnav button{width:40px;height:40px}
+.sugg,.gtnav button{min-height:40px}
+details>summary{padding-block:8px}
+.goalsel select{min-height:38px;padding:8px 12px}
 .btn.danger{background:var(--badbg);color:var(--bad);box-shadow:inset 0 0 0 2px var(--bad),0 4px 0 var(--bad)}
 .btn.danger:hover:not(:disabled){box-shadow:inset 0 0 0 2px var(--bad),0 4px 0 var(--bad)} .btn.danger:active:not(:disabled){box-shadow:inset 0 0 0 2px var(--bad),0 1px 0 var(--bad)}
 .model small{font-weight:700;color:var(--muted)}
@@ -4532,7 +4538,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = '14aecf4';  // build.py puts the build number here
+const APP_VERSION = '6d19f09';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -4837,7 +4843,8 @@ function vHeute(){
       <div class="dgoal"><div class="progline"><span>Daily goal</span><b>${mins} / ${goal} min</b></div><div class="bar"><i style="width:${Math.min(100, Math.round(mins / goal * 100))}%"></i></div></div>
     </section>
     <div class="row more"><button class="linkbtn" data-goto="fortschritt">${icon('trend')}See my progress</button><button class="linkbtn" data-goto="suche">${icon('suche')}Look something up</button><button class="linkbtn" data-goto="ueben">${icon('ueben')}Practise something else</button></div></div>`;
-  document.getElementById('go').onclick = first ? startSession : () => { if (next.t === 'app') runBlock(next); else { tickBlock(next.key, true); render(); } };
+  const goBtn = document.getElementById('go');   // gone when the whole plan is done
+  if (goBtn) goBtn.onclick = first ? startSession : () => { if (next.t === 'app') runBlock(next); else { tickBlock(next.key, true); render(); } };
   $main.querySelectorAll('[data-tick]').forEach(b => b.onclick = () => { tickBlock(b.dataset.tick, b.getAttribute('aria-pressed') !== 'true'); render(); });
   $main.querySelectorAll('[data-run]').forEach(b => b.onclick = () => runBlock(plan.blocks.find(x => x.key === b.dataset.run)));
   $main.querySelectorAll('[data-size]').forEach(b => b.onclick = () => { state.planMin = +b.dataset.size; save(); chips(); render(); });
