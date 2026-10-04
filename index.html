@@ -721,6 +721,13 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 .tdeck{display:flex;flex-direction:column;gap:8px;background:var(--panel2);border-radius:var(--r-card);padding:14px}
 .tbar{position:relative;height:8px;border-radius:99px;background:var(--line);overflow:hidden}.tbar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:var(--accent-soft)}.tbar i.well{background:var(--go)}
 .model{display:flex;gap:12px;align-items:center;justify-content:space-between;background:var(--panel2);border-radius:var(--r-card);padding:12px 14px}
+.navgroup.primary{position:relative}
+.navgroup.primary>button{position:relative;z-index:1}
+.navgroup.primary>button[aria-current="page"]{background:none}
+.navpill{position:absolute;left:0;top:0;border-radius:999px;background:var(--accent-soft);pointer-events:none;opacity:0}
+@media (max-width:900px){.navpill{border-radius:14px}}
+.btn.danger{background:var(--badbg);color:var(--bad);box-shadow:inset 0 0 0 2px var(--bad),0 4px 0 var(--bad)}
+.btn.danger:hover:not(:disabled){box-shadow:inset 0 0 0 2px var(--bad),0 4px 0 var(--bad)} .btn.danger:active:not(:disabled){box-shadow:inset 0 0 0 2px var(--bad),0 1px 0 var(--bad)}
 .model small{font-weight:700;color:var(--muted)}.model p{margin:2px 0 0;font-weight:600}
 /* ---------- motion system (calm, precise; one signature moment: finishing an exercise) ---------- */
 :root{--e-settle:cubic-bezier(.22,1,.36,1);--e-reveal:cubic-bezier(.16,1,.3,1);--e-move:cubic-bezier(.65,0,.35,1);--e-leave:cubic-bezier(.4,0,1,1);--e-lively:cubic-bezier(.34,1.3,.64,1);
@@ -768,14 +775,20 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
   .bento .gauge .seg.on{animation:segin .5s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i) * 45ms)}
   .bento .bcol .fill{animation:barin .8s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i) * 50ms)}
   .bento .rings circle.val{animation:ringin 1s cubic-bezier(.16,1,.3,1) both}
-  #main.enter{animation:vtin .22s cubic-bezier(.16,1,.3,1)}
+  #main.enter>*{animation:tabin 420ms var(--e-settle) backwards}
+  #main.enter>:nth-child(2){animation-delay:50ms} #main.enter>:nth-child(3){animation-delay:100ms} #main.enter>:nth-child(4){animation-delay:150ms}
+  #main.enter>:nth-child(5){animation-delay:200ms} #main.enter>:nth-child(n+6){animation-delay:250ms}
+  .navpill{transition:transform 380ms var(--e-settle),opacity var(--t-quick) var(--e-settle)}
+  .navpill.jump{transition:none}
+  .navgroup button[aria-current="page"] svg.i{animation:navpop 420ms var(--e-settle)}
 }
 @keyframes segin{from{opacity:.15}}
 @keyframes barin{from{transform:scaleY(.04)}}
 @keyframes ringin{from{stroke-dashoffset:var(--len)}}
 @keyframes recpulse{50%{filter:brightness(1.15);transform:scale(1.03)}}
 @keyframes ringwig{25%{transform:rotate(-14deg)}75%{transform:rotate(14deg)}}
-@keyframes vtin{from{opacity:0;transform:translateY(6px)}}
+@keyframes tabin{from{opacity:0;transform:translate3d(var(--dx,0px),var(--dy,10px),0)}}
+@keyframes navpop{0%{transform:scale(.82) translateY(2px)}55%{transform:scale(1.08) translateY(-1px)}100%{transform:none}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 @media (max-width:640px){.qtext{font-size:1.3rem}.opts{grid-template-columns:1fr}.gopts{grid-template-columns:repeat(3,minmax(0,1fr))}.card{padding:16px}.qcard{padding:20px 16px}.stages{grid-template-columns:repeat(2,1fr)}.road{grid-template-columns:1fr 1fr 1fr}}
 </style>
@@ -4472,7 +4485,7 @@ const LUC = {heute:'House', pfad:'Route', ueben:'Dumbbell', pruefung:'Graduation
   say:'Volume2', flame:'Flame', play:'Play', sun:'Sun', moon:'Moon', x:'X', back:'ArrowLeft', next:'ArrowRight', check:'Check', clock:'Clock', list:'ListChecks',
   target:'Target', zap:'Zap', brain:'Brain', chevL:'ChevronLeft', chevR:'ChevronRight', cloud:'Cloud', device:'Smartphone', snow:'Snowflake', trophy:'Trophy',
   shapes:'Shapes', dialog:'MessagesSquare', repeat:'Repeat', timer:'Timer', spell:'SpellCheck', headphones:'Headphones', sparkles:'Sparkles',
-  book:'BookMarked', video:'CirclePlay', ext:'ArrowUpRight', move:'ArrowLeftRight', copy:'ClipboardCopy', gear:'Settings', phone:'Phone', mic:'Mic', eye:'Eye', eyeoff:'EyeOff', trend:'TrendingUp', fortschritt:'TrendingUp', search:'Search', suche:'Search'};
+  book:'BookMarked', video:'CirclePlay', ext:'ArrowUpRight', move:'ArrowLeftRight', copy:'ClipboardCopy', gear:'Settings', phone:'Phone', mic:'Mic', eye:'Eye', eyeoff:'EyeOff', trend:'TrendingUp', fortschritt:'TrendingUp', search:'Search', suche:'Search', reset:'RotateCcw'};
 const iconCache = {};
 const icon = k => {
   if (iconCache[k]) return iconCache[k];
@@ -4486,7 +4499,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = '2beea66';  // build.py puts the build number here
+const APP_VERSION = 'c943026';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -4561,7 +4574,7 @@ function nav(){
     tabs.innerHTML = `
       <div class="brand"><span class="logo">B1</span><div><b>Weg zur B1</b><small>Deutsch A1 bis B1</small></div></div>
       <p class="navlabel">Hauptmenü</p>
-      <div class="navgroup primary">${VIEWS.map(v => btn(v)).join('')}</div>
+      <div class="navgroup primary"><i class="navpill jump" aria-hidden="true"></i>${VIEWS.map(v => btn(v)).join('')}</div>
       <p class="navlabel">Direkt</p>
       <div class="navgroup secondary">${MORE.map(v => btn(v, v[0] === 'karten' ? '<span class="badge" hidden></span>' : '')).join('')}</div>
       <div class="side-foot">
@@ -4581,9 +4594,21 @@ function nav(){
   const badge = tabs.querySelector('.badge'); badge.hidden = !due; badge.textContent = due || '';
   tabs.querySelectorAll('button[data-mode]').forEach(b => b.setAttribute('aria-pressed', String(curMode() === b.dataset.mode)));
   tabs.querySelector('#soundSw').checked = !!state.sound;
+  placePill();
   const mb = document.getElementById('modeBtn'), want = curMode() === 'dark' ? 'sun' : 'moon';
   if (mb && mb.dataset.icon !== want){ mb.innerHTML = icon(want); mb.dataset.icon = want; }
 }
+// The highlight behind the current main tab is one element that glides from tab to tab (transform only).
+function placePill(){
+  const pill = document.querySelector('.navpill'), cur = document.querySelector('.navgroup.primary>button[aria-current]');
+  if (!pill) return;
+  if (!cur || !cur.offsetWidth){ pill.style.opacity = 0; return; }
+  const wasHidden = pill.style.opacity !== '1';
+  if (wasHidden) pill.classList.add('jump');   // appearing: no flight from the old place, just fade in
+  Object.assign(pill.style, {width: cur.offsetWidth + 'px', height: cur.offsetHeight + 'px', transform: `translate(${cur.offsetLeft}px,${cur.offsetTop}px)`, opacity: 1});
+  if (wasHidden || pill.classList.contains('jump')){ void pill.offsetWidth; pill.classList.remove('jump'); }
+}
+addEventListener('resize', () => { const p = document.querySelector('.navpill'); if (p){ p.classList.add('jump'); placePill(); } });
 document.getElementById('tabs').addEventListener('click', e => {
   const m = e.target.closest('button[data-mode]'); if (m) return setMode(m.dataset.mode);  // button only: <html data-mode> would match every tap
   const b = e.target.closest('[data-view]'); if (!b) return;
@@ -4625,14 +4650,28 @@ document.addEventListener('click', async e => {
   finally { b.disabled = false; b.textContent = 'Check for updates'; }
 });
 function maybeReload(){ if (window.__updated && !activity){ location.reload(); return true; } return false; }
-let rendered = false;
+let rendered = false, shownView = null, enterT;
+const TAB_ORDER = [...VIEWS, ...MORE].map(v => v[0]).concat('daten');
+// +1: going forward or deeper (content comes from the right), -1: going back (from the left), 0: same place (rises a little)
+function tabDir(from, to){
+  if (!from || from === to) return 0;
+  if (PARENT[to] === from) return 1;
+  if (PARENT[from] === to) return -1;
+  const a = TAB_ORDER.indexOf(PARENT[from] || from), b = TAB_ORDER.indexOf(PARENT[to] || to);
+  return a === b ? (TAB_ORDER.indexOf(to) > TAB_ORDER.indexOf(from) ? 1 : -1) : Math.sign(b - a);
+}
 function render(){
   if (maybeReload()) return;
   const go = () => { nav(); chips(); setTitle(); ({heute:vHeute, pfad:vPfad, ueben:vUeben, pruefung:vPruefung, tabelle:vTabelle, karten:vKarten, lesen:vLesen, schreiben:vSchreiben, telefon:vTelefon, daten:vDaten, fortschritt:vFortschritt, suche:vSuche})[view](); };
   go();
   // A short fade of the content. (document.startViewTransition snapshots the whole screen, fixed bottom bar included, and froze phones for about a second.)
-  if (rendered && !matchMedia('(prefers-reduced-motion: reduce)').matches){ $main.classList.remove('enter'); void $main.offsetWidth; $main.classList.add('enter'); }
-  rendered = true;
+  if (rendered && !reduceMotion()){
+    const d = tabDir(shownView, view);
+    $main.style.setProperty('--dx', d * 22 + 'px'); $main.style.setProperty('--dy', d ? '0px' : '10px');
+    $main.classList.remove('enter'); void $main.offsetWidth; $main.classList.add('enter');
+    clearTimeout(enterT); enterT = setTimeout(() => $main.classList.remove('enter'), 750);  // so later screens inside this tab (a quiz question) don't slide again
+  }
+  rendered = true; shownView = view;
 }
 const backTo = (label, v) => `<div class="row"><button class="linkbtn" data-goto="${v}">${icon('back')}${label}</button></div>`;
 document.addEventListener('click', e => { const b = e.target.closest('[data-goto]'); if (b){ stopActivity(); view = b.dataset.goto; render(); toTop(); } });
@@ -5475,6 +5514,12 @@ function vDaten(){
     <div id="pout" hidden class="stack"><p class="muted" style="margin:0">Your device didn’t allow copying. Select all of the code below and copy it yourself.</p>
       <textarea class="write code" id="pcode" readonly aria-label="Your progress code"></textarea></div>
   </section>
+  <section class="card stack"><h2>Start again from zero</h2>
+    <p class="muted" style="margin:0">Deletes all progress on this device: XP, lessons, flashcards, streak, exam and call results, and your writing drafts. Your own words, your daily goal, your Gemini key and light/dark mode stay. If you might want it back, copy your progress code above first.</p>
+    <div class="row"><button class="btn ghost" id="preset">${icon('reset')}Reset my progress</button></div>
+    <div id="pconfirm" hidden class="stack"><p class="tip" style="margin:0">Are you sure? This deletes ${sum(me)}. It can’t be undone.</p>
+      <div class="row"><button class="btn danger" id="presetYes">Yes, delete my progress</button><button class="btn ghost" id="presetNo">Cancel</button></div></div>
+  </section>
   <section class="card stack"><h2>Load progress from another device</h2>
     <textarea class="write code" id="pin" spellcheck="false" autocomplete="off" placeholder="Paste a code that starts with WZB1." aria-label="Paste a progress code"></textarea>
     <div id="pcheck"></div>
@@ -5494,6 +5539,16 @@ function vDaten(){
     const code = progressCode(state), out = document.getElementById('pout'), ta = document.getElementById('pcode');
     const manual = () => { ta.value = code; out.hidden = false; ta.focus(); ta.select(); };
     try { navigator.clipboard.writeText(code).then(() => toast('Code copied. Paste it on your other device.'), manual); } catch(e){ manual(); }
+  };
+  const pconf = document.getElementById('pconfirm');
+  document.getElementById('preset').onclick = () => { pconf.hidden = false; document.getElementById('presetNo').focus(); };
+  document.getElementById('presetNo').onclick = () => { pconf.hidden = true; };
+  document.getElementById('presetYes').onclick = () => {
+    const keep = {myWords: state.myWords, goal: state.goal, planMin: state.planMin, sound: state.sound};
+    state = Object.assign(fresh(), keep); registerMyWords(); searchIdx = null; save();
+    try { Object.keys(localStorage).filter(k => k.startsWith('wzb1:draft:')).forEach(k => localStorage.removeItem(k)); } catch(e) {}
+    toast('Progress reset. A fresh start!');
+    view = 'heute'; render(); toTop();
   };
   const pin = document.getElementById('pin'), check = document.getElementById('pcheck');
   pin.oninput = () => {
