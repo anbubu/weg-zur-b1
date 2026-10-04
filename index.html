@@ -131,7 +131,7 @@ svg.i{width:18px;height:18px;flex:none;stroke-width:1.9}
   .shell{height:100%;max-width:none;margin:0;display:flex;flex-direction:column;padding:0;gap:0;background:none}
   .mainwrap{order:1;flex:1 1 0;min-height:0;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding:0 16px 16px}
   .topbar{position:sticky;top:8px;z-index:5;margin-top:12px}
-  .side{order:2;align-self:stretch;position:static;flex:none;min-height:0;z-index:20;border-radius:20px 20px 0 0;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));flex-direction:row;box-shadow:0 -10px 26px -16px rgba(120,40,20,.4)}
+  .side{order:2;align-self:stretch;position:static;flex:none;min-height:0;z-index:20;border-radius:20px 20px 0 0;padding:6px 6px calc(6px + env(safe-area-inset-bottom,0px));flex-direction:row;box-shadow:0 -10px 26px -16px rgba(23,23,31,.4)}
   .side .brand,.side .navlabel,.side .secondary,.side .side-foot{display:none}
   .navgroup.primary{flex-direction:row;justify-content:space-around;width:100%}
   .navgroup.primary button{flex-direction:column;gap:3px;font-size:.68rem;padding:7px 4px;border-radius:14px;min-width:58px;align-items:center}
@@ -227,8 +227,8 @@ svg.i{width:18px;height:18px;flex:none;stroke-width:1.9}
 .bars .goal-line{position:absolute;left:0;right:0;border-top:1.5px dashed var(--faint);pointer-events:none}
 .bcol{display:flex;flex-direction:column;align-items:center;gap:8px;height:100%;justify-content:flex-end}
 .bcol .track{width:100%;max-width:44px;flex:1;border-radius:12px;background:var(--panel2);display:flex;align-items:flex-end;overflow:hidden;position:relative}
-.bcol .fill{width:100%;border-radius:12px;background:repeating-linear-gradient(-45deg,var(--accent) 0 3px,transparent 3px 7px);box-shadow:inset 0 0 0 1.5px var(--accent);transform-origin:bottom;transition:transform .7s cubic-bezier(.16,1,.3,1)}
-.bcol .fill.met{background:repeating-linear-gradient(-45deg,var(--sun) 0 3px,transparent 3px 7px);box-shadow:inset 0 0 0 1.5px var(--sun)}
+.bcol .fill{width:100%;border-radius:12px;background:var(--accent);transform-origin:bottom;transition:transform .7s cubic-bezier(.16,1,.3,1)}
+.bcol .fill.met{background:var(--sun)}
 .bcol .fill.today{background:var(--accent)}
 .bcol .fill.today.met{background:var(--sun)}
 .bcol small{font:500 .74rem var(--f);color:var(--muted)}
@@ -377,7 +377,7 @@ details.hit .intro{margin-top:10px}
 .bento.prog{grid-template-areas:"goal goal streak streak" "stats stats rings rings" "weak weak cal cal"}
 @media (max-width:1180px){.bento.prog{grid-template-areas:"goal streak" "stats stats" "rings weak" "cal cal"}}
 @media (max-width:640px){.bento.prog{grid-template-areas:"goal" "streak" "stats" "rings" "weak" "cal"}}
-.pstage{background:var(--panel);border-radius:var(--r-panel);box-shadow:var(--lift,0 14px 34px -22px rgba(120,40,20,.35));padding:6px 8px}
+.pstage{background:var(--panel);border-radius:var(--r-panel);box-shadow:var(--lift,0 14px 34px -22px rgba(23,23,31,.35));padding:6px 8px}
 .pstage > summary{display:flex;gap:14px;align-items:center;padding:12px;cursor:pointer;list-style:none;border-radius:var(--r-card)}
 .pstage > summary::-webkit-details-marker{display:none}
 .pstage .sn{flex:none;width:34px;height:34px;border-radius:50%;display:grid;place-items:center;background:var(--panel2);font:600 .9rem var(--fm)}
@@ -616,9 +616,13 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 .phero .done-note{margin:6px 0 0;font-weight:700}
 .plancard .blocks{margin:0;padding:18px 18px 4px}
 .plancard > .muted{padding:0 18px 18px}
-.blk{background:var(--panel);box-shadow:inset 0 0 0 2px var(--line)}
-.blk.next{box-shadow:inset 0 0 0 2px var(--accent)}
-.blk.rest{box-shadow:none;background:transparent;border:2px dashed var(--line)}
+.plancard .blocks{gap:0;padding:10px 10px 0}
+.blk{background:none;box-shadow:none;border-radius:var(--r-card);padding:14px 10px}
+.blk+.blk{box-shadow:0 -1px 0 var(--line)}
+.blk.next{background:var(--accent-soft);box-shadow:none}.blk.next+.blk{box-shadow:none}
+.blk.rest{background:none;border:0}.blk.rest .bt b{color:var(--muted);font-weight:600}
+.pfoot{display:flex;flex-direction:column;align-items:flex-start;gap:10px;padding:14px 20px 20px;border-top:1px solid var(--line);margin-top:6px}
+.pfoot p{margin:0;font-size:.82rem}
 .tick{border:2px solid var(--line)}
 .tick[aria-pressed="true"]{background:var(--go);border-color:var(--go);color:#fff}
 .bt > b{font-weight:700}
@@ -662,9 +666,8 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 /* celebrations: lesson complete and streak */
 .celebrate{display:flex;flex-direction:column;align-items:center;text-align:center;gap:14px;padding:26px 16px 10px;max-width:520px;margin:0 auto;width:100%}
 .burst{position:relative;width:210px;height:180px;display:grid;place-items:center}
-.burst::before{content:'';position:absolute;inset:0;border-radius:50%;background:radial-gradient(closest-side,var(--glow),transparent)}
-.cbadge{position:relative;width:116px;height:116px;border-radius:34px;display:grid;place-items:center;color:#fff;background:linear-gradient(160deg,#A8EE6A,#20B957);box-shadow:0 8px 0 #15964A,0 22px 40px -14px rgba(34,197,94,.6);transform:rotate(-6deg)}
-.cbadge.zap{background:linear-gradient(160deg,#F7F98C,#D3DB3F);color:#3B3F08;box-shadow:0 8px 0 #A9B12E,0 22px 40px -14px rgba(201,210,60,.6)}
+.cbadge{position:relative;width:116px;height:116px;border-radius:34px;display:grid;place-items:center;color:var(--on-go);background:var(--go);box-shadow:0 8px 0 var(--go-edge);transform:rotate(-6deg)}
+.cbadge.zap{background:var(--lime);color:var(--on-lime);box-shadow:0 8px 0 var(--lime-edge)}
 .cbadge svg.i{width:58px;height:58px;stroke-width:2.2}
 .spark{position:absolute;color:var(--go)}
 .spark svg.i{width:22px;height:22px}
@@ -695,7 +698,7 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 @media (max-width:900px){
   .topbar{background:var(--g3);top:0;margin-top:0;padding:12px 4px 8px;border-radius:0}
   .tb-title h1{font-size:1.35rem}
-  .side{margin:0 10px calc(8px + env(safe-area-inset-bottom,0px));border-radius:26px;padding:6px;box-shadow:0 14px 34px -16px rgba(23,23,31,.4)}
+  .side{margin:0 10px calc(8px + env(safe-area-inset-bottom,0px));border:0;border-radius:26px;padding:6px;box-shadow:0 14px 34px -16px rgba(23,23,31,.4)}
   .navgroup.primary button{font-weight:700}
   .phero h2{font-size:1.55rem}
 }
@@ -732,10 +735,26 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 .sugg,.gtnav button{min-height:40px}
 details>summary{padding-block:8px}
 .goalsel select{min-height:38px;padding:8px 12px}
+.nw{white-space:nowrap}
+.hint{margin:-6px 0 0;font-size:.82rem;text-align:center}
+/* focus mode: on a phone, an open lesson, quiz, call or exam shows only the task */
+@media (max-width:900px){body.focus .side,body.focus .topbar .chips{display:none}}
+.sechead{margin:6px 2px -4px;font-size:1.05rem}
+.ugrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+@media (min-width:1100px){.ugrid{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.ugrid .tile{min-height:0;padding:16px;gap:6px}.ugrid .tile span:not(.ic){font-size:.82rem;line-height:1.35;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
+.glist{display:grid;gap:2px;background:var(--panel);border:1px solid var(--line);border-radius:var(--r-panel);padding:6px}
+@media (min-width:1100px){.glist{grid-template-columns:1fr 1fr}}
+.grow{display:flex;align-items:center;gap:14px;border:0;background:none;color:var(--ink);text-align:left;padding:12px 10px;border-radius:var(--r-card);cursor:pointer;font:inherit;min-width:0}
+.grow>span:nth-child(2){flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}.grow b{font-weight:700}.grow>span:nth-child(2)>span{font-size:.84rem;color:var(--muted)}
+.grow .gi{flex:none;width:40px;height:40px;border-radius:12px;display:grid;place-items:center;background:var(--gc);color:#fff}
+.grow>svg.i{color:var(--faint);flex:none}
+.grow:disabled{opacity:.5;cursor:default}
+@media (hover:hover){.grow:hover:not(:disabled){background:var(--panel2)}}
 .btn.danger{background:var(--badbg);color:var(--bad);box-shadow:inset 0 0 0 2px var(--bad),0 4px 0 var(--bad)}
 .btn.danger:hover:not(:disabled){box-shadow:inset 0 0 0 2px var(--bad),0 4px 0 var(--bad)} .btn.danger:active:not(:disabled){box-shadow:inset 0 0 0 2px var(--bad),0 1px 0 var(--bad)}
 .model small{font-weight:700;color:var(--muted)}
-button.ref{border:0;background:none;padding:0;font:inherit;font-size:.84rem;text-align:left;cursor:pointer}
+button.ref{border:0;background:none;padding:7px 0;margin:0;min-height:36px;align-items:center;font:inherit;font-size:.84rem;text-align:left;cursor:pointer}
 button.ref>span{text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:3px}
 button.resrow{border:0;width:100%;font:inherit;text-align:left;cursor:pointer}
 button.resrow:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
@@ -795,6 +814,7 @@ button.resrow:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
 @keyframes wipe{from{clip-path:inset(0 0 100% 0)}to{clip-path:inset(0)}}
 @keyframes wipeup{from{clip-path:inset(0 0 100% 0);transform:translateY(10px)}to{clip-path:inset(-20%)}}
 @keyframes rise{from{opacity:0;transform:translateY(12px)}}
+@keyframes qin{from{opacity:0;transform:translateY(6px)}}
 @keyframes stampin{from{opacity:0;transform:rotate(-14deg) scale(1.5)}}
 /* ---------- motion ---------- */
 @media (prefers-reduced-motion:no-preference){
@@ -803,9 +823,9 @@ button.resrow:hover{box-shadow:inset 0 0 0 1.5px var(--ink)}
   .bento .gauge .seg.on{animation:segin .5s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i) * 45ms)}
   .bento .bcol .fill{animation:barin .8s cubic-bezier(.16,1,.3,1) both;animation-delay:calc(var(--i) * 50ms)}
   .bento .rings circle.val{animation:ringin 1s cubic-bezier(.16,1,.3,1) both}
-  #main.enter>*{animation:tabin 420ms var(--e-settle) backwards}
-  #main.enter>:nth-child(2){animation-delay:50ms} #main.enter>:nth-child(3){animation-delay:100ms} #main.enter>:nth-child(4){animation-delay:150ms}
-  #main.enter>:nth-child(5){animation-delay:200ms} #main.enter>:nth-child(n+6){animation-delay:250ms}
+  #main.enter>*{animation:tabin 340ms var(--e-settle) backwards}
+  #main.enter>:nth-child(2){animation-delay:40ms} #main.enter>:nth-child(3){animation-delay:80ms} #main.enter>:nth-child(n+4){animation-delay:120ms}
+  .qcard{animation:qin 260ms var(--e-settle)}
   .navpill{transition:transform 380ms var(--e-settle),opacity var(--t-quick) var(--e-settle)}
   .navpill.jump{transition:none}
   .navgroup button[aria-current="page"] svg.i{animation:navpop 420ms var(--e-settle)}
@@ -2881,11 +2901,11 @@ function planBlocks(size, c){
     cards:    () => ({t:'app', act:'cards', title:'Flashcards', sub:`${Math.min(c.due, 15)} word${c.due === 1 ? '' : 's'} to review`}),
     lesson:   () => c.lesson ? {t:'app', act:'lesson', id:c.lesson.id, title:`Lesson: ${c.lesson.title}`, sub:c.lesson.sub}
                              : {t:'app', act:'practice', title:'Grammar training', sub:'Mixed questions on cases and verb forms'},
-    book:     () => res && res.b.length ? {t:'book', title:'In your book', sub:'Read the pages and do the exercises. Tick it when you are done.', refs:res.b.slice(0, 3)}
+    book:     () => res && res.b.length ? {t:'book', title:'In your book', sub:'Read the pages and do the exercises.', refs:res.b.slice(0, 3)}
                 : c.lesson ? {t:'book', title:'Write it down', sub:'Read the lesson again and write 10 sentences of your own in a notebook.', refs:[]}
                 : {t:'book', title:'In your book: B1 grammar', sub:'Grammatik Aktiv, units 49 to 80: one unit today, with its exercises.', refs:[['ga', '49', 'Präteritum (the B1 units start here)', 118]]},
     rest:     () => ({t:'rest', title:'Break', sub:'Stand up, drink some water, rest your eyes.'}),
-    video:    () => res ? {t:'video', title:'Watch', sub:'Pause often and repeat what you hear. Tick it when you are done.', video:res.v[0]}
+    video:    () => res ? {t:'video', title:'Watch', sub:'Pause often and repeat what you hear.', video:res.v[0]}
                         : {t:'video', title:'Watch and listen', sub:'Pick a Nicos Weg episode or an Easy German video on a topic you like. Pause and repeat.', video:null},
     practice: () => ({t:'app', act:'practice', title:c.weak ? 'Practise your weak spots' : 'Mixed practice', sub:'Questions mixed from everything you have learned'}),
     reading:  () => c.reading ? {t:'app', act:'reading', id:c.reading.id, title:`Read: ${c.reading.title}`, sub:`${c.reading.level} · answer the questions, then listen to the text`}
@@ -4538,7 +4558,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = '6d19f09';  // build.py puts the build number here
+const APP_VERSION = '1a1c09e';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -4634,6 +4654,7 @@ function nav(){
   tabs.querySelectorAll('button[data-mode]').forEach(b => b.setAttribute('aria-pressed', String(curMode() === b.dataset.mode)));
   tabs.querySelector('#soundSw').checked = !!state.sound;
   placePill();
+  document.body.classList.toggle('focus', !!activity);
   const mb = document.getElementById('modeBtn'), want = curMode() === 'dark' ? 'sun' : 'moon';
   if (mb && mb.dataset.icon !== want){ mb.innerHTML = icon(want); mb.dataset.icon = want; }
 }
@@ -4704,9 +4725,9 @@ function render(){
   const go = () => { nav(); chips(); setTitle(); ({heute:vHeute, pfad:vPfad, ueben:vUeben, pruefung:vPruefung, tabelle:vTabelle, karten:vKarten, lesen:vLesen, schreiben:vSchreiben, telefon:vTelefon, daten:vDaten, fortschritt:vFortschritt, suche:vSuche})[view](); };
   go();
   // A short fade of the content. (document.startViewTransition snapshots the whole screen, fixed bottom bar included, and froze phones for about a second.)
-  if (rendered && !reduceMotion()){
+  if (rendered && view !== shownView && !reduceMotion()){
     const d = tabDir(shownView, view);
-    $main.style.setProperty('--dx', d * 22 + 'px'); $main.style.setProperty('--dy', d ? '0px' : '10px');
+    $main.style.setProperty('--dx', d * 16 + 'px'); $main.style.setProperty('--dy', d ? '0px' : '8px');
     $main.classList.remove('enter'); void $main.offsetWidth; $main.classList.add('enter');
     clearTimeout(enterT); enterT = setTimeout(() => $main.classList.remove('enter'), 750);  // so later screens inside this tab (a quiz question) don't slide again
   }
@@ -4814,7 +4835,7 @@ function vHeute(){
     plan = getPlan();
     next = plan.blocks.find(b => b.t !== 'rest' && !plan.done[b.key]);
     const row = b => {
-      const done = !!plan.done[b.key], refs = (b.refs || []).map(([bk, ch, sec, pg]) => `<button class="ref" data-book="${bk}" data-pg="${pg}" data-ch="${esc(ch)}" data-sec="${esc(sec)}">${icon('book')}<span>${BOOKS[bk].short} ${ch}, ${pagesTxt(bk, pg)} <small>Tap to open</small></span></button>`).join('');
+      const done = !!plan.done[b.key], refs = (b.refs || []).map(([bk, ch, sec, pg]) => `<button class="ref" data-book="${bk}" data-pg="${pg}" data-ch="${esc(ch)}" data-sec="${esc(sec)}">${icon('book')}<span>${BOOKS[bk].short} ${ch}, <span class="nw">${pagesTxt(bk, pg)}</span></span></button>`).join('');
       const vid = b.video ? `<a class="ref" href="${vidUrl(b.video[0])}" target="_blank" rel="noopener">${icon('video')}<span>${esc(b.video[1])} <small>${esc(b.video[2])}</small></span>${icon('ext')}</a>` : '';
       return `<li class="blk ${b.t === 'rest' ? 'rest' : ''} ${done ? 'done' : ''} ${b === next ? 'next' : ''}">
         <button class="tick" data-tick="${b.key}" aria-pressed="${done}" aria-label="${done ? 'Mark as not done' : 'Mark as done'}: ${esc(b.title)}">${done ? icon('check') : ''}</button>
@@ -4826,7 +4847,7 @@ function vHeute(){
     card = `<section class="card step plancard">
       <div class="phero" style="--sc:${stageColor(st)}">
         <div class="ptop"><span class="plabel">${st ? `${st.name} · stage ${sn} of ${STAGES.length}` : 'Exam training'}</span>
-          <div class="seg-tabs" role="group" aria-label="Length of the plan">${[[30, '30 min'], [60, '1 hour'], [120, '2 hours']].map(([v, l]) => `<button data-size="${v}" aria-pressed="${goal === v}">${l}</button>`).join('')}</div></div>
+</div>
         <h2>Dein Plan für heute</h2>
         <p class="pcan">${st ? st.can : 'All lessons are done. Now it is exam training: reading, writing, listening and full practice exams.'}</p>
         <div class="pmeta"><span>Studied today</span><span>${mins} / ${goal} min</span></div><div class="pbar"><i style="width:${pct}%"></i></div>
@@ -4834,7 +4855,8 @@ function vHeute(){
                : `<p class="done-note">Plan complete. ${mins >= goal ? 'Daily goal reached. Your streak is safe.' : 'Well done. Choose a longer plan above if you want to keep going.'}</p>`}
       </div>
       <ol class="blocks">${plan.blocks.map(row).join('')}</ol>
-      <p class="muted" style="margin:12px 0 0;font-size:.82rem">Time in lessons and exercises counts by itself. Book and video blocks count when you tick them.</p>
+      <div class="pfoot"><div class="seg-tabs" role="group" aria-label="Length of the plan">${[[30, '30 min'], [60, '1 hour'], [120, '2 hours']].map(([v, l]) => `<button data-size="${v}" aria-pressed="${goal === v}">${l}</button>`).join('')}</div>
+        <p class="muted">Lessons and exercises count by themselves. Tick book and video blocks when you finish them.</p></div>
     </section>`;
   }
   $main.innerHTML = `<div class="today">${card}
@@ -4993,7 +5015,7 @@ function openLesson(l, onDone){
     ${l.th ? `<h4>Words in this lesson (${VOCAB.filter(v => v.th === l.th).length})</h4><div class="words">${VOCAB.filter(v => v.th === l.th).map(v => `<span>${v.g ? gspan(v.g, G[v.g])+' ' : ''}${v.de} <span class="muted">· ${v.en}</span></span>`).join('')}</div>` : ''}
   </section>
   <button class="btn big" id="practice">${state.done[l.id] ? 'Practise again' : 'Start practice'} · ${l.drills.reduce((a,d) => a+d[1], 0)} questions</button>
-  ${state.done[l.id] ? '' : '<button class="btn ghost" id="testout">Already know this? Test out: 80% right on the first try completes the lesson</button>'}
+  ${state.done[l.id] ? '' : '<button class="btn ghost" id="testout">Test out</button><p class="muted hint">Already know this? 80% right on the first try completes the lesson.</p>'}
   ${resHtml(l)}`;
   $main.querySelectorAll('[data-rp]').forEach(b => b.onclick = () => {
     const w = l.repeat[+b.dataset.rp], out = document.getElementById('rp' + b.dataset.rp), norm = x => ' ' + x.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim() + ' ';
@@ -5157,7 +5179,7 @@ function vKarten(){
     <div class="stages">${['Neu','Lernen','Gut','Sicher'].map((n,i) => `<div class="stage"><b>${st[i]}</b><span>${n}</span></div>`).join('')}</div>
     <p class="muted" style="margin:0">Cards you know come back later and later (1, 2, 4, 8 … days). Cards you miss come back today. From stage “Lernen” on, some cards show English first, so you practise saying the German word.</p>
     <button class="btn big" id="rev" ${due.length ? '' : 'disabled'}>${due.length ? `Review ${due.length} due card${due.length===1?'':'s'}` : 'Nothing due. Come back tomorrow.'}</button>
-    ${ids.length ? '<button class="btn ghost" id="extra">Extra practice · 15 random words (doesn’t change the schedule)</button>' : ''}
+    ${ids.length ? '<button class="btn ghost" id="extra">Extra practice</button><p class="muted hint">15 random words. Doesn’t change your review schedule.</p>' : ''}
   </section>
   <section class="card stack">
     <h3>Die Top 100</h3>
@@ -5216,19 +5238,19 @@ function vUeben(){
       return `<div class="wrow"><span class="wi">${icon('brain')}</span><span style="min-width:0"><b>${w.name}</b><br><span class="muted" style="font-size:.8rem">${st.c} of ${st.n} right on the first try</span></span><span class="pct ${w.pct < 60 ? 'fail' : w.pct >= 80 ? 'pass' : ''}">${w.pct}%</span><span></span></div>`; }).join('')}</div>`
       : '<p class="empty">Every exercise type you practise is tracked. After a few lessons your weakest topics show up here, and Fall-Training gives you more of them.</p>'}
   </section>
-  <div class="lvhead"><h3>Trainieren</h3><span>words, reading and writing</span></div>
-  <section class="grid2">
-    <button class="tile p-butter" data-goto="karten"><span class="ic">${icon('karten')}</span><b>Karten</b><span>Flashcards · ${due} due today · ${Object.keys(state.cards).length} words in your deck</span></button>
-    <button class="tile p-mint" data-goto="lesen"><span class="ic">${icon('lesen')}</span><b>Lesen</b><span>Reading and listening · ${nr ? `Next: ${esc(nr.title)} (${nr.level})` : 'All 20 texts read. Read your favourites again.'}</span></button>
-    <button class="tile p-lilac" data-goto="schreiben"><span class="ic">${icon('schreiben')}</span><b>Schreiben</b><span>Check list and model answers · ${wdone ? `${wdone} of ${WRITING.length} tasks written` : `${WRITING.length} tasks from A1 to the B1 exam`}</span></button>
-    <button class="tile p-sky" data-goto="telefon"><span class="ic">${icon('phone')}</span><b>Sprechen</b><span>Answer out loud · phone calls, job interviews and the B1 speaking exam · ${CALLS.length} role-plays</span></button>
+  <h3 class="sechead">Trainieren</h3>
+  <section class="ugrid">
+    <button class="tile p-butter" data-goto="karten"><span class="ic">${icon('karten')}</span><b>Karten</b><span>${due ? `${due} due today` : `${Object.keys(state.cards).length} words`}</span></button>
+    <button class="tile p-mint" data-goto="lesen"><span class="ic">${icon('lesen')}</span><b>Lesen</b><span>${nr ? `Next: ${esc(nr.title)}` : 'All texts read'}</span></button>
+    <button class="tile p-lilac" data-goto="schreiben"><span class="ic">${icon('schreiben')}</span><b>Schreiben</b><span>${wdone ? `${wdone} of ${WRITING.length} written` : `${WRITING.length} tasks, A1 to B1`}</span></button>
+    <button class="tile p-sky" data-goto="telefon"><span class="ic">${icon('phone')}</span><b>Sprechen</b><span>${CALLS.length} role-plays</span></button>
   </section>
-  <div class="lvhead"><h3>Spiele</h3><span>quick rounds</span></div>
-  <section class="grid2">
-    <button class="tile p-rose" data-g="blitz"><span class="ic">${icon('zap')}</span><b>der-die-das Blitz</b><span>60 seconds · Sort as many nouns as you can. Best: ${state.best.blitz || 0}</span></button>
-    <button class="tile p-butter" data-g="fall"><span class="ic">${icon('target')}</span><b>Fall-Training</b><span>10 questions · Mixed questions from your lessons, more of what you get wrong</span></button>
-    <button class="tile p-mint" data-g="pron" ${pron.length ? '' : 'disabled'}><span class="ic">${icon('dialog')}</span><b>Pronomen-Duell</b><span>10 questions · ${pron.length ? 'Only pronouns: ich, mich, mir …' : 'Unlocks at lesson 7'}</span></button>
-    <button class="tile p-lilac" data-g="verb"><span class="ic">${icon('timer')}</span><b>Verb-Sprint</b><span>10 questions · Conjugate sein, haben, modal verbs and more</span></button>
+  <h3 class="sechead">Spiele</h3>
+  <section class="glist">
+    <button class="grow" data-g="blitz" style="--gc:var(--t2)"><span class="gi">${icon('zap')}</span><span><b>der-die-das Blitz</b><span>60 seconds of articles${state.best.blitz ? `. Best: ${state.best.blitz}` : ''}</span></span>${icon('chevR')}</button>
+    <button class="grow" data-g="fall" style="--gc:var(--t5)"><span class="gi">${icon('target')}</span><span><b>Fall-Training</b><span>10 questions, more of what you get wrong</span></span>${icon('chevR')}</button>
+    <button class="grow" data-g="pron" style="--gc:var(--t1)" ${pron.length ? '' : 'disabled'}><span class="gi">${icon('dialog')}</span><span><b>Pronomen-Duell</b><span>${pron.length ? 'ich, mich, mir: pronouns only' : 'Unlocks at lesson 7'}</span></span>${icon('chevR')}</button>
+    <button class="grow" data-g="verb" style="--gc:var(--t4)"><span class="gi">${icon('timer')}</span><span><b>Verb-Sprint</b><span>Conjugate sein, haben and the modal verbs</span></span>${icon('chevR')}</button>
   </section>`;
   const wk = document.getElementById('weak');
   if (wk) wk.onclick = () => runQuiz(mixedDrill(10, true), {title:'Schwächen: your weak spots', onDone: render});
@@ -5303,7 +5325,7 @@ function runBlitz(onDone){
 function vTabelle(){
   $main.innerHTML = `
   <section class="card intro">
-    <h2>Die <span class="hl">Tabelle</span></h2>
+    <h2>Die Tabelle</h2>
     <p class="muted">Cases at a glance first. Below it, every grammar table from A1 to B1, chapter by chapter, each with how to read it.</p>
     <h4>Step 1 · Ask the question</h4>
     <div class="tablewrap"><table class="ct"><tr><th>ask</th><th>case</th><th>job</th></tr>
@@ -6003,7 +6025,7 @@ function vPruefung(){
         <span style="min-width:0">${esc(t.title)}</span><span class="row" style="gap:6px">${examSets(key).map((x, si) => `<button class="btn ghost" data-teil="${key}:${i}:${si}">Set ${si + 1}</button>`).join('')}${getKey() ? `<button class="btn ghost" data-teil="${key}:${i}:ai">New</button>` : ''}</span></div>`).join('')}${getKey() ? '' : '<p class="muted" style="margin:0">Add a free Gemini key in Settings to get new sets whenever you want.</p>'}</div></details>
     </section>`; };
   $main.innerHTML = `
-  <section class="card"><h2>Prüfung <span class="hl">simulieren</span></h2>
+  <section class="card"><h2>Prüfung simulieren</h2>
     <p class="muted">Four modules, 100 points each. You pass a module with 60 points, and you can take the modules separately. Practise here in the real format: same parts, same question types, same time limits. Each set is a complete practice exam.</p>
     ${hist.length ? `<h4>Your results</h4><div class="hist">${hist.map(h => `<div><span>${esc(h.d)} · ${esc(h.m)}</span><span class="${h.s >= 60 ? 'pass' : 'fail'}">${h.s}/100</span></div>`).join('')}</div>` : ''}
   </section>
