@@ -20,9 +20,9 @@
   --panel:#FFFFFF; --panel2:#F2F2F6; --line:#E4E4EB; --ink:#17171F; --muted:#636373; --faint:#9C9CAB;
   --accent:#7B5CFA; --accent-fill:#6A45F2; --accent-ink:#5A36E0; --accent-soft:#EFEBFF; --on-accent:#FFFFFF;
   --cta:#1D1D27; --cta-edge:#000000; --on-cta:#FFFFFF;
-  --go:#21B95A; --go-edge:#16904A; --on-go:#FFFFFF; --lime:#E2EA6A; --lime-edge:#B5BD3B; --on-lime:#2A1150;
+  --go:#21B95A; --go-edge:#16904A; --on-go:#FFFFFF; --lime:#F9CF46; --lime-edge:#D4A514; --on-lime:#2A1150;
   --sun:#F9CF46; --sun-soft:#FFF6D6; --ring3:#188A7E; --glow:#EAF8DF;
-  --t1:#157A70; --t2:#BC2A6E; --t3:#2C7D33; --t4:#7B3FE4; --t5:#A9570C; --t6:#2B67D1;
+  --t1:#0F766E; --t2:#C2410C; --t3:#6D28D9; --t4:#86198F; --t5:#57534E; --t6:#6D28D9;
   --p-rose:#FDE7F1; --p-butter:#FFF3D6; --p-mint:#DDF6EF; --p-lilac:#EFEBFF; --p-sky:#E3EEFE;
   --der:#2563EB; --die:#C2185B; --das:#15803D;
   --ok:#15803D; --okbg:#DCFCE7; --bad:#DC2626; --badbg:#FEE2E2;
@@ -36,8 +36,8 @@
   --accent:#E2EA6A; --accent-fill:#E2EA6A; --accent-ink:#E9EF8C; --accent-soft:#5C3696; --on-accent:#2A1150;
   --cta:#E2EA6A; --cta-edge:#B4BB3A; --on-cta:#2A1150;
   --go:#34D399; --go-edge:#109C74; --on-go:#0B2A1E; --lime:#E2EA6A; --lime-edge:#B4BB3A; --on-lime:#2A1150;
-  --sun:#F9CF46; --sun-soft:#5A3A84; --ring3:#5FD3C6; --glow:#5A3A8A;
-  --t1:#157A70; --t2:#CC3379; --t3:#2C7D33; --t4:#8E52F0; --t5:#A9570C; --t6:#2B67D1;
+  --sun:#E2EA6A; --sun-soft:#5A3A84; --ring3:#5FD3C6; --glow:#5A3A8A;
+  --t1:#0F766E; --t2:#C2410C; --t3:#7C3AED; --t4:#A21CAF; --t5:#57534E; --t6:#7C3AED;
   --p-rose:#5E2F7C; --p-butter:#5E3F76; --p-mint:#2E4F7A; --p-lilac:#55348C; --p-sky:#3A3F8C;
   --der:#9DC3FF; --die:#FF8FC4; --das:#7FE3AE;
   --ok:#6EE7A8; --okbg:#1F5240; --bad:#FF9B9B; --badbg:#6A2350;
@@ -50,8 +50,8 @@
   --accent:#E2EA6A; --accent-fill:#E2EA6A; --accent-ink:#E9EF8C; --accent-soft:#5C3696; --on-accent:#2A1150;
   --cta:#E2EA6A; --cta-edge:#B4BB3A; --on-cta:#2A1150;
   --go:#34D399; --go-edge:#109C74; --on-go:#0B2A1E; --lime:#E2EA6A; --lime-edge:#B4BB3A; --on-lime:#2A1150;
-  --sun:#F9CF46; --sun-soft:#5A3A84; --ring3:#5FD3C6; --glow:#5A3A8A;
-  --t1:#157A70; --t2:#CC3379; --t3:#2C7D33; --t4:#8E52F0; --t5:#A9570C; --t6:#2B67D1;
+  --sun:#E2EA6A; --sun-soft:#5A3A84; --ring3:#5FD3C6; --glow:#5A3A8A;
+  --t1:#0F766E; --t2:#C2410C; --t3:#7C3AED; --t4:#A21CAF; --t5:#57534E; --t6:#7C3AED;
   --p-rose:#5E2F7C; --p-butter:#5E3F76; --p-mint:#2E4F7A; --p-lilac:#55348C; --p-sky:#3A3F8C;
   --der:#9DC3FF; --die:#FF8FC4; --das:#7FE3AE;
   --ok:#6EE7A8; --okbg:#1F5240; --bad:#FF9B9B; --badbg:#6A2350;
@@ -534,7 +534,7 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 .topbar{background:transparent;box-shadow:none;padding:8px 4px 4px 6px}
 .tb-title h1{font-size:1.75rem;letter-spacing:-.03em}
 .chip{background:var(--panel);border:1.5px solid var(--line);font:700 .86rem var(--f)}
-.chip.lit svg.i{color:var(--t5)}
+.chip.lit svg.i{color:var(--t2)}
 .iconbtn{background:var(--panel);border:1.5px solid var(--line)}
 .avatar{background:var(--accent-soft);color:var(--accent-ink);border:0;box-shadow:none;font-weight:800}
 .card{border:1px solid var(--line);box-shadow:none}
@@ -561,11 +561,12 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 .tile:hover:not(:disabled){transform:none;filter:brightness(1.04)}
 .tile:active:not(:disabled){transform:translateY(3px)}
 .tile b{font-weight:800}
-.tile.p-rose{background:var(--t2)} .tile.p-butter{background:var(--t5)} .tile.p-mint{background:var(--t1)} .tile.p-lilac{background:var(--t4)} .tile.p-sky{background:var(--t6)}
+.tile.p-rose{background:var(--t2)} .tile.p-butter{background:var(--t5)} .tile.p-mint{background:var(--t1)} .tile.p-lilac{background:var(--t4)} .tile.p-violet{background:var(--t3)} .tile.p-sky{background:var(--t6)}
 .tile[class*="p-"]{color:#fff;box-shadow:0 4px 0 rgba(0,0,0,.2)}
 .tile[class*="p-"] span{color:#fff;opacity:.9}
 .tile[class*="p-"] .ic{background:rgba(255,255,255,.22);color:#fff;box-shadow:none}
-.stage{background:var(--p-rose);border-radius:var(--r-card)}
+/* flashcard stages: one colour that gets stronger towards "Sicher" (pastel pink/blue/green read as die/der/das) */
+.stage,.stage:nth-child(2){background:var(--panel2);border-radius:var(--r-card)} .stage:nth-child(3){background:var(--accent-soft)} .stage:nth-child(4){background:var(--accent-fill);color:var(--on-accent)}
 
 /* the path: every stage has its own colour (--sc) */
 .road div{background:var(--panel2);border-radius:var(--r-card)}
@@ -626,7 +627,7 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 .tick{border:2px solid var(--line)}
 .tick[aria-pressed="true"]{background:var(--go);border-color:var(--go);color:#fff}
 .bt > b{font-weight:700}
-.dstreak svg.i{color:var(--t5)}
+.dstreak svg.i{color:var(--t2)}
 .dstreak b{font-family:var(--f);font-weight:800}
 
 /* quiz: open white canvas, chunky answers, a feedback sheet */
@@ -2886,7 +2887,7 @@ const STAGES = [
   {name:'Wortschatz für Beruf und Alltag', can:'Talk about professions, health, money, the internet, the environment and education.', ids:['b1-wort-berufe','b1-wort-gesundheit','b1-wort-geld','b1-wort-medien','b1-wort-umwelt','b1-wort-bildung']},
 ];
 const stageOf = l => STAGES.find(st => st.ids.includes(l.id));
-const stageColor = st => st ? 'var(--t' + (STAGES.indexOf(st) % 6 + 1) + ')' : 'var(--t4)';
+const stageColor = st => st ? 'var(--t' + (STAGES.indexOf(st) % 5 + 1) + ')' : 'var(--t3)';   // 5 stage colours, cycled
 // ---- the study plan: a day made of blocks that add up to 30, 60 or 120 minutes ----
 const PLAN_MIN = {
   30:  {cards:5, lesson:15, practice:10},
@@ -4558,7 +4559,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = '1a1c09e';  // build.py puts the build number here
+const APP_VERSION = '6f3e150';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -5240,17 +5241,17 @@ function vUeben(){
   </section>
   <h3 class="sechead">Trainieren</h3>
   <section class="ugrid">
-    <button class="tile p-butter" data-goto="karten"><span class="ic">${icon('karten')}</span><b>Karten</b><span>${due ? `${due} due today` : `${Object.keys(state.cards).length} words`}</span></button>
+    <button class="tile p-rose" data-goto="karten"><span class="ic">${icon('karten')}</span><b>Karten</b><span>${due ? `${due} due today` : `${Object.keys(state.cards).length} words`}</span></button>
     <button class="tile p-mint" data-goto="lesen"><span class="ic">${icon('lesen')}</span><b>Lesen</b><span>${nr ? `Next: ${esc(nr.title)}` : 'All texts read'}</span></button>
-    <button class="tile p-lilac" data-goto="schreiben"><span class="ic">${icon('schreiben')}</span><b>Schreiben</b><span>${wdone ? `${wdone} of ${WRITING.length} written` : `${WRITING.length} tasks, A1 to B1`}</span></button>
-    <button class="tile p-sky" data-goto="telefon"><span class="ic">${icon('phone')}</span><b>Sprechen</b><span>${CALLS.length} role-plays</span></button>
+    <button class="tile p-violet" data-goto="schreiben"><span class="ic">${icon('schreiben')}</span><b>Schreiben</b><span>${wdone ? `${wdone} of ${WRITING.length} written` : `${WRITING.length} tasks, A1 to B1`}</span></button>
+    <button class="tile p-lilac" data-goto="telefon"><span class="ic">${icon('phone')}</span><b>Sprechen</b><span>${CALLS.length} role-plays</span></button>
   </section>
   <h3 class="sechead">Spiele</h3>
   <section class="glist">
-    <button class="grow" data-g="blitz" style="--gc:var(--t2)"><span class="gi">${icon('zap')}</span><span><b>der-die-das Blitz</b><span>60 seconds of articles${state.best.blitz ? `. Best: ${state.best.blitz}` : ''}</span></span>${icon('chevR')}</button>
-    <button class="grow" data-g="fall" style="--gc:var(--t5)"><span class="gi">${icon('target')}</span><span><b>Fall-Training</b><span>10 questions, more of what you get wrong</span></span>${icon('chevR')}</button>
+    <button class="grow" data-g="blitz" style="--gc:var(--t5)"><span class="gi">${icon('zap')}</span><span><b>der-die-das Blitz</b><span>60 seconds of articles${state.best.blitz ? `. Best: ${state.best.blitz}` : ''}</span></span>${icon('chevR')}</button>
+    <button class="grow" data-g="fall" style="--gc:var(--t2)"><span class="gi">${icon('target')}</span><span><b>Fall-Training</b><span>10 questions, more of what you get wrong</span></span>${icon('chevR')}</button>
     <button class="grow" data-g="pron" style="--gc:var(--t1)" ${pron.length ? '' : 'disabled'}><span class="gi">${icon('dialog')}</span><span><b>Pronomen-Duell</b><span>${pron.length ? 'ich, mich, mir: pronouns only' : 'Unlocks at lesson 7'}</span></span>${icon('chevR')}</button>
-    <button class="grow" data-g="verb" style="--gc:var(--t4)"><span class="gi">${icon('timer')}</span><span><b>Verb-Sprint</b><span>Conjugate sein, haben and the modal verbs</span></span>${icon('chevR')}</button>
+    <button class="grow" data-g="verb" style="--gc:var(--t3)"><span class="gi">${icon('timer')}</span><span><b>Verb-Sprint</b><span>Conjugate sein, haben and the modal verbs</span></span>${icon('chevR')}</button>
   </section>`;
   const wk = document.getElementById('weak');
   if (wk) wk.onclick = () => runQuiz(mixedDrill(10, true), {title:'Schwächen: your weak spots', onDone: render});
