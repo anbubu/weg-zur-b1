@@ -721,6 +721,7 @@ h4{font-weight:700;letter-spacing:-.01em;text-transform:none;font-size:.95rem;co
 .gtnav{display:flex;flex-wrap:wrap;gap:6px}.gtnav button{border:0;background:var(--panel2);color:var(--ink);border-radius:999px;padding:7px 12px;font:600 .82rem var(--f);cursor:pointer}
 .gtch summary{cursor:pointer;list-style:none;display:flex;flex-direction:column;gap:3px}.gtch summary::-webkit-details-marker{display:none}.gtch summary h3{margin:0}.gtch summary h3::after{content:' +';color:var(--muted)}.gtch[open] summary h3::after{content:' −'}
 .gtt{border-top:1px solid var(--line);padding-top:14px;margin-top:14px}.gtread{margin:8px 0;padding-left:18px;color:var(--muted);font-size:.92rem}.gtread li{margin:4px 0}.gtread b{color:var(--ink)}
+.b1list{display:flex;flex-direction:column;gap:2px;margin-top:10px}.b1row{display:flex;align-items:center;gap:12px;padding:10px 4px;border-top:1px solid var(--line)}.b1row>div{flex:1;min-width:0;display:flex;flex-direction:column;gap:4px}.b1row b{font-size:.95rem}.b1row span{font-size:.8rem;color:var(--muted)}.b1row .tbar{height:6px}.b1row .btn{padding:9px 14px;font-size:.86rem;flex:none}
 .tdeck .row{gap:6px}.tdeck .btn{padding:9px 14px;font-size:.86rem}
 .tdeck{display:flex;flex-direction:column;gap:8px;background:var(--panel2);border-radius:var(--r-card);padding:14px}
 .tbar{position:relative;height:8px;border-radius:99px;background:var(--line);overflow:hidden}.tbar i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:var(--accent-soft)}.tbar i.well{background:var(--go)}
@@ -1842,11 +1843,11 @@ function hintWords(){
   const fin = new Set([...AUX.h, ...AUX.s, 'war','warst','waren','wart','hatte','hattest','hatten','wird','wirst','werde','gibt','kann','kannst','muss','musst','will','willst','möchte','möchtest','darf','darfst','soll','sollst','konnte','musste','wollte','durfte','sollte','würde','könnte','hätte','wäre']);
   for (const k in VERBS) for (const f of VERBS[k].f) if (f !== k) fin.add(f);
   fin.delete('haben');
-  const stop = new Set(['leid','recht','schuld','morgen','abend','mittag','angst','deutsch','englisch','arabisch','französisch','türkisch','spanisch','italienisch','kosten','paar','laut','fest','klasse','ernst','wert','reich','spitze','weg','schade','gern','gerne','rund','mehr','post','brutto','netto','plus','minus','online','okay','grad','alter','jugendliche','erwachsene','bekannte','verwandte','liebe','laden','viertel']);
+  const stop = new Set(['sucht','junge','alte','kranke','deutsche','fremde','leid','recht','schuld','morgen','abend','mittag','angst','deutsch','englisch','arabisch','französisch','türkisch','spanisch','italienisch','kosten','paar','laut','fest','klasse','ernst','wert','reich','spitze','weg','schade','gern','gerne','rund','mehr','post','brutto','netto','plus','minus','online','okay','grad','alter','jugendliche','erwachsene','bekannte','verwandte','liebe','laden','viertel']);
   const nouns = new Set(VOCAB.filter(v => ['m','f','n','pl'].includes(v.g) && /^[A-ZÄÖÜ][a-zäöüß]{3,}$/.test(v.de)).map(v => v.de.toLowerCase()).filter(n => !inf.has(n) && !stop.has(n)));
   const genders = new Map();
   for (const v of VOCAB){
-    if (!['m','f','n','pl'].includes(v.g) || !/^[A-ZÄÖÜ][a-zäöüß]{2,}$/.test(v.de)) continue;
+    if (!['m','f','n','pl'].includes(v.g) || !/^[A-ZÄÖÜ][a-zäöüß]{2,}$/.test(v.de) || ADJ_NOUNS.has(v.de)) continue;
     const g = genders.get(v.de) || new Set(); g.add(v.g);
     if ((v.g === 'm' || v.g === 'n') && /(er|el|en|chen|lein)$/.test(v.de)) g.add('pl');
     genders.set(v.de, g);
@@ -1854,6 +1855,7 @@ function hintWords(){
   return hintSets = {inf, fin, nouns, genders};
 }
 const SUB_CONJ = 'weil|dass|wenn|ob|obwohl|bevor|nachdem|damit';
+const ADJ_NOUNS = new Set(['Deutsche','Kranke','Tote','Beamte','Angestellte','Angehörige','Erwachsene','Bekannte','Verwandte','Jugendliche','Studierende','Reisende','Arbeitslose','Band','Teil','Blog','Poster']);
 // Article forms -> the genders they can stand with in some case (m, f, n, p = plural), and the family that suggests the right form.
 const ARTS = (() => {
   const t = {der:['mfp','def'], die:['fp','def'], das:['n','def'], den:['mp','def'], dem:['mn','def'], des:['mn','def'],
@@ -1872,7 +1874,7 @@ const ART_FORMS = {def:{m:'der/den/dem', f:'die/der', n:'das/dem', pl:'die/den'}
   zu:{m:'zum', f:'zur', n:'zum'}, in:{m:'im/in den', f:'in der/in die', n:'im/ins'}, an:{m:'am', f:'an der', n:'am'}, von:{m:'vom', f:'von der', n:'vom'}, bei:{m:'beim', f:'bei der', n:'beim'}};
 const artForms = (fam, g) => (ART_FORMS[fam] ?ART_FORMS[fam][g] : ({m:`${fam}/${fam}en/${fam}em`, f:`${fam}e/${fam}er`, n:`${fam}/${fam}em`, pl:`${fam}e/${fam}en`})[g].replace(/^eur\//, 'euer/')) || ART_FORMS.def[g];
 const AFTER_INF = /^\s+(kann|kannst|muss|musst|will|willst|möchte|möchtest|darf|darfst|soll|sollst|werde|wirst|würde|würdest|könnte|könntest|sollte|solltest|konnte|musste|wollte|durfte|lassen|gehen)\b/i;
-const MODAL_BEFORE = /\b(kann|kannst|muss|musst|will|willst|möchte|möchtest|darf|darfst|soll|sollst|werde|wirst|würde|würdest|könnte|könntest|sollte|solltest|konnte|konntest|musste|wollte|habe|hast|bin|bist|lass|lässt)\b/i;
+const MODAL_BEFORE = /\b(gehe|gehst|geht|ging|gingst|gingen|bleibe|bleibst|bleibt|blieb|fahre|fährst|fährt|fuhr|lerne|lernst|lernt|kann|kannst|muss|musst|will|willst|möchte|möchtest|darf|darfst|soll|sollst|werde|wirst|würde|würdest|könnte|könntest|sollte|solltest|konnte|konntest|musste|wollte|habe|hast|bin|bist|lass|lässt)\b/i;
 function grammarHints(text){
   const t = String(text || ''), {inf, fin, nouns, genders} = hintWords(), out = [], seen = new Set();
   const add = (frag, msg) => { frag = frag.trim().replace(/\s+/g, ' '); if (!seen.has(frag)){ seen.add(frag); out.push({frag, msg}); } };
@@ -3933,6 +3935,1821 @@ const TOP100 = {verben:[], nomen:[]};
   }
   Object.assign(THEMES, {topv:'Top 100 Verben', topn:'Top 100 Nomen'});
 }
+// ---- Goethe B1 Wortschatz: the words of the official B1 word list that the lessons don't teach yet (added 2026-10-05) ----
+// The list was used as a checklist only: the English meanings and the topic decks are this app's own. Nouns carry the plural,
+// verbs the er-form, Präteritum and Perfekt from the list. Format: deck|word|English|gender|forms.
+const B1_DECKS = [["beruf1", "Arbeit & Beruf 1", 54], ["beruf2", "Arbeit & Beruf 2", 54], ["lernen1", "Schule, Kurs & Prüfung 1", 48], ["lernen2", "Schule, Kurs & Prüfung 2", 48], ["amt", "Ämter, Recht & Politik", 69], ["wohnen1", "Wohnen & Haushalt 1", 46], ["wohnen2", "Wohnen & Haushalt 2", 46], ["geld", "Einkaufen, Geld & Post", 49], ["essen", "Essen & Trinken", 64], ["gesund", "Körper & Gesundheit", 59], ["natur", "Natur, Tiere & Wetter", 45], ["reisen", "Reisen & Verkehr", 72], ["freizeit1", "Freizeit, Sport & Kultur 1", 50], ["freizeit2", "Freizeit, Sport & Kultur 2", 49], ["medien", "Medien & Technik", 64], ["reden1", "Sprechen & Meinungen 1", 45], ["reden2", "Sprechen & Meinungen 2", 44], ["leute1", "Menschen & Gefühle 1", 41], ["leute2", "Menschen & Gefühle 2", 40], ["welt1", "Gesellschaft & Umwelt 1", 41], ["welt2", "Gesellschaft & Umwelt 2", 41], ["zeitort", "Zeit, Ort & Maße", 32], ["v1", "Verben 1", 73], ["v2", "Verben 2", 73], ["v3", "Verben 3", 71], ["adj1", "Adjektive 1", 74], ["adj2", "Adjektive 2", 74], ["adj3", "Adjektive 3", 74], ["adj4", "Adjektive 4", 74], ["klein1", "Kleine Wörter 1", 63], ["klein2", "Kleine Wörter 2", 63], ["klein3", "Kleine Wörter 3", 63]];
+const B1_WORDS = `beruf1|ablehnen|to reject, to turn down||lehnt ab · lehnte ab · hat abgelehnt
+beruf1|abmachen|to agree, to arrange||macht ab · machte ab · hat abgemacht
+beruf1|abschreiben|to copy (out)||schreibt ab · schrieb ab · hat abgeschrieben
+beruf1|Abteilung|department|f|Plural: die Abteilungen
+beruf1|Angestellte|employee (female)|f|Plural: die Angestellten
+beruf1|anstellen|to employ, to queue||stellt an · stellte an · hat angestellt
+beruf1|Arbeiter|worker|m|Plural: die Arbeiter
+beruf1|Arbeitserlaubnis|work permit|f|
+beruf1|Arbeitsstelle|job, workplace|f|Plural: die Arbeitsstellen
+beruf1|Architekt|architect|m|Plural: die Architekten
+beruf1|Aushilfe|temporary help, temp|f|Plural: die Aushilfen
+beruf1|Bauer|farmer|m|Plural: die Bauern
+beruf1|Baustelle|construction site|f|Plural: die Baustellen
+beruf1|beantragen|to apply for||beantragt · beantragte · hat beantragt
+beruf1|beraten|to advise||berät · beriet · hat beraten
+beruf1|Beratung|advice, counselling|f|
+beruf1|Bereich|area, field|m|Plural: die Bereiche
+beruf1|Beschäftigung|employment, occupation|f|
+beruf1|Besprechung|meeting|f|Plural: die Besprechungen
+beruf1|betreuen|to look after||betreut · betreute · hat betreut
+beruf1|Betreuer|carer, supervisor|m|Plural: die Betreuer
+beruf1|Betreuung|care, supervision|f|
+beruf1|Betriebsrätin|works council member (female)|f|Plural: die Betriebsrätinnen
+beruf1|Büro|office|n|Plural: die Büros
+beruf1|Chance|chance|f|Plural: die Chancen
+beruf1|checken|to check||
+beruf1|Dienst|service, duty|m|
+beruf1|Direktor|director, head|m|Plural: die Direktoren
+beruf1|einsetzen|to use, to insert||setzt ein · setzte ein · hat eingesetzt
+beruf1|entlassen|to dismiss||entlässt · entließ · hat entlassen
+beruf1|Entlassung|dismissal|f|Plural: die Entlassungen
+beruf1|Experte|expert|m|Plural: die Experten
+beruf1|Export|export|m|Plural: die Exporte
+beruf1|Fabrik|factory|f|Plural: die Fabriken
+beruf1|Fachfrau|expert (female)|f|Plural: die Fachfrauen
+beruf1|Fachleute|experts|pl|
+beruf1|Fachmann|expert, specialist|m|
+beruf1|Feuerwehr|fire brigade|f|Plural: die Feuerwehren
+beruf1|Fortbildung|further training|f|Plural: die Fortbildungen
+beruf1|Fähigkeit|ability, skill|f|Plural: die Fähigkeiten
+beruf1|Führung|guided tour, leadership|f|Plural: die Führungen
+beruf1|Gewerkschaft|trade union|f|Plural: die Gewerkschaften
+beruf1|Gold|gold|n|
+beruf1|Handel|trade|m|
+beruf1|Hausfrau|housewife|f|
+beruf1|Herausforderung|challenge|f|Plural: die Herausforderungen
+beruf1|Hersteller|manufacturer|m|Plural: die Hersteller
+beruf1|Holz|wood|n|
+beruf1|Händler|dealer, trader|m|Plural: die Händler
+beruf1|Import|import|m|Plural: die Importe
+beruf1|Ingenieur|engineer|m|Plural: die Ingenieure
+beruf1|Job|job|m|
+beruf1|jobben|to do odd jobs||
+beruf1|Kantine|canteen|f|Plural: die Kantinen
+beruf2|Karriere|career|f|Plural: die Karrieren
+beruf2|Konferenz|conference|f|Plural: die Konferenzen
+beruf2|Konkurrenz|competition|f|
+beruf2|Kontakt|contact|m|Plural: die Kontakte
+beruf2|Kunststoff|plastic (material)|m|Plural: die Kunststoffe
+beruf2|Lager|warehouse, storage|n|Plural: die Lager
+beruf2|Landwirtschaft|agriculture|f|
+beruf2|Leder|leather|n|
+beruf2|Lehre|apprenticeship|f|
+beruf2|Lehrling|apprentice|m|Plural: die Lehrlinge
+beruf2|Lehrstelle|apprenticeship place|f|Plural: die Lehrstellen
+beruf2|leisten|to achieve, to afford||leistet · leistete · hat geleistet
+beruf2|Leistung|performance, achievement|f|Plural: die Leistungen
+beruf2|leiten|to lead, to manage||leitet · leitete · hat geleitet
+beruf2|Leiter|manager, leader|m|Plural: die Leiter
+beruf2|Manager|manager|m|
+beruf2|Material|material|n|
+beruf2|Mechaniker|mechanic|m|Plural: die Mechaniker
+beruf2|Messe|trade fair|f|Plural: die Messen
+beruf2|Metall|metal|n|Plural: die Metalle
+beruf2|Metzger|butcher|m|
+beruf2|Mitarbeiter|employee, colleague|m|Plural: die Mitarbeiter
+beruf2|Nachwuchs|new generation, young talent|m|
+beruf2|Personal|staff, personnel|n|
+beruf2|Plastik|plastic|n|
+beruf2|Praktikant|intern|m|Plural: die Praktikanten
+beruf2|Praxis|practice (doctor's), experience|f|
+beruf2|Produkt|product|n|Plural: die Produkte
+beruf2|Produktion|production|f|
+beruf2|produzieren|to produce||produziert · produzierte · hat produziert
+beruf2|Profi|professional, pro|m|Plural: die Profis
+beruf2|Projekt|project|n|Plural: die Projekte
+beruf2|Qualifikation|qualification|f|Plural: die Qualifikationen
+beruf2|Sekretär|secretary|m|Plural: die Sekretäre
+beruf2|Service|service|m|
+beruf2|Sozialarbeiter|social worker|m|Plural: die Sozialarbeiter
+beruf2|Spezialist|specialist|m|Plural: die Spezialisten
+beruf2|Stoff|fabric, material|m|Plural: die Stoffe
+beruf2|Streik|strike|m|Plural: die Streiks
+beruf2|streiken|to strike||streikt · streikte · hat gestreikt
+beruf2|Team|team|n|
+beruf2|Tätigkeit|activity, job|f|Plural: die Tätigkeiten
+beruf2|Unternehmer|entrepreneur|m|Plural: die Unternehmer
+beruf2|unterrichten|to teach||unterrichtet · unterrichtete · hat unterrichtet
+beruf2|Vermittlung|placement, agency|f|Plural: die Vermittlungen
+beruf2|vertreten|to represent, to stand in for||vertritt · vertrat · hat vertreten
+beruf2|Vertreter|representative|m|Plural: die Vertreter
+beruf2|Vertretung|substitute, representation|f|Plural: die Vertretungen
+beruf2|Verwaltung|administration|f|Plural: die Verwaltungen
+beruf2|Werk|plant, works|n|Plural: die Werke
+beruf2|Werkstatt|workshop, garage|f|Plural: die Werkstätten
+beruf2|Wirtschaft|economy|f|
+beruf2|Wolle|wool|f|
+beruf2|Zusammenarbeit|cooperation|f|
+lernen1|Abbildung|illustration, picture|f|Plural: die Abbildungen
+lernen1|Abschnitt|section, paragraph|m|Plural: die Abschnitte
+lernen1|Alphabet|alphabet|n|Plural: die Alphabete
+lernen1|ankreuzen|to tick (a box)||
+lernen1|Antwortbogen|answer sheet|m|
+lernen1|Aufgabe|task, exercise|f|Plural: die Aufgaben
+lernen1|aufschreiben|to write down||
+lernen1|Aussage|statement|f|
+lernen1|Aussprache|pronunciation|f|
+lernen1|aussprechen|to pronounce||spricht aus · sprach aus · hat ausgesprochen
+lernen1|Bibliothek|library|f|Plural: die Bibliotheken
+lernen1|Biologie|biology|f|
+lernen1|Blatt|sheet, leaf|n|Plural: die Blätter
+lernen1|Bleistift|pencil|m|Plural: die Bleistifte
+lernen1|Bogen|sheet (of paper), arc|m|Plural: die Bogen
+lernen1|Buchstabe|letter (of the alphabet)|m|Plural: die Buchstaben
+lernen1|Diplom|diploma|n|Plural: die Diplome
+lernen1|Einführung|introduction|f|Plural: die Einführungen
+lernen1|Einleitung|introduction|f|
+lernen1|Erziehung|upbringing, education|f|
+lernen1|Fehler|mistake|m|Plural: die Fehler
+lernen1|Folie|slide (presentation)|f|
+lernen1|Forschung|research|f|Plural: die Forschungen
+lernen1|Fremdsprache|foreign language|f|Plural: die Fremdsprachen
+lernen1|Grafik|graph, graphic|f|Plural: die Grafiken
+lernen1|Hilfsmittel|aid, tool|n|
+lernen1|Inhalt|content|m|Plural: die Inhalte
+lernen1|Institut|institute|n|Plural: die Institute
+lernen1|Intelligenz|intelligence|f|
+lernen1|Intensivkurs|intensive course|m|Plural: die Intensivkurse
+lernen1|Kapitel|chapter|n|Plural: die Kapitel
+lernen1|Kindergarten|kindergarten|m|Plural: die Kindergärten
+lernen1|Klasse|class|f|Plural: die Klassen
+lernen1|Klassenarbeit|class test|f|Plural: die Klassenarbeiten
+lernen1|Kommentar|comment|m|
+lernen1|korrigieren|to correct||korrigiert · korrigierte · hat korrigiert
+lernen1|Krippe|nursery, crèche|f|
+lernen1|Kugelschreiber|ballpoint pen|m|Plural: die Kugelschreiber
+lernen1|Kursleiter|course teacher|m|Plural: die Kursleiter
+lernen1|Lerner|learner|m|Plural: die Lerner
+lernen1|Lexikon|encyclopedia|n|Plural: die LexikonLexika
+lernen1|lösen|to solve||löst · löste · hat gelöst
+lernen1|Mappe|folder|f|Plural: die Mappen
+lernen1|markieren|to mark||markiert · markierte · hat markiert
+lernen1|Mensa|university canteen|f|Plural: die Mensas
+lernen1|Methode|method|f|Plural: die Methoden
+lernen1|Mitschüler|classmate|m|
+lernen1|Modell|model|n|Plural: die Modelle
+lernen2|Moderator|presenter|m|
+lernen2|Modul|module|n|
+lernen2|Muttersprache|mother tongue|f|Plural: die Muttersprachen
+lernen2|Nachhilfe|private tutoring|f|Plural: die Nachhilfen
+lernen2|nachschlagen|to look up||schlägt nach · schlug nach · hat nachgeschlagen
+lernen2|Notiz|note|f|Plural: die Notizen
+lernen2|Ordner|folder, binder|m|Plural: die Ordner
+lernen2|Papier|paper|n|Plural: die Papiere
+lernen2|Professor|professor|m|Plural: die Professoren
+lernen2|Präsentation|presentation|f|Plural: die Präsentationen
+lernen2|Punkt|point|m|Plural: die Punkte
+lernen2|Recherche|research (looking things up)|f|Plural: die Recherchen
+lernen2|Referat|presentation, paper|n|Plural: die Referate
+lernen2|Rückmeldung|feedback|f|
+lernen2|Schularbeit|written test|f|
+lernen2|Schüler|pupil, student|m|Plural: die Schüler
+lernen2|Statistik|statistics|f|Plural: die Statistiken
+lernen2|Stift|pen|m|Plural: die Stifte
+lernen2|Struktur|structure|f|
+lernen2|Student|student|m|Plural: die Studenten
+lernen2|Studie|study|f|Plural: die Studien
+lernen2|Studierende|students|pl|
+lernen2|Tabelle|table, chart|f|Plural: die Tabellen
+lernen2|Tafel|board (in class)|f|Plural: die Tafeln
+lernen2|Talent|talent|n|Plural: die Talente
+lernen2|Test|test|m|Plural: die Tests
+lernen2|Text|text|m|Plural: die Texte
+lernen2|Textaufbau|structure of a text|m|
+lernen2|Thema|topic|n|Plural: die Themen
+lernen2|Theorie|theory|f|Plural: die Theorien
+lernen2|Unterricht|lessons, teaching|m|
+lernen2|unterstreichen|to underline||unterstreicht · unterstrich · hat unterstrichen
+lernen2|Vergleich|comparison|m|Plural: die Vergleiche
+lernen2|Versuch|attempt, experiment|m|Plural: die Versuche
+lernen2|Vorbereitung|preparation|f|Plural: die Vorbereitungen
+lernen2|vorlesen|to read aloud||liest vor · las vor · hat vorgelesen
+lernen2|Wissenschaft|science|f|Plural: die Wissenschaften
+lernen2|Wissenschaftler|scientist|m|Plural: die Wissenschaftler
+lernen2|Wörterbuch|dictionary|n|Plural: die Wörterbücher
+lernen2|Zeile|line (of text)|f|Plural: die Zeilen
+lernen2|Zertifikat|certificate|n|Plural: die Zertifikate
+lernen2|zuordnen|to match||
+lernen2|zusammenfassen|to summarise||fasst zusammen · fasste zusammen · hat zusammengefasst
+lernen2|Zweitsprache|second language|f|Plural: die Zweitsprachen
+lernen2|Überschrift|heading, title|f|Plural: die Überschriften
+lernen2|übersetzen|to translate||übersetzt · übersetzte · hat übersetzt
+lernen2|übertragen|to transfer, to broadcast||
+lernen2|Übung|exercise, practice|f|Plural: die Übungen
+amt|Adresse|address|f|Plural: die Adressen
+amt|Anspruch|claim, right|m|Plural: die Ansprüche
+amt|Asyl|asylum|n|
+amt|Aufenthalt|stay, residence|m|Plural: die Aufenthalte
+amt|Behörde|authority, office|f|Plural: die Behörden
+amt|Bescheid|notice, decision|m|Plural: die Bescheide
+amt|Beamte|civil servant|m|Plural: die Beamten
+amt|Beamtin|civil servant (female)|f|Plural: die Beamtinnen
+amt|Botschaft|embassy, message|f|Plural: die Botschaften
+amt|Bund|federation|m|
+amt|Bundeskanzler|Federal Chancellor|m|
+amt|Bundespräsident|Federal President|m|
+amt|Bundestag|German parliament|m|
+amt|Bürgermeister|mayor|m|
+amt|Gemeinde|municipality, community|f|
+amt|Minister|minister|m|
+amt|Parlament|parliament|n|
+amt|Politiker|politician|m|Plural: die Politiker
+amt|Familienstand|marital status|m|
+amt|Familienname|surname|m|Plural: die Familiennamen
+amt|Personalien|personal details|pl|
+amt|Personenstand|civil status|m|
+amt|Gefängnis|prison|n|Plural: die Gefängnisse
+amt|Gericht|court, dish|n|Plural: die Gerichte
+amt|Konsulat|consulate|n|Plural: die Konsulate
+amt|Kriminalpolizei|criminal police|f|
+amt|Polizist|police officer|m|Plural: die Polizisten
+amt|Richter|judge|m|Plural: die Richter
+amt|Strafe|punishment, fine|f|Plural: die Strafen
+amt|Strafzettel|parking ticket|m|Plural: die Strafzettel
+amt|Täter|offender|m|Plural: die Täter
+amt|Urkunde|certificate, document|f|Plural: die Urkunden
+amt|Urteil|verdict, judgement|n|Plural: die Urteile
+amt|Verbot|ban|n|Plural: die Verbote
+amt|Verbrecher|criminal|m|Plural: die Verbrecher
+amt|Verdacht|suspicion|m|
+amt|Vorschrift|rule, regulation|f|Plural: die Vorschriften
+amt|Wohnsitz|place of residence|m|Plural: die Wohnsitze
+amt|Wohnort|place where you live|m|Plural: die Wohnorte
+amt|Zeuge|witness|m|Plural: die Zeugen
+amt|Zoll|customs|m|Plural: die Zölle
+amt|Dieb|thief|m|Plural: die Diebe
+amt|Einbrecher|burglar|m|Plural: die Einbrecher
+amt|Einbruch|burglary|m|Plural: die Einbrüche
+amt|Beweis|proof, evidence|m|Plural: die Beweise
+amt|Anwalt|lawyer|m|Plural: die Anwälte
+amt|Anwältin|lawyer (female)|f|Plural: die Anwältinnen
+amt|Angabe|information, detail|f|Plural: die Angaben
+amt|Erlaubnis|permission|f|
+amt|Kennzeichen|number plate, sign|n|Plural: die Kennzeichen
+amt|Reform|reform|f|Plural: die Reformen
+amt|Rathaus|town hall|n|Plural: die Rathäuser
+amt|Karte|card, map, ticket|f|Plural: die Karten
+amt|Chipkarte|chip card|f|Plural: die Chipkarten
+amt|Plan|plan, map|m|Plural: die Pläne
+amt|Planung|planning|f|Plural: die Planungen
+amt|Rat|advice, council|m|
+amt|bestätigen|to confirm||bestätigt · bestätigte · hat bestätigt
+amt|eintragen|to enter, to register||trägt ein · trug ein · hat eingetragen
+amt|genehmigen|to approve||genehmigt · genehmigte · hat genehmigt
+amt|melden|to report||meldet · meldete · hat gemeldet
+amt|verlängern|to extend||verlängert · verlängerte · hat verlängert
+amt|bestrafen|to punish||bestraft · bestrafte · hat bestraft
+amt|verhaften|to arrest||verhaftet · verhaftete · hat verhaftet
+amt|verurteilen|to sentence, to condemn||verurteilt · verurteilte · hat verurteilt
+amt|betrügen|to cheat, to deceive||betrügt · betrog · hat betrogen
+amt|stehlen|to steal||stiehlt · stahl · hat gestohlen
+amt|einbrechen|to break in||bricht ein · brach ein · ist eingebrochen
+amt|beweisen|to prove||beweist · bewies · hat bewiesen
+wohnen1|Abfall|waste, rubbish|m|Plural: die Abfälle
+wohnen1|Abfalleimer|rubbish bin|m|Plural: die Abfalleimer
+wohnen1|abwaschen|to wash up||wäscht ab · wusch ab · hat abgewaschen
+wohnen1|Altenheim|old people's home|n|Plural: die Altenheime
+wohnen1|Altersheim|old people's home|n|Plural: die Altersheime
+wohnen1|Anlage|facility, system, enclosure|f|Plural: die Anlagen
+wohnen1|Apartment|apartment|n|Plural: die Apartments
+wohnen1|Batterie|battery|f|Plural: die Batterien
+wohnen1|Bewohner|resident|m|Plural: die Bewohner
+wohnen1|Bürste|brush|f|Plural: die Bürsten
+wohnen1|Couch|couch|f|Plural: die Couchs
+wohnen1|Dreck|dirt|m|
+wohnen1|Ecke|corner|f|
+wohnen1|einrichten|to furnish, to set up||richtet ein · richtete ein · hat eingerichtet
+wohnen1|Einrichtung|furniture, facility|f|Plural: die Einrichtungen
+wohnen1|einziehen|to move in||zieht ein · zog ein · ist eingezogen
+wohnen1|entsorgen|to dispose of||entsorgt · entsorgte · hat entsorgt
+wohnen1|Etage|floor, storey|f|Plural: die Etagen
+wohnen1|Feuer|fire|n|
+wohnen1|Feuerzeug|lighter|n|Plural: die Feuerzeuge
+wohnen1|Fleck|stain, spot|m|Plural: die Flecken
+wohnen1|Garderobe|coat rack, cloakroom|f|Plural: die Garderoben
+wohnen1|Gebäude|building|n|Plural: die Gebäude
+wohnen1|Geschirr|dishes, crockery|n|
+wohnen1|gießen|to water, to pour||gießt · goss · gegossen
+wohnen1|Grundstück|plot of land|n|Plural: die Grundstücke
+wohnen1|Hammer|hammer|m|Plural: die Hämmer
+wohnen1|Heim|home (institution)|n|Plural: die Heime
+wohnen1|heizen|to heat||heizt · heizte · hat geheizt
+wohnen1|Hof|yard, courtyard|m|Plural: die Höfe
+wohnen1|Hütte|hut, cabin|f|Plural: die Hütten
+wohnen1|Kanne|jug, pot|f|Plural: die Kannen
+wohnen1|Kasten|box, chest|m|Plural: die Kästen
+wohnen1|Kerze|candle|f|Plural: die Kerzen
+wohnen1|Kirche|church|f|Plural: die Kirchen
+wohnen1|Kiste|box, crate|f|Plural: die Kisten
+wohnen1|Klimaanlage|air conditioning|f|Plural: die Klimaanlagen
+wohnen1|klingeln|to ring (the bell)||klingelt · klingelte · hat geklingelt
+wohnen1|klopfen|to knock||klopft · klopfte · hat geklopft
+wohnen1|Knopf|button|m|Plural: die Knöpfe
+wohnen1|Korridor|corridor|m|Plural: die Korridore
+wohnen1|Kreis|circle, district|m|Plural: die Kreise
+wohnen1|Lift|lift, elevator|m|
+wohnen1|Loch|hole|n|Plural: die Löcher
+wohnen1|Mauer|wall|f|Plural: die Mauern
+wohnen1|mischen|to mix||mischt · mischte · hat gemischt
+wohnen2|Möbelstück|piece of furniture|n|
+wohnen2|Müllabfuhr|rubbish collection|f|
+wohnen2|Nadel|needle|f|Plural: die Nadeln
+wohnen2|Nagel|nail|m|Plural: die Nägel
+wohnen2|Notausgang|emergency exit|m|Plural: die Notausgänge
+wohnen2|Nähe|nearness, vicinity|f|
+wohnen2|nähen|to sew||näht · nähte · hat genäht
+wohnen2|Obergeschoss|upper floor|n|
+wohnen2|Ordnung|order, tidiness|f|
+wohnen2|pflanzen|to plant||pflanzt · pflanzte · hat gepflanzt
+wohnen2|Rasen|lawn|m|Plural: die Rasen
+wohnen2|Raum|room, space|m|Plural: die Räume
+wohnen2|reinigen|to clean||reinigt · reinigte · hat gereinigt
+wohnen2|Reinigung|cleaning, dry cleaner's|f|Plural: die Reinigungen
+wohnen2|Reparatur|repair|f|Plural: die Reparaturen
+wohnen2|Saal|hall|m|Plural: die Säle
+wohnen2|Sack|sack, bag|m|Plural: die Säcke
+wohnen2|Schachtel|box (small)|f|Plural: die Schachteln
+wohnen2|Schatten|shade, shadow|m|Plural: die Schatten
+wohnen2|Schere|scissors|f|Plural: die Scheren
+wohnen2|Schirm|umbrella|m|Plural: die Schirme
+wohnen2|Schmutz|dirt|m|
+wohnen2|Seife|soap|f|Plural: die Seifen
+wohnen2|Sessel|armchair|m|Plural: die Sessel
+wohnen2|Sitz|seat|m|Plural: die Sitze
+wohnen2|Staub|dust|m|
+wohnen2|staubsaugen|to vacuum||staubsaugt · staubsaugte · hat gestaubsaugt
+wohnen2|Streichholz|match|n|Plural: die Streichhölzer
+wohnen2|Taschentuch|tissue, handkerchief|n|Plural: die Taschentücher
+wohnen2|Terrasse|terrace|f|Plural: die Terrassen
+wohnen2|Treppenhaus|stairwell|n|Plural: die Treppenhäuser
+wohnen2|trocknen|to dry||trocknet · trocknete · hat/ist getrocknet
+wohnen2|Tuch|cloth|n|Plural: die Tücher
+wohnen2|Untergeschoss|basement|n|
+wohnen2|Vase|vase|f|Plural: die Vasen
+wohnen2|Vermietung|letting, renting out|f|Plural: die Vermietungen
+wohnen2|Waschmittel|washing powder|n|Plural: die Waschmittel
+wohnen2|Wecker|alarm clock|m|Plural: die Wecker
+wohnen2|Wärme|warmth|f|
+wohnen2|Wäsche|laundry|f|
+wohnen2|Zahnbürste|toothbrush|f|Plural: die Zahnbürsten
+wohnen2|Zahncreme|toothpaste|f|
+wohnen2|Zange|pliers|f|Plural: die Zangen
+wohnen2|Zelt|tent|n|Plural: die Zelte
+wohnen2|Zeug|stuff|n|
+wohnen2|Zuhause|home|n|
+geld|Abo|subscription|n|
+geld|Abonnement|subscription|n|Plural: die Abonnements
+geld|Anbieter|provider|m|Plural: die Anbieter
+geld|Automat|machine (vending, ticket)|m|Plural: die Automaten
+geld|Bankleitzahl|bank sort code|f|Plural: die Bankleitzahlen
+geld|Bedarf|need, demand|m|
+geld|Beleg|receipt|m|Plural: die Belege
+geld|Briefträger|postman|m|
+geld|Briefumschlag|envelope|m|Plural: die Briefumschläge
+geld|Brieftasche|wallet|f|Plural: die Brieftaschen
+geld|Durchschnitt|average|m|Plural: die Durchschnitte
+geld|Einkauf|shopping, purchase|m|Plural: die Einkäufe
+geld|Einkommen|income|n|Plural: die Einkommen
+geld|Einnahme|income, takings|f|Plural: die Einnahmen
+geld|Einzahlung|deposit, payment in|f|Plural: die Einzahlungen
+geld|Ermäßigung|discount|f|Plural: die Ermäßigungen
+geld|Geldbörse|purse, wallet|f|
+geld|Gewinn|profit, prize|m|Plural: die Gewinne
+geld|Katalog|catalogue|m|Plural: die Kataloge
+geld|Kauf|purchase|m|
+geld|Käufer|buyer|m|Plural: die Käufer
+geld|Konsum|consumption|m|
+geld|Nachfrage|demand|f|Plural: die Nachfragen
+geld|Portemonnaie|purse, wallet|n|
+geld|Prospekt|brochure, leaflet|m|Plural: die Prospekte
+geld|Rechner|calculator, computer|m|Plural: die Rechner
+geld|Reklame|advertising|f|Plural: die Reklamen
+geld|Schaufenster|shop window|n|Plural: die Schaufenster
+geld|Summe|sum, amount|f|Plural: die Summen
+geld|Taschengeld|pocket money|n|Plural: die Taschengelder
+geld|Verlust|loss|m|Plural: die Verluste
+geld|Wert|value|m|Plural: die Werte
+geld|Erhöhung|increase|f|Plural: die Erhöhungen
+geld|Flohmarkt|flea market|m|Plural: die Flohmärkte
+geld|Stempel|stamp|m|Plural: die Stempel
+geld|Annonce|advert|f|Plural: die Annoncen
+geld|Anzeige|advert, report|f|Plural: die Anzeigen
+geld|Inserat|advert|n|Plural: die Inserate
+geld|Broschüre|brochure|f|Plural: die Broschüren
+geld|abonnieren|to subscribe||abonniert · abonnierte · hat abonniert
+geld|anschaffen|to buy, to acquire||schafft an · schaffte an · hat angeschafft
+geld|bar|cash||
+geld|besorgen|to get, to buy||besorgt · besorgte · hat besorgt
+geld|buchen|to book||bucht · buchte · hat gebucht
+geld|finanzieren|to finance||finanziert · finanzierte · hat finanziert
+geld|reservieren|to reserve||reserviert · reservierte · hat reserviert
+geld|tauschen|to swap, to exchange||tauscht · tauschte · hat getauscht
+geld|verpacken|to pack||verpackt · verpackte · hat verpackt
+geld|einpacken|to pack, to wrap||packt ein · packte ein · hat eingepackt
+essen|Appetit|appetite|m|
+essen|Aprikose|apricot|f|Plural: die Aprikosen
+essen|Bier|beer|n|
+essen|Birne|pear, light bulb|f|Plural: die Birnen
+essen|Bohne|bean|f|Plural: die Bohnen
+essen|Büchse|tin, can|f|Plural: die Büchsen
+essen|Buffet|buffet|n|Plural: die Buffets
+essen|Cafeteria|cafeteria|f|Plural: die Cafeterias
+essen|Creme|cream|f|Plural: die Cremen
+essen|Dessert|dessert|n|
+essen|Diät|diet|f|
+essen|Essig|vinegar|m|
+essen|Fett|fat|n|
+essen|Frucht|fruit|f|Plural: die Früchte
+essen|Gasthaus|inn|n|
+essen|Gaststätte|restaurant, pub|f|Plural: die Gaststätten
+essen|Gebäck|pastries, biscuits|n|
+essen|Gewürz|spice|n|Plural: die Gewürze
+essen|Grill|grill, barbecue|m|
+essen|Hackfleisch|minced meat|n|
+essen|Hamburger|hamburger|m|
+essen|Honig|honey|m|
+essen|Imbiss|snack bar|m|Plural: die Imbisse
+essen|Kakao|cocoa|m|Plural: die Kakaos
+essen|Kloß|dumpling|m|Plural: die Klöße
+essen|Kneipe|pub, bar|f|Plural: die Kneipen
+essen|Limonade|lemonade|f|Plural: die Limonaden
+essen|Lokal|pub, restaurant|n|Plural: die Lokale
+essen|Margarine|margarine|f|
+essen|Marmelade|jam|f|Plural: die Marmeladen
+essen|Menü|set menu|n|Plural: die Menüs
+essen|Mineralwasser|mineral water|n|
+essen|Möhre|carrot|f|Plural: die Möhren
+essen|Nachspeise|dessert|f|Plural: die Nachspeisen
+essen|Nahrungsmittel|food, foodstuffs|n|Plural: die Nahrungsmittel
+essen|Nudel|noodle, pasta|f|Plural: die Nudeln
+essen|Orange|orange|f|Plural: die Orangen
+essen|Pflaume|plum|f|Plural: die Pflaumen
+essen|Pilz|mushroom|m|Plural: die Pilze
+essen|Pizza|pizza|f|Plural: die Pizzas
+essen|Pommes|chips, fries|pl|
+essen|Portion|portion|f|Plural: die Portionen
+essen|Rind|cow, beef|n|Plural: die Rinder
+essen|Schinken|ham|m|Plural: die Schinken
+essen|Schnitzel|schnitzel|n|Plural: die Schnitzel
+essen|Schokolade|chocolate|f|
+essen|Snack|snack|m|
+essen|Soße|sauce|f|
+essen|Steak|steak|n|
+essen|Torte|cake, gateau|f|Plural: die Torten
+essen|Wein|wine|m|Plural: die Weine
+essen|Zigarette|cigarette|f|Plural: die Zigaretten
+essen|Zutaten|ingredients|pl|
+essen|Ernährung|nutrition, diet|f|
+essen|Ober|waiter|m|Plural: die Ober
+essen|Restaurant|restaurant|n|Plural: die Restaurants
+essen|zubereiten|to prepare (food)||bereitet zu · bereitete zu · hat zubereitet
+essen|probieren|to taste, to try||
+essen|schmecken|to taste||schmeckt · schmeckte · hat geschmeckt
+essen|riechen|to smell||riecht · roch · hat gerochen
+essen|rauchen|to smoke||raucht · rauchte · hat geraucht
+essen|fressen|to eat (animals)||frisst · fraß · hat gefressen
+essen|füttern|to feed||füttert · fütterte · hat gefüttert
+essen|grillieren|to barbecue||
+gesund|Ärztin|doctor (female)|f|Plural: die Ärztinnen
+gesund|Atem|breath|m|
+gesund|Droge|drug|f|Plural: die Drogen
+gesund|Infektion|infection|f|Plural: die Infektionen
+gesund|Klinik|clinic|f|Plural: die Kliniken
+gesund|Krankheit|illness|f|Plural: die Krankheiten
+gesund|Kranke|sick person|m|Plural: die Kranken
+gesund|Krankenpfleger|nurse (male)|m|Plural: die Krankenpfleger
+gesund|Krankenschwester|nurse|f|Plural: die Krankenschwestern
+gesund|Medikament|medicine|n|Plural: die Medikamente
+gesund|Medizin|medicine|f|
+gesund|Muskel|muscle|m|Plural: die Muskeln
+gesund|Nerv|nerve|m|Plural: die Nerven
+gesund|Operation|operation|f|Plural: die Operationen
+gesund|Patient|patient|m|Plural: die Patienten
+gesund|Pfleger|carer, nurse|m|Plural: die Pfleger
+gesund|Pille|pill|f|Plural: die Pillen
+gesund|Schmerzmittel|painkiller|n|Plural: die Schmerzmittel
+gesund|Schwangerschaft|pregnancy|f|Plural: die Schwangerschaften
+gesund|Spritze|injection|f|Plural: die Spritzen
+gesund|Sprechstunde|consulting hours|f|
+gesund|Sucht|addiction|f|Plural: die Süchte
+gesund|Suchtmittel|addictive substance|n|Plural: die Suchtmittel
+gesund|Therapie|therapy|f|Plural: die Therapien
+gesund|Tropfen|drop|pl|
+gesund|Virus|virus|m|Plural: die Viren
+gesund|Vitamin|vitamin|n|Plural: die Vitamine
+gesund|Gesundheit|health|f|
+gesund|Besserung|recovery|f|
+gesund|Erholung|rest, recovery|f|Plural: die Erholungen
+gesund|Notfall|emergency|m|Plural: die Notfälle
+gesund|Opfer|victim|n|Plural: die Opfer
+gesund|Tote|dead person|m|Plural: die Toten
+gesund|Gymnastik|exercises, gymnastics|f|
+gesund|Fitness|fitness|f|
+gesund|Bewegung|movement, exercise|f|Plural: die Bewegungen
+gesund|Frisur|hairstyle|f|Plural: die Frisuren
+gesund|Parfüm|perfume|n|Plural: die Parfüms
+gesund|Gift|poison|n|Plural: die Gifte
+gesund|Schlaf|sleep|m|
+gesund|Stimme|voice|f|Plural: die Stimmen
+gesund|Raucher|smoker|m|Plural: die Raucher
+gesund|Nichtraucher|non-smoker|m|Plural: die Nichtraucher
+gesund|Doktor|doctor|m|Plural: die Doktoren
+gesund|Flüssigkeit|liquid|f|Plural: die Flüssigkeiten
+gesund|abnehmen|to lose weight, to take off||nimmt ab · nahm ab · hat abgenommen
+gesund|zunehmen|to put on weight, to increase||nimmt zu · nahm zu · hat zugenommen
+gesund|sich erkälten|to catch a cold||erkältet sich · erkältete sich · hat sich erkältet
+gesund|operieren|to operate||operiert · operierte · hat operiert
+gesund|untersuchen|to examine||untersucht · untersuchte · hat untersucht
+gesund|verschreiben|to prescribe||verschreibt · verschrieb · hat verschrieben
+gesund|schwitzen|to sweat||schwitzt · schwitzte · hat geschwitzt
+gesund|frieren|to be cold, to freeze||friert · fror · hat gefroren
+gesund|leiden|to suffer||leidet · litt · hat gelitten
+gesund|sterben|to die||stirbt · starb · ist gestorben
+gesund|behandeln|to treat||behandelt · behandelte · hat behandelt
+gesund|pflegen|to care for, to nurse||pflegt · pflegte · hat gepflegt
+gesund|ernähren|to feed, to nourish||ernährt · ernährte · hat ernährt
+gesund|schminken|to put on make-up||schminkt · schminkte · hat geschminkt
+natur|Affe|monkey|m|
+natur|Bär|bear|m|
+natur|Biene|bee|f|
+natur|Elefant|elephant|m|
+natur|Ente|duck|f|
+natur|Fliege|fly|f|
+natur|Giraffe|giraffe|f|
+natur|Hase|hare, rabbit|m|
+natur|Krokodil|crocodile|n|
+natur|Löwe|lion|m|
+natur|Maus|mouse|f|
+natur|Mücke|mosquito|f|
+natur|Pinguin|penguin|m|
+natur|Schildkröte|tortoise, turtle|f|
+natur|Schlange|snake, queue|f|Plural: die Schlangen
+natur|Schwein|pig|n|
+natur|Donner|thunder|m|Plural: die Donner
+natur|Ernte|harvest|f|Plural: die Ernten
+natur|Gebiet|area, region|n|Plural: die Gebiete
+natur|Gebirge|mountains|n|
+natur|Gegend|area, region|f|Plural: die Gegenden
+natur|Mond|moon|m|Plural: die Monde
+natur|Norden|north|m|
+natur|Osten|east|m|
+natur|Süden|south|m|
+natur|Westen|west|m|
+natur|Ozean|ocean|m|Plural: die Ozeane
+natur|Rose|rose|f|Plural: die Rosen
+natur|Sand|sand|m|
+natur|Stern|star|m|Plural: die Sterne
+natur|Sturm|storm|m|Plural: die Stürme
+natur|Ufer|bank, shore|n|Plural: die Ufer
+natur|Wettervorhersage|weather forecast|f|Plural: die Wettervorhersagen
+natur|Tierpark|zoo, animal park|m|Plural: die Tierparks
+natur|Zoo|zoo|m|Plural: die Zoos
+natur|Region|region|f|Plural: die Regionen
+natur|Umgebung|surroundings|f|Plural: die Umgebungen
+natur|Gas|gas|n|
+natur|blitzen|to flash (lightning)||blitzt · blitzte · hat geblitzt
+natur|blühen|to bloom||blüht · blühte · hat geblüht
+natur|donnern|to thunder||donnert · donnerte · hat gedonnert
+natur|hageln|to hail||hagelt · hagelte · hat gehagelt
+natur|regnen|to rain||es regnet · es regnete · es hat geregnet
+natur|schneien|to snow||es schneit · es schneite · es hat geschneit
+natur|wachsen|to grow||wächst · wuchs · ist gewachsen
+reisen|Kfz|motor vehicle|n|
+reisen|Lkw|lorry, truck|m|
+reisen|Pkw|car|m|
+reisen|Camp|camp|n|
+reisen|Tour|tour|f|
+reisen|Ausfahrt|exit (motorway, garage)|f|Plural: die Ausfahrten
+reisen|Autobahn|motorway|f|Plural: die Autobahnen
+reisen|Bahn|railway, train|f|Plural: die Bahnen
+reisen|Bremse|brake|f|Plural: die Bremsen
+reisen|Boot|boat|n|Plural: die Boote
+reisen|Brücke|bridge|f|Plural: die Brücken
+reisen|Distanz|distance|f|Plural: die Distanzen
+reisen|Einbahnstraße|one-way street|f|Plural: die Einbahnstraßen
+reisen|Einfahrt|entrance (for vehicles)|f|Plural: die Einfahrten
+reisen|Eisenbahn|railway|f|Plural: die Eisenbahnen
+reisen|Entfernung|distance|f|Plural: die Entfernungen
+reisen|Fahrbahn|road, carriageway|f|Plural: die Fahrbahnen
+reisen|Fahrzeug|vehicle|n|Plural: die Fahrzeuge
+reisen|Flugzeug|aeroplane|n|Plural: die Flugzeuge
+reisen|Fundbüro|lost property office|n|Plural: die Fundbüros
+reisen|Fußgänger|pedestrian|m|Plural: die Fußgänger
+reisen|Fußgängerzone|pedestrian zone|f|Plural: die Fußgängerzonen
+reisen|Hafen|port, harbour|m|Plural: die Häfen
+reisen|Halbpension|half board|f|
+reisen|Hallenbad|indoor pool|n|Plural: die Hallenbäder
+reisen|Hauptbahnhof|main station|m|Plural: die Hauptbahnhöfe
+reisen|Kabine|cabin|f|Plural: die Kabinen
+reisen|Kraftfahrzeug|motor vehicle|n|Plural: die Kraftfahrzeuge
+reisen|Kurve|bend, curve|f|Plural: die Kurven
+reisen|Landung|landing|f|Plural: die Landungen
+reisen|Laster|lorry|m|Plural: die Laster
+reisen|Linie|line|f|Plural: die Linien
+reisen|Motor|engine|m|Plural: die Motoren
+reisen|Motorrad|motorbike|n|Plural: die Motorräder
+reisen|Panne|breakdown|f|Plural: die Pannen
+reisen|Pass|passport|m|Plural: die Pässe
+reisen|Passagier|passenger|m|Plural: die Passagiere
+reisen|Pension|guesthouse, pension|f|Plural: die Pensionen
+reisen|Rad|wheel, bike|n|Plural: die Räder
+reisen|Radfahrer|cyclist|m|Plural: die Radfahrer
+reisen|Reifen|tyre|m|Plural: die Reifen
+reisen|Reisebüro|travel agency|n|Plural: die Reisebüros
+reisen|Rückfahrt|return journey|f|Plural: die Rückfahrten
+reisen|Rückkehr|return|f|
+reisen|Rundfahrt|round trip, tour|f|Plural: die Rundfahrten
+reisen|Saison|season|f|Plural: die Saisons
+reisen|Souvenir|souvenir|n|Plural: die Souvenirs
+reisen|Speisewagen|dining car|m|Plural: die Speisewagen
+reisen|Station|station, stop|f|Plural: die Stationen
+reisen|Steward|steward|m|Plural: die Stewards
+reisen|Stewardess|flight attendant|f|Plural: die Stewardessen
+reisen|Strecke|route, distance|f|Plural: die Strecken
+reisen|Tourismus|tourism|m|
+reisen|Tourist|tourist|m|Plural: die Touristen
+reisen|Transport|transport|m|Plural: die Transporte
+reisen|Übernachtung|overnight stay|f|Plural: die Übernachtungen
+reisen|Verkehrsmittel|means of transport|n|Plural: die Verkehrsmittel
+reisen|Verkehrszeichen|road sign|n|Plural: die Verkehrszeichen
+reisen|Vorfahrt|right of way|f|
+reisen|Wagen|car, carriage|m|Plural: die Wagen
+reisen|Heimat|home, homeland|f|
+reisen|Heimweh|homesickness|n|
+reisen|anschnallen|to fasten (seatbelt)||schnallt an · schnallte an · hat angeschnallt
+reisen|bremsen|to brake||bremst · bremste · hat gebremst
+reisen|hupen|to honk||hupt · hupte · hat gehupt
+reisen|landen|to land||landet · landete · ist gelandet
+reisen|losfahren|to set off||fährt los · fuhr los · ist losgefahren
+reisen|tanken|to fill up (petrol)||tankt · tankte · hat getankt
+reisen|überholen|to overtake||überholt · überholte · hat überholt
+reisen|überfahren|to run over||überfährt · überfuhr · hat überfahren
+reisen|besichtigen|to visit, to see (sights)||besichtigt · besichtigte · hat besichtigt
+reisen|transportieren|to transport||transportiert · transportierte · hat transportiert
+freizeit1|Abenteuer|adventure|n|Plural: die Abenteuer
+freizeit1|Anzug|suit|m|Plural: die Anzüge
+freizeit1|Aufnahme|recording, admission|f|Plural: die Aufnahmen
+freizeit1|Auftritt|performance, appearance|m|Plural: die Auftritte
+freizeit1|Babysitter|babysitter|m|
+freizeit1|baden|to bathe, to swim||badet · badete · hat gebadet
+freizeit1|Ball|ball|m|Plural: die Bälle
+freizeit1|Ballett|ballet|n|Plural: die Ballette
+freizeit1|Band|band|f|
+freizeit1|Bar|bar|f|Plural: die Bars
+freizeit1|Basketball|basketball|m|Plural: die Basketbälle
+freizeit1|basteln|to do crafts||bastelt · bastelte · hat gebastelt
+freizeit1|Bikini|bikini|m|
+freizeit1|Bluse|blouse|f|Plural: die Blusen
+freizeit1|Burg|castle|f|Plural: die Burgen
+freizeit1|Bühne|stage|f|Plural: die Bühnen
+freizeit1|campen|to camp||
+freizeit1|Castingshow|talent show|f|
+freizeit1|Club|club|m|
+freizeit1|Denkmal|monument|n|Plural: die Denkmäler
+freizeit1|Diskothek|disco|f|Plural: die Diskotheken
+freizeit1|Fan|fan|m|
+freizeit1|Fasching|carnival|m|Plural: die Fasching
+freizeit1|faulenzen|to laze around||faulenzt · faulenzte · hat gefaulenzt
+freizeit1|feiern|to celebrate, to party||feiert · feierte · hat gefeiert
+freizeit1|Fest|festival, party|n|Plural: die Feste
+freizeit1|Figur|figure|f|Plural: die Figuren
+freizeit1|Flöte|flute|f|Plural: die Flöten
+freizeit1|Fotoapparat|camera|m|Plural: die Fotoapparate
+freizeit1|Fotograf|photographer|m|Plural: die Fotografen
+freizeit1|Fotografie|photography|f|Plural: die Fotografien
+freizeit1|Galerie|gallery|f|Plural: die Galerien
+freizeit1|Gegner|opponent|m|Plural: die Gegner
+freizeit1|grillen|to barbecue||grillt · grillte · hat gegrillt (D
+freizeit1|Hit|hit (song)|m|
+freizeit1|Hut|hat|m|Plural: die Hüte
+freizeit1|Instrument|instrument|n|Plural: die Instrumente
+freizeit1|Jazz|jazz|m|
+freizeit1|Jeans|jeans|f|
+freizeit1|joggen|to jog||
+freizeit1|Kamera|camera|f|Plural: die Kameras
+freizeit1|Karneval|carnival|m|Plural: die Karnevals
+freizeit1|Kette|necklace, chain|f|Plural: die Ketten
+freizeit1|Klavier|piano|n|Plural: die Klaviere
+freizeit1|klettern|to climb||klettert · kletterte · ist geklettert
+freizeit1|Kostüm|costume|n|Plural: die Kostüme
+freizeit1|Krimi|crime story|m|Plural: die Krimis
+freizeit1|Literatur|literature|f|
+freizeit1|Mode|fashion|f|Plural: die Moden
+freizeit1|Mountainbike|mountain bike|n|
+freizeit2|Musiker|musician|m|Plural: die Musiker
+freizeit2|Märchen|fairy tale|n|Plural: die Märchen
+freizeit2|Orchester|orchestra|n|Plural: die Orchester
+freizeit2|Poster|poster|n|
+freizeit2|Profisportler|professional athlete|m|Plural: die Profisportler
+freizeit2|Publikum|audience|n|
+freizeit2|Puppe|doll|f|Plural: die Puppen
+freizeit2|Puzzle|puzzle|n|
+freizeit2|Quiz|quiz|n|
+freizeit2|reiten|to ride (a horse)||reitet · ritt · ist geritten
+freizeit2|Rekord|record|m|Plural: die Rekorde
+freizeit2|Ring|ring|m|Plural: die Ringe
+freizeit2|Rolle|role|f|Plural: die Rollen
+freizeit2|Runde|round|f|Plural: die Runden
+freizeit2|Rätsel|puzzle, riddle|n|Plural: die Rätsel
+freizeit2|Salon|salon|m|Plural: die Salons
+freizeit2|Schloss|castle, lock|n|Plural: die Schlösser
+freizeit2|Schmuck|jewellery|m|
+freizeit2|Schriftsteller|writer|m|Plural: die Schriftsteller
+freizeit2|Show|show|f|
+freizeit2|Sieger|winner|m|Plural: die Sieger
+freizeit2|Ski|ski|m|
+freizeit2|Socke|sock|f|Plural: die Socken
+freizeit2|Song|song|m|
+freizeit2|Spielplatz|playground|m|Plural: die Spielplätze
+freizeit2|Spielzeug|toy|n|Plural: die Spielzeuge
+freizeit2|Sportart|type of sport|f|Plural: die Sportarten
+freizeit2|Sportler|athlete|m|Plural: die Sportler
+freizeit2|Stadion|stadium|n|Plural: die Stadien
+freizeit2|Star|star|m|Plural: die Stars
+freizeit2|Start|start|m|Plural: die Starts
+freizeit2|Stiefel|boot|m|Plural: die Stiefel
+freizeit2|Stil|style|m|Plural: die Stile
+freizeit2|Strumpf|stocking, sock|m|Plural: die Strümpfe
+freizeit2|Swimmingpool|swimming pool|m|
+freizeit2|Tanz|dance|m|Plural: die Tänze
+freizeit2|tauchen|to dive||taucht · tauchte · ist/hat getaucht
+freizeit2|Tempo|speed, pace|n|
+freizeit2|Tennis|tennis|n|
+freizeit2|Treffpunkt|meeting point|m|Plural: die Treffpunkte
+freizeit2|Uniform|uniform|f|Plural: die Uniformen
+freizeit2|Unterhaltung|entertainment, conversation|f|Plural: die Unterhaltungen
+freizeit2|Vergnügen|pleasure, fun|n|Plural: die Vergnügen
+freizeit2|Verlierer|loser|m|Plural: die Verlierer
+freizeit2|wandern|to hike||wandert · wanderte · ist gewandert
+freizeit2|zeichnen|to draw||zeichnet · zeichnete · hat gezeichnet
+freizeit2|zelten|to camp in a tent||zeltet · zeltete · hat gezeltet
+freizeit2|Zirkus|circus|m|Plural: die Zirkusse
+freizeit2|Zuschauer|spectator, viewer|m|Plural: die Zuschauer
+medien|Blog|blog|m|
+medien|Chat|chat|m|
+medien|Chip|chip|m|
+medien|Fax|fax|n|
+medien|Homepage|homepage|f|
+medien|Internet|internet|n|
+medien|Laptop|laptop|m|
+medien|Link|link|m|
+medien|Mobilbox|voicemail|f|Plural: die Mobilboxen
+medien|Plattform|platform|f|
+medien|Smartphone|smartphone|n|
+medien|Software|software|f|
+medien|User|user|m|
+medien|Anrufbeantworter|answering machine|m|Plural: die Anrufbeantworter
+medien|Apparat|device, phone|m|Plural: die Apparate
+medien|Artikel|article|m|Plural: die Artikel
+medien|Autor|author|m|Plural: die Autoren
+medien|Bedienungsanleitung|user manual|f|
+medien|Gebrauchsanweisung|instructions for use|f|
+medien|Anleitung|instructions|f|Plural: die Anleitungen
+medien|Festplatte|hard drive|f|Plural: die Festplatten
+medien|Fernbedienung|remote control|f|Plural: die Fernbedienungen
+medien|Fernseher|TV set|m|Plural: die Fernseher
+medien|Journalist|journalist|m|Plural: die Journalisten
+medien|Kanal|channel|m|Plural: die Kanäle
+medien|Kassette|cassette|f|Plural: die Kassetten
+medien|Klick|click|m|Plural: die Klick
+medien|Kopie|copy|f|Plural: die Kopien
+medien|Kopierer|photocopier|m|Plural: die Kopierer
+medien|Laufwerk|drive|n|Plural: die Laufwerke
+medien|Lautsprecher|loudspeaker|m|Plural: die Lautsprecher
+medien|Leser|reader|m|Plural: die Leser
+medien|Magazin|magazine|n|Plural: die Magazine
+medien|Meldung|report, news item|f|Plural: die Meldungen
+medien|Mobiltelefon|mobile phone|n|Plural: die Mobiltelefone
+medien|Monitor|monitor|m|Plural: die Monitore
+medien|Netz|network|n|Plural: die Netze
+medien|Presse|press|f|
+medien|Programm|programme|n|Plural: die Programme
+medien|Radio|radio|n|Plural: die Radios
+medien|Reportage|report, feature|f|Plural: die Reportagen
+medien|Reporter|reporter|m|Plural: die Reporter
+medien|Sender|station, sender|m|Plural: die Sender
+medien|Serie|series|f|Plural: die Serien
+medien|Studio|studio|n|Plural: die Studios
+medien|System|system|n|Plural: die Systeme
+medien|Technik|technology|f|Plural: die Techniken
+medien|Technologie|technology|f|Plural: die Technologien
+medien|Verlag|publisher|m|
+medien|Video|video|n|Plural: die Videos
+medien|Hörer|receiver, listener|m|Plural: die Hörer
+medien|Zuhörer|listener|m|
+medien|Interview|interview|n|Plural: die Interviews
+medien|Umfrage|survey|f|Plural: die Umfragen
+medien|bloggen|to blog||
+medien|chatten|to chat (online)||
+medien|faxen|to fax||
+medien|googeln|to google||
+medien|mailen|to email||
+medien|surfen|to surf||
+medien|twittern|to tweet, to post||
+medien|anklicken|to click on||klickt an · klickte an · hat angeklickt
+medien|drucken|to print||druckt · druckte · hat gedruckt
+medien|installieren|to install||installiert · installierte · hat installiert
+reden1|Ahnung|idea, notion|f|
+reden1|ankündigen|to announce||kündigt an · kündigte an · hat angekündigt
+reden1|Anrede|form of address|f|Plural: die Anreden
+reden1|Ansage|announcement|f|Plural: die Ansagen
+reden1|ansprechen|to address, to speak to||spricht an · sprach an · hat angesprochen
+reden1|Aufforderung|request, demand|f|Plural: die Aufforderungen
+reden1|Ausdruck|expression|m|Plural: die Ausdrücke
+reden1|Auskunft|information|f|Plural: die Auskünfte
+reden1|sich bedanken|to say thank you||bedankt · bedankte · hat bedankt
+reden1|Bedeutung|meaning|f|Plural: die Bedeutungen
+reden1|Begründung|reason, justification|f|Plural: die Begründungen
+reden1|begrüßen|to greet, to welcome||begrüßt · begrüßte · hat begrüßt
+reden1|behaupten|to claim||behauptet · behauptete · hat behauptet
+reden1|Beitrag|contribution, article|m|Plural: die Beiträge
+reden1|bemerken|to notice, to remark||bemerkt · bemerkte · hat bemerkt
+reden1|Bericht|report|m|Plural: die Berichte
+reden1|Beschreibung|description|f|Plural: die Beschreibungen
+reden1|betonen|to stress||
+reden1|Darstellung|presentation, depiction|f|Plural: die Darstellungen
+reden1|Detail|detail|n|Plural: die Details
+reden1|Dialekt|dialect|m|Plural: die Dialekte
+reden1|Dialog|dialogue|m|Plural: die Dialoge
+reden1|Diskussion|discussion|f|Plural: die Diskussionen
+reden1|Durchsage|announcement|f|Plural: die Durchsagen
+reden1|duzen|to say du (informal)||
+reden1|Eindruck|impression|m|Plural: die Eindrücke
+reden1|Einfall|idea|m|Plural: die Einfälle
+reden1|Einzelheit|detail|f|Plural: die Einzelheiten
+reden1|Empfehlung|recommendation|f|Plural: die Empfehlungen
+reden1|Erklärung|explanation|f|Plural: die Erklärungen
+reden1|erwähnen|to mention||
+reden1|Erzählung|story, narrative|f|Plural: die Erzählungen
+reden1|Gedanke|thought|m|Plural: die Gedanken
+reden1|Gegensatz|contrast, opposite|m|Plural: die Gegensätze
+reden1|Gegenteil|opposite|n|Plural: die Gegenteile
+reden1|Geschichte|story, history|f|Plural: die Geschichten
+reden1|Glückwunsch|congratulations|m|Plural: die Glückwünsche
+reden1|Gratulation|congratulations|f|Plural: die Gratulationen
+reden1|gratulieren|to congratulate||gratuliert · gratulierte · hat gratuliert
+reden1|Gruß|greeting|m|Plural: die Grüße
+reden1|Hinweise|notes, hints|pl|
+reden1|klagen|to complain||klagt · klagte · hat geklagt
+reden1|Kommunikation|communication|f|
+reden1|Kompromiss|compromise|m|Plural: die Kompromisse
+reden1|Kontrolle|check, control|f|Plural: die Kontrollen
+reden2|Kritik|criticism, review|f|Plural: die Kritiken
+reden2|kritisieren|to criticise||kritisiert · kritisierte · hat kritisiert
+reden2|Liste|list|f|Plural: die Listen
+reden2|loben|to praise||lobt · lobte · hat gelobt
+reden2|Lüge|lie|f|Plural: die Lügen
+reden2|lügen|to lie||lügt · log · hat gelogen
+reden2|mitteilen|to inform||teilt mit · teilte mit · hat mitgeteilt
+reden2|Neuigkeit|news|f|Plural: die Neuigkeiten
+reden2|Original|original|n|Plural: die Originale
+reden2|Plakat|poster|n|Plural: die Plakate
+reden2|protestieren|to protest||protestiert · protestierte · hat protestiert
+reden2|raten|to advise, to guess||rät · riet · hat geraten
+reden2|Rede|speech|f|Plural: die Reden
+reden2|Satz|sentence|m|Plural: die Sätze
+reden2|Schild|sign|n|Plural: die Schilder
+reden2|schimpfen|to scold, to complain||schimpft · schimpfte · hat geschimpft
+reden2|schreien|to shout||schreit · schrie · hat geschrien
+reden2|Schrift|writing, script|f|Plural: die Schriften
+reden2|schweigen|to be silent||schweigt · schwieg · hat geschwiegen
+reden2|siezen|to say Sie (formal)||
+reden2|Sinn|sense, meaning|m|
+reden2|Standpunkt|point of view|m|Plural: die Standpunkte
+reden2|Symbol|symbol|n|Plural: die Symbole
+reden2|Tipp|tip|m|Plural: die Tipps
+reden2|Titel|title|m|Plural: die Titel
+reden2|unterbrechen|to interrupt||unterbricht · unterbrach · hat unterbrochen
+reden2|verraten|to give away (a secret)||verrät · verriet · hat verraten
+reden2|Verständnis|understanding|n|
+reden2|Visitenkarte|business card|f|Plural: die Visitenkarten
+reden2|Vortrag|talk, lecture|m|Plural: die Vorträge
+reden2|Vorwurf|reproach|m|Plural: die Vorwürfe
+reden2|warnen|to warn||warnt · warnte · hat gewarnt
+reden2|Witz|joke|m|Plural: die Witze
+reden2|Zeichen|sign|n|Plural: die Zeichen
+reden2|Zeichnung|drawing|f|Plural: die Zeichnungen
+reden2|Zettel|note, slip of paper|m|Plural: die Zettel
+reden2|Zustimmung|agreement|f|Plural: die Zustimmungen
+reden2|zweifeln|to doubt||zweifelt · zweifelte · hat gezweifelt
+reden2|äußern|to express||
+reden2|überreden|to persuade||überredet · überredete · hat überredet
+reden2|Übersetzer|translator|m|Plural: die Übersetzer
+reden2|Übersetzung|translation|f|Plural: die Übersetzungen
+reden2|übertreiben|to exaggerate||übertreibt · übertrieb · hat übertrieben
+reden2|Überzeugung|conviction|f|Plural: die Überzeugungen
+leute1|Abschied|goodbye, farewell|m|Plural: die Abschiede
+leute1|Absicht|intention|f|Plural: die Absichten
+leute1|sich amüsieren|to have fun||amüsiert sich · amüsierte sich · hat sich amüsiert
+leute1|Angehörige|relatives|pl|
+leute1|aufregen|to get upset||regt auf · regte auf · hat aufgeregt
+leute1|sich beeilen|to hurry||beeilt sich · beeilte sich · hat sich beeilt
+leute1|beleidigen|to insult||beleidigt · beleidigte · hat beleidigt
+leute1|sich bemühen|to make an effort||bemüht · bemühte · hat bemüht
+leute1|beruhigen|to calm (down)||beruhigt · beruhigte · hat beruhigt
+leute1|Besuch|visit|m|Plural: die Besuche
+leute1|Charakter|character|m|
+leute1|Dame|lady|f|Plural: die Damen
+leute1|Dank|thanks|m|
+leute1|Ehepaar|married couple|n|Plural: die Ehepaare
+leute1|Eile|hurry|f|
+leute1|enttäuschen|to disappoint||enttäuscht · enttäuschte · hat ent-
+leute1|Erfolg|success|m|Plural: die Erfolge
+leute1|Erinnerung|memory, reminder|f|Plural: die Erinnerungen
+leute1|Erlebnis|experience|n|Plural: die Erlebnisse
+leute1|erschrecken|to frighten, to get a fright||erschrickt · erschrak · ist erschrocken/
+leute1|erziehen|to bring up||erzieht · erzog · hat erzogen
+leute1|Europäer|European|m|
+leute1|Fantasie|imagination|f|
+leute1|Geheimnis|secret|n|Plural: die Geheimnisse
+leute1|Gemeinschaft|community|f|Plural: die Gemeinschaften
+leute1|Generation|generation|f|Plural: die Generationen
+leute1|Geschlecht|sex, gender|n|Plural: die Geschlechter
+leute1|Geschmack|taste|m|
+leute1|Gewissen|conscience|n|
+leute1|Gewohnheit|habit|f|Plural: die Gewohnheiten
+leute1|gewöhnen|to get used to||gewöhnt · gewöhnte · hat gewöhnt/ist gewöhnt
+leute1|Gott|God|m|Plural: die Götter
+leute1|Grieche|Greek|m|
+leute1|Held|hero|m|Plural: die Helden
+leute1|Herkunft|origin|f|
+leute1|Herr|gentleman, Mr|m|Plural: die Herren
+leute1|Hoffnung|hope|f|Plural: die Hoffnungen
+leute1|Humor|humour|m|
+leute1|Interesse|interest|n|Plural: die Interessen
+leute1|Junge|boy|m|Plural: die Jungen
+leute1|Kandidat|candidate|m|Plural: die Kandidaten
+leute2|Kraft|strength, power|f|Plural: die Kräfte
+leute2|Kuss|kiss|m|Plural: die Küsse
+leute2|König|king|m|Plural: die Könige
+leute2|sich kümmern|to take care of||kümmert sich · kümmerte sich · hat sich gekümmert
+leute2|küssen|to kiss||küsst · küsste · hat geküsst
+leute2|Langeweile|boredom|f|
+leute2|sich langweilen|to bore, to be bored||langweilt · langweilte · hat gelangweilt
+leute2|Laune|mood|f|Plural: die Launen
+leute2|Migrant|migrant|m|Plural: die Migranten
+leute2|Mut|courage|m|
+leute2|Mühe|effort, trouble|f|
+leute2|Oma|grandma|f|Plural: die Omas
+leute2|Opa|grandpa|m|Plural: die Opas
+leute2|Pech|bad luck|n|
+leute2|Person|person|f|Plural: die Personen
+leute2|Rentner|pensioner|m|Plural: die Rentner
+leute2|Ruhe|quiet, calm|f|
+leute2|Rücksicht|consideration|f|Plural: die Rücksichten
+leute2|sich scheiden|to divorce||
+leute2|Schreck|fright|m|
+leute2|Schuld|guilt, fault|f|
+leute2|Schweizer|Swiss person|m|
+leute2|Senioren|senior citizens|pl|
+leute2|Stress|stress|m|
+leute2|Traum|dream|m|Plural: die Träume
+leute2|Trennung|separation|f|Plural: die Trennungen
+leute2|Träne|tear|f|Plural: die Tränen
+leute2|Typ|type, guy|m|Plural: die Typen
+leute2|Türke|Turk|m|
+leute2|Ukrainer|Ukrainian|m|
+leute2|umarmen|to hug||umarmt · umarmte · hat umarmt
+leute2|Verhalten|behaviour|n|
+leute2|Verhältnis|relationship|n|Plural: die Verhältnisse
+leute2|sich verlieben|to fall in love||verliebt sich · verliebte sich · hat sich verliebt
+leute2|vermissen|to miss (someone)||vermisst · vermisste · hat vermisst
+leute2|verzeihen|to forgive||verzeiht · verzieh · hat verziehen
+leute2|Wirt|landlord (pub)|m|Plural: die Wirte
+leute2|Wunder|miracle|n|Plural: die Wunder
+leute2|Wunsch|wish|m|Plural: die Wünsche
+leute2|Österreicher|Austrian|m|
+welt1|Aktion|campaign, action|f|Plural: die Aktionen
+welt1|Aktivität|activity|f|Plural: die Aktivitäten
+welt1|Alarm|alarm|m|Plural: die Alarme
+welt1|Alkohol|alcohol|m|
+welt1|Alltag|everyday life|m|
+welt1|Alternative|alternative|f|Plural: die Alternativen
+welt1|Art|kind, type|f|Plural: die Arten
+welt1|Ausgabe|edition, expense|f|Plural: die Ausgaben
+welt1|Ausnahme|exception|f|Plural: die Ausnahmen
+welt1|Aussicht|view, prospect|f|Plural: die Aussichten
+welt1|Bau|construction, building|m|Plural: die Bauten
+welt1|Bedingung|condition|f|Plural: die Bedingungen
+welt1|Blick|look, view|m|Plural: die Blicke
+welt1|Deutsche|German (person)|m|
+welt1|Druck|pressure, printing|m|
+welt1|Einfluss|influence|m|Plural: die Einflüsse
+welt1|Ereignis|event|n|Plural: die Ereignisse
+welt1|Erfindung|invention|f|Plural: die Erfindungen
+welt1|Eröffnung|opening|f|Plural: die Eröffnungen
+welt1|Faktor|factor|m|Plural: die Faktoren
+welt1|Flucht|escape, flight|f|
+welt1|Folge|consequence, episode|f|Plural: die Folgen
+welt1|Forderung|demand|f|Plural: die Forderungen
+welt1|Fortschritt|progress|m|Plural: die Fortschritte
+welt1|Fortsetzung|continuation, sequel|f|Plural: die Fortsetzungen
+welt1|Forum|forum|n|Plural: die Foren
+welt1|Friede|peace|m|Plural: die Frieden
+welt1|Förderung|support, funding|f|Plural: die Förderungen
+welt1|Gefahr|danger|f|Plural: die Gefahren
+welt1|Gegenstand|object|m|Plural: die Gegenstände
+welt1|Gelegenheit|opportunity|f|Plural: die Gelegenheiten
+welt1|Gewalt|violence|f|Plural: die Gewalten
+welt1|Gruppe|group|f|Plural: die Gruppen
+welt1|Kampf|fight|m|Plural: die Kämpfe
+welt1|Katastrophe|disaster|f|Plural: die Katastrophen
+welt1|Konflikt|conflict|m|Plural: die Konflikte
+welt1|Kraftwerk|power station|n|Plural: die Kraftwerke
+welt1|Kreuz|cross|n|Plural: die Kreuze
+welt1|Krise|crisis|f|Plural: die Krisen
+welt1|Lage|situation, location|f|
+welt1|Lärm|noise|m|
+welt2|Mehrheit|majority|f|Plural: die Mehrheiten
+welt2|Migration|migration|f|
+welt2|Minderheit|minority|f|Plural: die Minderheiten
+welt2|Mittel|means, remedy|n|Plural: die Mittel
+welt2|Mobilität|mobility|f|Plural: die Mobilitäten
+welt2|Organisation|organisation|f|Plural: die Organisationen
+welt2|Protest|protest|m|Plural: die Proteste
+welt2|Prozess|process, trial|m|Plural: die Prozesse
+welt2|Reaktion|reaction|f|Plural: die Reaktionen
+welt2|Realität|reality|f|Plural: die Realitäten
+welt2|Regel|rule|f|Plural: die Regeln
+welt2|Risiko|risk|n|Plural: die Risiken
+welt2|Schaden|damage|m|Plural: die Schäden
+welt2|Schluss|end, conclusion|m|
+welt2|Schritt|step|m|Plural: die Schritte
+welt2|Schutz|protection|m|
+welt2|Schweiz|Switzerland|f|
+welt2|Schwierigkeit|difficulty|f|Plural: die Schwierigkeiten
+welt2|Situation|situation|f|Plural: die Situationen
+welt2|Szene|scene|f|Plural: die Szenen
+welt2|Tat|act, deed|f|Plural: die Taten
+welt2|Tatsache|fact|f|Plural: die Tatsachen
+welt2|Teilnahme|participation|f|Plural: die Teilnahmen
+welt2|Trend|trend|m|
+welt2|Türkei|Turkey|f|
+welt2|Ukraine|Ukraine|f|
+welt2|Unglück|accident, misfortune|n|Plural: die Unglücke
+welt2|Unterschied|difference|m|Plural: die Unterschiede
+welt2|Unterstützung|support|f|Plural: die Unterstützungen
+welt2|Ursache|cause|f|Plural: die Ursachen
+welt2|Versammlung|meeting, assembly|f|Plural: die Versammlungen
+welt2|Vorsicht|caution|f|
+welt2|Wahrheit|truth|f|Plural: die Wahrheiten
+welt2|Wirklichkeit|reality|f|
+welt2|Wirkung|effect|f|Plural: die Wirkungen
+welt2|Zufall|coincidence, chance|m|Plural: die Zufälle
+welt2|Zugang|access|m|Plural: die Zugänge
+welt2|Zusammenhang|connection, context|m|Plural: die Zusammenhänge
+welt2|Zustand|condition, state|m|Plural: die Zustände
+welt2|Zweck|purpose|m|Plural: die Zwecke
+welt2|Öffentlichkeit|public|f|
+zeitort|Sekunde|second|f|
+zeitort|Jahrzehnt|decade|n|
+zeitort|Jahrtausend|millennium|n|
+zeitort|Augenblick|moment|m|Plural: die Augenblicke
+zeitort|Beginn|beginning|m|
+zeitort|Dauer|duration|f|
+zeitort|Moment|moment|m|Plural: die Momente
+zeitort|Zeitpunkt|point in time|m|Plural: die Zeitpunkt
+zeitort|Tagesablauf|daily routine|m|Plural: die Tagesabläufe
+zeitort|Terminkalender|diary, appointment book|m|Plural: die Terminkalender
+zeitort|Breite|width|f|Plural: die Breiten
+zeitort|Fläche|area, surface|f|Plural: die Flächen
+zeitort|Form|form, shape|f|Plural: die Formen
+zeitort|Höhe|height|f|
+zeitort|Länge|length|f|
+zeitort|Mitte|middle|f|
+zeitort|Rand|edge|m|Plural: die Ränder
+zeitort|Reihe|row, series|f|Plural: die Reihen
+zeitort|Reihenfolge|order, sequence|f|Plural: die Reihenfolgen
+zeitort|Rest|rest, remainder|m|Plural: die Reste
+zeitort|Spur|track, lane|f|Plural: die Spuren
+zeitort|Stufe|step, level|f|Plural: die Stufen
+zeitort|Zone|zone|f|Plural: die Zonen
+zeitort|Zentrum|centre|n|Plural: die Zentren
+zeitort|Vorort|suburb|m|Plural: die Vororte
+zeitort|Metropole|metropolis|f|Plural: die Metropolen
+zeitort|Dorf|village|n|Plural: die Dörfer
+zeitort|Quartier|district, quarter|n|
+zeitort|Halle|hall|f|Plural: die Hallen
+zeitort|Turm|tower|m|Plural: die Türme
+zeitort|Gang|corridor, gear|m|Plural: die Gänge
+zeitort|Stock|floor, stick|m|
+v1|abhängen|to depend||hängt ab · hing ab · hat abgehangen · + von
+v1|abstimmen|to vote||stimmt ab · stimmte ab · hat abgestimmt
+v1|achten|to pay attention||achtet · achtete · hat geachtet · + auf
+v1|akzeptieren|to accept||akzeptiert · akzeptierte · hat akzeptiert
+v1|analysieren|to analyse||analysiert · analysierte · hat analysiert
+v1|anerkennen|to recognise, to accept||erkennt an · erkannte an · hat anerkannt
+v1|angeben|to state, to give||gibt an · gab an · hat angegeben
+v1|anhaben|to wear||hat an · hatte an · hat angehabt
+v1|annehmen|to accept, to assume||nimmt an · nahm an · hat angenommen
+v1|sich anstrengen|to make an effort||
+v1|anwenden|to apply, to use||wendet an · wandte an · hat ange-
+v1|anzeigen|to report, to show||zeigt an · zeigte an · hat angezeigt
+v1|auffallen|to stand out, to be noticed||fällt auf · fiel auf · ist aufgefallen
+v1|auffordern|to ask, to call on||fordert auf · forderte auf · hat aufgefordert
+v1|aufführen|to perform||führt auf · führte auf · hat aufgeführt
+v1|aufgeben|to give up, to post||gibt auf · gab auf · hat aufgegeben
+v1|aufhalten|to stop, to hold up||hält auf · hielt auf · hat aufgehalten
+v1|aufheben|to pick up, to keep||hebt auf · hob auf · hat aufgehoben
+v1|aufladen|to charge (battery)||lädt auf · lud auf · hat aufgeladen
+v1|auflösen|to dissolve||löst auf · löste auf · hat aufgelöst
+v1|aufnehmen|to record, to take in||nimmt auf · nahm auf · hat aufgenommen
+v1|aufpassen|to watch out, to look after||passt auf · passte auf · hat aufgepasst
+v1|auftreten|to appear, to perform||tritt auf · trat auf · ist aufgetreten
+v1|ausfallen|to be cancelled||fällt aus · fiel aus · ist ausgefallen
+v1|ausgehen|to go out||geht aus · ging aus · ist ausgegangen
+v1|ausreichen|to be enough||reicht aus · reichte aus · hat ausgereicht
+v1|ausrichten|to pass on (a message)||richtet aus · richtete aus · hat ausgerichtet
+v1|ausschließen|to exclude||schließt aus · schloss aus · hat ausgeschlossen
+v1|ausstellen|to exhibit, to issue||stellt aus · stellte aus · hat ausgestellt
+v1|auswählen|to choose||wählt aus · wählte aus · hat ausgewählt
+v1|bauen|to build||baut · baute · hat gebaut
+v1|beachten|to note, to observe||beachtet · beachtete · hat beachtet
+v1|beantworten|to answer||beantwortet · beantwortete · hat beantwortet
+v1|bedienen|to serve, to operate||bedient · bediente · hat bedient
+v1|beeinflussen|to influence||beeinflusst · beeinflusste · hat beeinflusst
+v1|sich befinden|to be (located)||befindet sich · befand sich · hat sich befunden
+v1|begegnen|to meet (by chance)||begegnet · begegnete · ist begegnet
+v1|begleiten|to accompany||begleitet · begleitete · hat begleitet
+v1|begründen|to give reasons for||begründet · begründete · hat begründet
+v1|behalten|to keep||behält · behielt · hat behalten
+v1|behindern|to hinder||behindert · behinderte · hat behindert
+v1|beißen|to bite||beißt · biss · hat gebissen
+v1|benötigen|to need||benötigt · benötigte · hat benötigt
+v1|beobachten|to watch, to observe||beobachtet · beobachtete · hat beobachtet
+v1|berechnen|to calculate||berechnet · berechnete · hat berechnet
+v1|beschließen|to decide||beschließt · beschloss · hat beschlossen
+v1|beschränken|to limit||
+v1|beschädigen|to damage||beschädigt · beschädigte · hat beschädigt
+v1|beschäftigen|to occupy, to employ||beschäftigt · beschäftigte · hat beschäftigt
+v1|besetzen|to occupy||besetzt · besetzte · hat besetzt
+v1|besitzen|to own||besitzt · besaß · hat besessen
+v1|sich beteiligen|to take part||beteiligt sich · beteiligte sich · hat sich beteiligt
+v1|bewegen|to move||bewegt · bewegte · hat bewegt
+v1|brechen|to break||bricht · brach · hat gebrochen
+v1|brennen|to burn||brennt · brannte · hat gebrannt
+v1|darstellen|to show, to depict||stellt dar · stellte dar · hat dargestellt
+v1|dauern|to last, to take (time)||dauert · dauerte · hat gedauert
+v1|dekorieren|to decorate||dekoriert · dekorierte · hat dekoriert
+v1|dienen|to serve||dient · diente · hat gedient
+v1|drehen|to turn||dreht · drehte · hat gedreht
+v1|sich eignen|to be suitable||eignet sich · eignete sich · hat sich geeignet
+v1|eilen|to hurry||eilt · eilte · hat/ist geeilt
+v1|einfallen|to occur to||fällt ein · fiel ein · ist eingefallen
+v1|einfügen|to insert||fügt ein · fügte ein · hat eingefügt
+v1|einführen|to introduce||führt ein · führte ein · hat eingeführt
+v1|sich einigen|to agree||einigt sich · einigte sich · hat sich geeinigt
+v1|einnehmen|to take (medicine)||nimmt ein · nahm ein · hat eingenommen
+v1|eintreten|to enter||
+v1|empfangen|to receive||empfängt · empfing · hat empfangen
+v1|enden|to end||endet · endete · hat geendet
+v1|entdecken|to discover||entdeckt · entdeckte · hat entdeckt
+v1|entfernen|to remove||entfernt · entfernte · hat entfernt
+v1|entgegenkommen|to come towards, to meet halfway||
+v2|enthalten|to contain||enthält · enthielt · hat enthalten
+v2|sich entschließen|to decide||entschließt sich · entschloss sich · hat sich entschlossen
+v2|sich ereignen|to happen||ereignet sich · ereignete sich · hat sich ereignet
+v2|erfinden|to invent||erfindet · erfand · hat erfunden
+v2|erfordern|to require||erfordert · erforderte · hat erfordert
+v2|erfüllen|to fulfil||erfüllt · erfüllte · hat erfüllt
+v2|ergänzen|to complete, to add||ergänzt · ergänzte · hat ergänzt
+v2|erhöhen|to raise, to increase||erhöht · erhöhte · hat erhöht
+v2|sich erkundigen|to enquire||erkundigt sich · erkundigte sich · hat sich erkundigt
+v2|erleben|to experience||erlebt · erlebte · hat erlebt
+v2|erleichtern|to make easier||erleichtert · erleichterte · hat erleichtert
+v2|ersetzen|to replace||ersetzt · ersetzte · hat ersetzt
+v2|erstellen|to create||erstellt · erstellte · hat erstellt
+v2|eröffnen|to open||eröffnet · eröffnete · hat eröffnet
+v2|fangen|to catch||fängt · fing · hat gefangen
+v2|fassen|to grasp, to hold||fasst · fasste · hat gefasst
+v2|festhalten|to hold on to||hält fest · hielt fest · hat festgehalten
+v2|festlegen|to fix, to set||legt fest · legte fest · hat festgelegt
+v2|feststehen|to be certain||steht fest · stand fest · ist festgestanden
+v2|feststellen|to find out, to notice||stellt fest · stellte fest · hat festgestellt
+v2|fliehen|to flee||flieht · floh · ist geflohen
+v2|fließen|to flow||fließt · floss · ist geflossen fließend
+v2|fordern|to demand||fordert · forderte · hat gefordert
+v2|fortsetzen|to continue||setzt fort · setzte fort · hat fortgesetzt
+v2|funktionieren|to work, to function||funktioniert · funktionierte · hat funktioniert
+v2|fördern|to support, to promote||fördert · förderte · hat gefördert
+v2|garantieren|to guarantee||garantiert · garantierte · hat garantiert
+v2|gebrauchen|to use||gebraucht · gebrauchte · hat gebraucht
+v2|gelingen|to succeed||gelingt · gelang · ist gelungen
+v2|genießen|to enjoy||genießt · genoss · hat genossen
+v2|genügen|to be enough||genügt · genügte · hat genügt
+v2|geschehen|to happen||geschieht · geschah · ist geschehen
+v2|greifen|to grab||greift · griff · hat gegriffen
+v2|gründen|to found||gründet · gründete · hat gegründet
+v2|gucken|to look||guckt · guckte · hat geguckt
+v2|handeln|to act, to trade||handelt · handelte · hat gehandelt
+v2|heben|to lift||hebt · hob · hat gehoben
+v2|hinterlassen|to leave (behind)||hinterlässt · hinterließ · hat hinterlassen
+v2|hinweisen|to point out||weist hin · wies hin · hat hingewiesen
+v2|integrieren|to integrate||integriert · integrierte · hat integriert
+v2|sich irren|to be wrong||irrt sich · irrte sich · hat sich geirrt
+v2|kaputtgehen|to break||
+v2|kaputtmachen|to break (something)||
+v2|klappen|to work out||klappt · klappte · hat geklappt
+v2|kleben|to stick||klebt · klebte · hat geklebt
+v2|klingen|to sound||klingt · klang · hat geklungen
+v2|klären|to clarify||klärt · klärte · hat geklärt
+v2|konsumieren|to consume||konsumiert · konsumierte · hat konsumiert
+v2|sich konzentrieren|to concentrate||konzentriert sich · konzentrierte sich · hat sich konzentriert
+v2|kriegen|to get||kriegt · kriegte · hat gekriegt
+v2|kämpfen|to fight||kämpft · kämpfte · hat gekämpft
+v2|sich lohnen|to be worth it||lohnt sich · lohnte sich · hat sich gelohnt
+v2|merken|to notice, to remember||merkt · merkte · hat gemerkt
+v2|nachdenken|to think about||denkt nach · dachte nach · hat nachgedacht
+v2|nutzen|to use||nutzt · nutzte · hat genutzt
+v2|sich nähern|to approach||nähert sich · näherte sich · hat sich genähert
+v2|nützen|to be of use||nützt · nützte · hat genützt
+v2|ordnen|to sort, to arrange||ordnet · ordnete · hat geordnet
+v2|passieren|to happen||passiert · passierte · ist passiert
+v2|präsentieren|to present||
+v2|reagieren|to react||reagiert · reagierte · hat reagiert
+v2|realisieren|to realise||realisiert · realisierte · hat realisiert
+v2|rechnen|to calculate, to count on||rechnet · rechnete · hat gerechnet
+v2|reduzieren|to reduce||reduziert · reduzierte · hat reduziert
+v2|regeln|to regulate, to sort out||regelt · regelte · hat geregelt
+v2|reichen|to be enough, to pass||reicht · reichte · hat gereicht
+v2|retten|to save, to rescue||rettet · rettete · hat gerettet
+v2|sammeln|to collect||sammelt · sammelte · hat gesammelt
+v2|schaden|to harm||schadet · schadete · hat geschadet
+v2|schalten|to switch||schaltet · schaltete · hat geschaltet
+v2|schauen|to look||schaut · schaute · hat geschaut
+v2|schenken|to give (a present)||schenkt · schenkte · hat geschenkt
+v2|schieben|to push||schiebt · schob · hat geschoben
+v3|schießen|to shoot||schießt · schoss · hat geschossen
+v3|schlagen|to hit, to beat||schlägt · schlug · hat geschlagen
+v3|schätzen|to estimate, to value||schätzt · schätzte · hat geschätzt
+v3|schütteln|to shake||schüttelt · schüttelte · hat geschüttelt
+v3|senden|to send||sendet · sendete/sandte · hat gesendet/gesandt
+v3|sichern|to secure, to save||sichert · sicherte · hat gesichert
+v3|siegen|to win||siegt · siegte · hat gesiegt
+v3|sinken|to sink, to fall||sinkt · sank · ist gesunken
+v3|sorgen|to take care of, to worry||sorgt · sorgte · hat gesorgt
+v3|spazieren|to walk, to stroll||
+v3|spüren|to feel||spürt · spürte · hat gespürt
+v3|stammen|to come from||stammt · stammte · hat gestammt
+v3|starten|to start||startet · startete · ist gestartet
+v3|stattfinden|to take place||findet statt · fand statt · hat stattgefunden
+v3|stechen|to sting||sticht · stach · hat gestochen
+v3|stimmen|to be right||stimmt · stimmte · hat gestimmt
+v3|stinken|to stink||stinkt · stank · hat gestunken
+v3|stoppen|to stop||stoppt · stoppte · hat gestoppt
+v3|stören|to disturb||stört · störte · hat gestört
+v3|stürzen|to fall||stürzt · stürzte · ist gestürzt
+v3|teilen|to share, to divide||teilt · teilte · hat geteilt
+v3|telefonieren|to phone||telefoniert · telefonierte · hat telefoniert
+v3|testen|to test||testet · testete · hat getestet
+v3|tippen|to type, to tap||tippt · tippte · hat getippt
+v3|treiben|to do (sport), to drive||treibt · trieb · hat getrieben (sich) trennen
+v3|treten|to kick, to step||tritt · trat · hat/ist getreten
+v3|träumen|to dream||träumt · träumte · hat geträumt
+v3|umgehen|to deal with||geht um · ging um · ist umgegangen
+v3|unterlassen|to refrain from||unterlässt · unterließ · hat unterlassen
+v3|unternehmen|to do, to undertake||unternimmt · unternahm · hat unternommen
+v3|unterscheiden|to distinguish||unterscheidet · unterschied · hat unterschieden
+v3|verbrauchen|to use (up)||verbraucht · verbrauchte · hat verbraucht
+v3|verbringen|to spend (time)||verbringt · verbrachte · hat verbracht
+v3|vergrößern|to enlarge||vergrößert · vergrößerte · hat vergrößert
+v3|sich verhalten|to behave||verhält sich · verhielt sich · hat sich verhalten
+v3|verhindern|to prevent||verhindert · verhinderte · hat verhindert
+v3|verlangen|to demand||verlangt · verlangte · hat verlangt
+v3|verlassen|to leave||verlässt · verließ · hat verlassen
+v3|sich verlaufen|to get lost, to go||verläuft sich · verlief sich · hat sich verlaufen
+v3|vermuten|to suppose||vermutet · vermutete · hat vermutet
+v3|verschmutzen|to pollute||verschmutzt · verschmutzte · hat verschmutzt
+v3|verschwinden|to disappear||verschwindet · verschwand · ist verschwunden
+v3|versichern|to insure, to assure||versichert · versicherte · hat versichert
+v3|versäumen|to miss||versäumt · versäumte · hat versäumt
+v3|verteilen|to distribute||verteilt · verteilte · hat verteilt
+v3|verursachen|to cause||verursacht · verursachte · hat verursacht
+v3|verwechseln|to mix up||verwechselt · verwechselte · hat verwechselt
+v3|verwenden|to use||verwendet · verwendete · hat verwen-
+v3|verzichten|to do without||verzichtet · verzichtete · hat verzichtet
+v3|veröffentlichen|to publish||veröffentlicht · veröffentlichte · hat veröffentlicht
+v3|vorhaben|to plan||
+v3|vorkommen|to occur, to seem||kommt vor · kam vor · ist vorgekommen
+v3|wechseln|to change||wechselt · wechselte · hat gewechselt
+v3|wecken|to wake (someone)||weckt · weckte · hat geweckt
+v3|sich weigern|to refuse||weigert sich · weigerte sich · hat sich geweigert
+v3|wenden|to turn||wendet · wendete · hat gewendet
+v3|werfen|to throw||wirft · warf · hat geworfen
+v3|wetten|to bet||wettet · wettete · hat gewettet
+v3|winken|to wave||winkt · winkte · hat gewinkt
+v3|wirken|to have an effect||wirkt · wirkte · hat gewirkt
+v3|zahlen|to pay||zahlt · zahlte · hat gezahlt
+v3|zerstören|to destroy||zerstört · zerstörte · hat zerstört
+v3|zugehen|to approach||geht zu · ging zu · ist zugegangen
+v3|zuhören|to listen||hört zu · hörte zu · hat zugehört
+v3|zumachen|to close||macht zu · machte zu · hat zugemacht
+v3|zurechtkommen|to cope||kommt zurecht · kam zurecht · ist zurechtgekommen
+v3|zusagen|to accept, to promise||sagt zu · sagte zu · hat zugesagt
+v3|zuschauen|to watch||
+v3|übernehmen|to take over||übernimmt · übernahm · hat übernommen.
+v3|überprüfen|to check||überprüft · überprüfte · hat überprüft
+v3|überraschen|to surprise||überrascht · überraschte · hat überrascht
+adj1|abhängig|dependent||
+adj1|absolut|absolute(ly)||
+adj1|abwesend|absent||
+adj1|aktiv|active||
+adj1|aktuell|current, up to date||
+adj1|allgemein|general||
+adj1|alltäglich|everyday||
+adj1|alternativ|alternative||
+adj1|angenehm|pleasant||
+adj1|anstrengend|tiring, demanding||
+adj1|anwesend|present||
+adj1|aufmerksam|attentive||
+adj1|ausgebildet|trained, qualified||
+adj1|ausgezeichnet|excellent||
+adj1|ausländisch|foreign||
+adj1|ausreichend|sufficient||
+adj1|automatisch|automatic||
+adj1|befriedigend|satisfactory||
+adj1|begeistert|enthusiastic||
+adj1|begrenzt|limited||
+adj1|behindert|disabled||
+adj1|beliebt|popular||
+adj1|bereit|ready||
+adj1|beruflich|professional, work-related||
+adj1|berufstätig|working, employed||
+adj1|berühmt|famous||
+adj1|besonders|especially, special||
+adj1|bestimmt|certain(ly)||
+adj1|betrunken|drunk||
+adj1|bitter|bitter||
+adj1|blass|pale||
+adj1|blau|blue||
+adj1|blind|blind||
+adj1|braun|brown||
+adj1|bunt|colourful||
+adj1|cool|cool||
+adj1|dankbar|grateful||
+adj1|deutlich|clear||
+adj1|deutsch|German||
+adj1|dicht|dense, thick||
+adj1|digital|digital||
+adj1|dringend|urgent||
+adj1|durchschnittlich|average||
+adj1|durstig|thirsty||
+adj1|dünn|thin||
+adj1|echt|real, genuine||
+adj1|eckig|angular||
+adj1|egal|no matter, doesn't matter||
+adj1|eilig|urgent, in a hurry||
+adj1|eindeutig|clear, unambiguous||
+adj1|einheitlich|uniform||
+adj1|einverstanden|agreed||
+adj1|einzeln|single, individual||
+adj1|elegant|elegant||
+adj1|elektrisch|electric||
+adj1|elektronisch|electronic||
+adj1|endgültig|final||
+adj1|entschlossen|determined||
+adj1|entspannend|relaxing||
+adj1|erfolgreich|successful||
+adj1|erforderlich|necessary||
+adj1|erkältet|having a cold||
+adj1|ernsthaft|serious||
+adj1|erschöpft|exhausted||
+adj1|erwachsen|adult, grown-up||
+adj1|europäisch|European||
+adj1|ewig|eternal||
+adj1|extrem|extreme||
+adj1|fair|fair||
+adj1|fantastisch|fantastic||
+adj1|farbig|coloured||
+adj1|fertig|ready, finished||
+adj1|fest|firm, fixed||
+adj1|fett|fat, greasy||
+adj2|feucht|damp||
+adj2|finanziell|financial||
+adj2|fit|fit||
+adj2|flach|flat||
+adj2|flexibel|flexible||
+adj2|fließend|fluent||
+adj2|folgend|following||
+adj2|frech|cheeky||
+adj2|frei|free||
+adj2|freiwillig|voluntary||
+adj2|froh|glad||
+adj2|furchtbar|terrible||
+adj2|geboren|born||
+adj2|geehrt|dear (letters), honoured||
+adj2|geeignet|suitable||
+adj2|geheim|secret||
+adj2|gelb|yellow||
+adj2|gemeinsam|together, common||
+adj2|gerecht|fair, just||
+adj2|gering|small, low||
+adj2|gespannt|curious, excited||
+adj2|gewohnt|usual, used to||
+adj2|gewöhnlich|usual(ly)||
+adj2|giftig|poisonous||
+adj2|glatt|smooth, slippery||
+adj2|gleichberechtigt|equal (rights)||
+adj2|gleichzeitig|at the same time||
+adj2|global|global||
+adj2|gratis|free (of charge)||
+adj2|grau|grey||
+adj2|griechisch|Greek||
+adj2|grün|green||
+adj2|gründlich|thorough||
+adj2|gut|good||
+adj2|gültig|valid||
+adj2|halb|half||
+adj2|halbtags|part-time||
+adj2|haltbar|durable, keeps well||
+adj2|hart|hard||
+adj2|heimlich|secret(ly)||
+adj2|herzlich|warm, cordial||
+adj2|historisch|historical||
+adj2|hungrig|hungry||
+adj2|häufig|frequent(ly)||
+adj2|ideal|ideal||
+adj2|illegal|illegal||
+adj2|individuell|individual||
+adj2|intensiv|intensive||
+adj2|interessant|interesting||
+adj2|interessiert|interested||
+adj2|interkulturell|intercultural||
+adj2|international|international||
+adj2|klar|clear||
+adj2|knapp|scarce, just||
+adj2|komisch|funny, strange||
+adj2|komplett|complete||
+adj2|kompliziert|complicated||
+adj2|konservativ|conservative||
+adj2|korrekt|correct||
+adj2|kritisch|critical||
+adj2|kräftig|strong||
+adj2|kulturell|cultural||
+adj2|körperlich|physical||
+adj2|kühl|cool||
+adj2|künstlich|artificial||
+adj2|langweilig|boring||
+adj2|liberal|liberal||
+adj2|lieb|kind, dear||
+adj2|lila|purple||
+adj2|live|live||
+adj2|locker|relaxed, loose||
+adj2|mager|thin, lean||
+adj2|maximal|maximum||
+adj2|menschlich|human||
+adj3|merkwürdig|strange||
+adj3|mild|mild||
+adj3|minimal|minimal||
+adj3|musikalisch|musical||
+adj3|mutig|brave||
+adj3|männlich|male||
+adj3|mündlich|oral||
+adj3|neblig|foggy||
+adj3|negativ|negative||
+adj3|normal|normal||
+adj3|notwendig|necessary||
+adj3|nützlich|useful||
+adj3|offiziell|official||
+adj3|online|online||
+adj3|optimistisch|optimistic||
+adj3|orange|orange||
+adj3|original|original||
+adj3|parallel|parallel||
+adj3|passiv|passive||
+adj3|pauschal|all-inclusive, flat-rate||
+adj3|peinlich|embarrassing||
+adj3|perfekt|perfect||
+adj3|persönlich|personal||
+adj3|politisch|political||
+adj3|populär|popular||
+adj3|positiv|positive||
+adj3|preiswert|good value||
+adj3|prima|great||
+adj3|privat|private||
+adj3|realistisch|realistic||
+adj3|rechtlich|legal||
+adj3|regelmäßig|regular||
+adj3|regional|regional||
+adj3|reich|rich||
+adj3|reif|ripe, mature||
+adj3|rein|pure, clean||
+adj3|relativ|relative(ly)||
+adj3|riesig|huge||
+adj3|roh|raw||
+adj3|rosa|pink||
+adj3|rot|red||
+adj3|rund|round||
+adj3|satt|full (after eating)||
+adj3|sauer|sour, annoyed||
+adj3|schade|a pity||
+adj3|schief|crooked, wrong||
+adj3|schlecht|bad||
+adj3|schlimm|bad||
+adj3|schrecklich|terrible||
+adj3|schriftlich|written||
+adj3|schuldig|guilty||
+adj3|schwach|weak||
+adj3|schwanger|pregnant||
+adj3|schwarz|black||
+adj3|schweizerisch|Swiss||
+adj3|schädlich|harmful||
+adj3|schön|beautiful, nice||
+adj3|selbstverständlich|of course||
+adj3|seltsam|strange||
+adj3|senkrecht|vertical||
+adj3|sichtbar|visible||
+adj3|sinnlos|pointless||
+adj3|sinnvoll|sensible||
+adj3|sonnig|sunny||
+adj3|sozial|social||
+adj3|spannend|exciting||
+adj3|sparsam|economical, thrifty||
+adj3|speziell|special||
+adj3|spitz|pointed||
+adj3|sportlich|sporty||
+adj3|stark|strong||
+adj3|statistisch|statistical||
+adj3|steil|steep||
+adj3|still|quiet, still||
+adj4|strafbar|punishable||
+adj4|streng|strict||
+adj4|stumm|mute, silent||
+adj4|städtisch|urban, municipal||
+adj4|ständig|constant(ly)||
+adj4|super|great||
+adj4|süchtig|addicted||
+adj4|taub|deaf||
+adj4|technisch|technical||
+adj4|theoretisch|theoretical||
+adj4|tief|deep||
+adj4|tolerant|tolerant||
+adj4|toll|great||
+adj4|tot|dead||
+adj4|total|total(ly)||
+adj4|traditionell|traditional||
+adj4|treu|loyal||
+adj4|typisch|typical||
+adj4|tödlich|deadly||
+adj4|türkisch|Turkish||
+adj4|ukrainisch|Ukrainian||
+adj4|unentschieden|undecided, a draw||
+adj4|ungewöhnlich|unusual||
+adj4|unglaublich|unbelievable||
+adj4|unheimlich|eerie, incredibly||
+adj4|untersagt|prohibited||
+adj4|unterschiedlich|different||
+adj4|ursprünglich|original(ly)||
+adj4|verabredet|having arranged to meet||
+adj4|verantwortlich|responsible||
+adj4|verboten|forbidden||
+adj4|verdächtig|suspicious||
+adj4|vergeblich|in vain||
+adj4|vergnügt|cheerful||
+adj4|verliebt|in love||
+adj4|vernünftig|sensible||
+adj4|verpflichtet|obliged||
+adj4|verrückt|crazy||
+adj4|verständlich|understandable||
+adj4|verwandt|related||
+adj4|violett|violet||
+adj4|virtuell|virtual||
+adj4|vorläufig|temporary, for now||
+adj4|vorsichtig|careful||
+adj4|völlig|completely||
+adj4|waagerecht|horizontal||
+adj4|wahnsinnig|insane, incredibly||
+adj4|wahr|true||
+adj4|weiblich|female||
+adj4|weich|soft||
+adj4|weit|far, wide||
+adj4|weiß|white||
+adj4|weltweit|worldwide||
+adj4|wert|worth||
+adj4|wertlos|worthless||
+adj4|wertvoll|valuable||
+adj4|wild|wild||
+adj4|willkommen|welcome||
+adj4|wunderbar|wonderful||
+adj4|wunderschön|beautiful||
+adj4|zahlreich|numerous||
+adj4|zentral|central||
+adj4|zufällig|by chance||
+adj4|zugänglich|accessible||
+adj4|zukünftig|future||
+adj4|zuständig|responsible||
+adj4|zusätzlich|additional||
+adj4|ängstlich|anxious, fearful||
+adj4|ärgerlich|annoying, annoyed||
+adj4|äußerlich|external(ly)||
+adj4|öffentlich|public||
+adj4|österreichisch|Austrian||
+adj4|üblich|usual||
+adj4|übrig|left over||
+klein1|aber|but||
+klein1|abwärts|downwards||
+klein1|als|as, when, than||
+klein1|also|so, therefore||
+klein1|andererseits|on the other hand||
+klein1|anders|differently||
+klein1|anfangs|at first||
+klein1|auf|on, onto||
+klein1|aufwärts|upwards||
+klein1|aus|out of, from||
+klein1|auseinander|apart||
+klein1|ausschließlich|exclusively||
+klein1|außen|outside||
+klein1|außer|except||
+klein1|außerhalb|outside (of)||
+klein1|bei|at, near, with||
+klein1|beinahe|almost||
+klein1|bereits|already||
+klein1|bevor|before||
+klein1|bis|until||
+klein1|bisher|so far||
+klein1|bloß|only, just||
+klein1|dabei|with it, while doing so||
+klein1|dafür|for it, instead||
+klein1|dagegen|against it, on the other hand||
+klein1|daher|therefore||
+klein1|dahin|there (to it)||
+klein1|damit|so that, with it||
+klein1|daneben|next to it||
+klein1|dass|that||
+klein1|dasselbe|the same thing||
+klein1|dauernd|constantly||
+klein1|denn|because, then||
+klein1|deswegen|that's why||
+klein1|diesmal|this time||
+klein1|doch|but, yes (after a negative)||
+klein1|dorthin|there (to that place)||
+klein1|dreimal|three times||
+klein1|drin|inside||
+klein1|dritte|third||
+klein1|drittens|thirdly||
+klein1|drüben|over there||
+klein1|durch|through||
+klein1|durcheinander|in a mess||
+klein1|eben|just, flat||
+klein1|ebenfalls|also, likewise||
+klein1|ebenso|just as||
+klein1|eher|rather, sooner||
+klein1|eigentlich|actually||
+klein1|einerseits|on the one hand||
+klein1|einschließlich|including||
+klein1|entlang|along||
+klein1|erst|only, not until||
+klein1|erstens|firstly||
+klein1|etwa|about, roughly||
+klein1|etwas|something||
+klein1|eventuell|possibly||
+klein1|extra|extra, on purpose||
+klein1|falls|in case||
+klein1|für|for||
+klein1|ganz|whole, quite||
+klein1|gar|at all||
+klein1|gegen|against||
+klein2|gegenüber|opposite||
+klein2|genauso|just the same||
+klein2|gerade|just, straight||
+klein2|gleichfalls|likewise||
+klein2|halt|just (filler)||
+klein2|heim|home(wards)||
+klein2|hierher|here (to this place)||
+klein2|hinten|at the back||
+klein2|hinterher|afterwards||
+klein2|hoffentlich|hopefully||
+klein2|höchstens|at most||
+klein2|indem|by (doing)||
+klein2|inklusive|including||
+klein2|innen|inside||
+klein2|innerhalb|within||
+klein2|insgesamt|in total||
+klein2|inzwischen|meanwhile||
+klein2|irgendein|some, any||
+klein2|irgendwann|sometime||
+klein2|jederzeit|at any time||
+klein2|jedoch|however||
+klein2|jemals|ever||
+klein2|jemand|someone||
+klein2|jeweils|each, each time||
+klein2|kaum|hardly||
+klein2|klasse|great||
+klein2|kürzlich|recently||
+klein2|längst|long ago, for a long time||
+klein2|man|one, you (people)||
+klein2|meinetwegen|as far as I'm concerned||
+klein2|mindestens|at least||
+klein2|minus|minus||
+klein2|mit|with||
+klein2|miteinander|with each other||
+klein2|mitten|in the middle of||
+klein2|mittlerweile|meanwhile, by now||
+klein2|möglichst|as … as possible||
+klein2|nach|after, to||
+klein2|nachdem|after||
+klein2|natürlich|of course||
+klein2|neben|next to||
+klein2|nebenan|next door||
+klein2|nebenbei|on the side||
+klein2|nein|no||
+klein2|neulich|recently||
+klein2|nicht|not||
+klein2|nichts|nothing||
+klein2|niemand|nobody||
+klein2|nirgendwo|nowhere||
+klein2|nochmals|once again||
+klein2|nun|now||
+klein2|nämlich|you see, namely||
+klein2|obwohl|although||
+klein2|oder|or||
+klein2|offenbar|apparently||
+klein2|ohne|without||
+klein2|per|by, per||
+klein2|plus|plus||
+klein2|pro|per||
+klein2|quer|across||
+klein2|rückwärts|backwards||
+klein2|schließlich|finally, after all||
+klein2|schuld|to blame||
+klein3|seit|since||
+klein3|seitdem|since then||
+klein3|selber|oneself||
+klein3|selbst|self, even||
+klein3|sobald|as soon as||
+klein3|sodass|so that||
+klein3|solange|as long as||
+klein3|sondern|but (rather)||
+klein3|sonst|otherwise||
+klein3|soviel|as much as||
+klein3|sowieso|anyway||
+klein3|spätestens|at the latest||
+klein3|statt|instead of||
+klein3|stündlich|hourly||
+klein3|sämtliche|all||
+klein3|tatsächlich|actually, really||
+klein3|trotz|despite||
+klein3|umgekehrt|the other way round||
+klein3|umso|all the more||
+klein3|umsonst|free, in vain||
+klein3|unbedingt|absolutely||
+klein3|und|and||
+klein3|unter|under, among||
+klein3|unterwegs|on the way||
+klein3|vermutlich|presumably||
+klein3|von|from, of||
+klein3|voneinander|from each other||
+klein3|vor|before, in front of||
+klein3|voraus|ahead||
+klein3|voraussichtlich|probably, expected||
+klein3|vorgestern|the day before yesterday||
+klein3|vorhin|a moment ago||
+klein3|vorn|at the front||
+klein3|vorwärts|forwards||
+klein3|wann|when||
+klein3|warum|why||
+klein3|was|what||
+klein3|wegen|because of||
+klein3|weil|because||
+klein3|wenigstens|at least||
+klein3|wenn|if, when||
+klein3|wer|who||
+klein3|weshalb|why||
+klein3|wie|how||
+klein3|wieso|why||
+klein3|woher|where from||
+klein3|wohin|where to||
+klein3|wohl|probably, well||
+klein3|worum|about what||
+klein3|worüber|about what||
+klein3|während|during, while||
+klein3|zuletzt|last, finally||
+klein3|zumindest|at least||
+klein3|zunächst|first, at first||
+klein3|zurzeit|at the moment||
+klein3|zwar|admittedly||
+klein3|zweite|second||
+klein3|zweitens|secondly||
+klein3|zwischen|between||
+klein3|über|over, about||
+klein3|überhaupt|at all||
+klein3|übermorgen|the day after tomorrow||
+klein3|übrigens|by the way||`.split('\n').map(l => l.split('|'));
+const B1 = {};
+for (const [k, name] of B1_DECKS){ B1[k] = []; THEMES['b1-' + k] = name; }
+for (const [k, de, en, g, forms] of B1_WORDS){
+  const v = {id:'b1w:' + de, de, en, g, th:'b1-' + k};
+  if (forms) v.forms = forms;
+  VOCAB.push(v); VBYID[v.id] = v; B1[k].push(v.id);
+}
+
 // ---- Grammar tables (Tabelle): every grammar table of the A1–B1 syllabus, ordered like Grammatik Aktiv, written fresh for this app ----
 // head: "m|…", "f|…", "n|…", "pl|…" colour a column by gender. read: one line per part of the table ("how to read it").
 const GT = [
@@ -4632,7 +6449,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = '833ff29';  // build.py puts the build number here
+const APP_VERSION = '50634a9';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -5287,6 +7104,21 @@ function runCards(ids, {onDone, extra = false}){
   show();
 }
 
+// The Goethe B1 word list as flashcard decks: one "Learn 10 new" for the whole list, and every topic on its own.
+function b1Section(dueSet){
+  const all = B1_DECKS.flatMap(([k]) => B1[k]), inDeck = all.filter(id => state.cards[id]).length, well = all.filter(id => state.cards[id] && state.cards[id].b >= 3).length;
+  const pct = n => (n / all.length * 100).toFixed(1);
+  return `<section class="card stack">
+    <div class="row" style="justify-content:space-between"><h3>Goethe B1 Wortschatz</h3><span class="tag">${all.length} words</span></div>
+    <p class="muted" style="margin:0">The words of the official B1 word list that your lessons don’t teach yet, in ${B1_DECKS.length} topics. Nouns show the plural, verbs the Perfekt.</p>
+    <div class="tbar"><i style="width:${pct(inDeck)}%"></i><i class="well" style="width:${pct(well)}%"></i></div>
+    <span class="muted" style="font-size:.84rem">${inDeck} in your deck · ${well} known well</span>
+    <div class="row"><button class="btn" data-b1="all:new" ${inDeck < all.length ? '' : 'disabled'}>Learn 10 new</button>${inDeck >= 10 ? '<button class="btn ghost" data-b1="all:quick">Quick round · 20</button>' : ''}</div>
+    <details><summary>Choose a topic</summary><div class="b1list">${B1_DECKS.map(([k, name]) => { const L = B1[k], n = L.filter(id => state.cards[id]).length, due = L.filter(id => dueSet.has(id)).length;
+      return `<div class="b1row"><div><b>${esc(name)}</b><span>${n} of ${L.length} in your deck${due ? ` · ${due} due` : ''}</span><div class="tbar"><i style="width:${n / L.length * 100}%"></i></div></div>
+        <button class="btn ghost" data-b1="${k}:${due ? 'due' : n < L.length ? 'new' : 'quick'}">${due ? 'Review' : n < L.length ? 'Learn 10' : 'Practise'}</button></div>`; }).join('')}</div></details>
+  </section>`;
+}
 function vKarten(){
   const ids = Object.keys(state.cards).filter(id => VBYID[id]), due = dueCards();
   const st = [0,0,0,0]; ids.forEach(id => { const b = state.cards[id].b; st[b === 0 ? 0 : b <= 2 ? 1 : b <= 4 ? 2 : 3]++; });
@@ -5318,12 +7150,19 @@ function vKarten(){
       <button class="btn" id="mw-add">Add</button></div>
     ${my.length ? `<div class="words">${my.map(w => `<span>${w.g ? gspan(w.g, G[w.g]) + ' ' : ''}${esc(w.de)} <span class="muted">· ${esc(w.en)}</span> <button class="x" data-del="${esc(w.id)}" aria-label="Remove ${esc(w.de)}">×</button></span>`).join('')}</div>` : ''}
   </section>
-  ${Object.keys(THEMES).filter(th => !['mine','topv','topn'].includes(th)).map(th => {
+  ${b1Section(dueSet)}
+  ${Object.keys(THEMES).filter(th => !['mine','topv','topn'].includes(th) && !th.startsWith('b1-')).map(th => {
     const l = LESSONS.find(x => x.th === th);
     return `<section class="card"><div class="row" style="justify-content:space-between"><h3>${THEMES[th]}</h3><span class="tag">${learned.has(th) ? 'in deck' : `unlocks with lesson ${LESSONS.indexOf(l)+1}`}</span></div>
     ${learned.has(th) ? `<div class="words" style="margin-top:10px">${VOCAB.filter(v => v.th === th).map(v => `<span>${v.g ? gspan(v.g, G[v.g])+' ' : ''}${v.de}</span>`).join('')}</div>` : ''}</section>`;
   }).join('')}`;
   document.getElementById('rev').onclick = () => runCards(shuffle(due), {onDone: render});
+  $main.querySelectorAll('[data-b1]').forEach(b => b.onclick = () => {
+    const [k, mode] = b.dataset.b1.split(':'), L = k === 'all' ? B1_DECKS.flatMap(([d]) => B1[d]) : B1[k];
+    if (mode === 'new'){ const add = L.filter(id => !state.cards[id]).slice(0, 10); for (const id of add) state.cards[id] = {b:0, d:today()}; save(); runCards(add, {onDone: render}); }
+    else if (mode === 'due') runCards(shuffle(L.filter(id => dueSet.has(id))), {onDone: render});
+    else { const mine = L.filter(id => state.cards[id]); runCards(shuffle(mine.length >= 10 ? mine : L).slice(0, 20), {onDone: render, extra:true}); }
+  });
   $main.querySelectorAll('[data-top]').forEach(b => b.onclick = () => {
     const [k, mode] = b.dataset.top.split(':'), L = TOP100[k];
     if (mode === 'new'){ const add = L.filter(id => !state.cards[id]).slice(0, 10); for (const id of add) state.cards[id] = {b:0, d:today()}; save(); runCards(add, {onDone: render}); }
