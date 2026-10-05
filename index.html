@@ -111,7 +111,7 @@ svg.i{width:18px;height:18px;flex:none;stroke-width:1.9}
 .tb-title{flex:1;min-width:0}
 .tb-title h1{letter-spacing:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .tb-title p{margin:2px 0 0;color:var(--muted);font-size:.84rem}
-@media (max-width:480px){.nm{display:none}#chipXp{display:none}}
+@media (max-width:480px){.nm{display:none}}
 .chips{display:flex;gap:8px;align-items:center}
 .chip{display:inline-flex;align-items:center;gap:6px;height:38px;padding:0 13px;border-radius:999px;background:var(--panel2);font:600 .84rem var(--fm);font-variant-numeric:tabular-nums;white-space:nowrap}
 .chip svg.i{width:16px;height:16px;color:var(--faint)}
@@ -1017,16 +1017,244 @@ table.ct th{background:var(--panel2);color:var(--ink);font-weight:800}
 .resrow,.hit,.nextlist button,.bookrow,.model,.tdeck{background:var(--panel);border:2px solid var(--line)}
 .bub.me{background:var(--go-soft)}
 .cav{background:var(--cta);color:#fff}
+/* ---------- Stitch screens as layout: brand header, page head, focus cards, badge tiles, module cards, tip cards ---------- */
+.card{border:2px solid var(--line);box-shadow:0 3px 0 var(--edge)}
+.btn.big{border-radius:16px}
+.topbar{justify-content:flex-end;gap:10px}
+.tb-brand{display:none;align-items:center;gap:10px;flex:1;min-width:0;border:0;background:none;padding:0;text-align:left}
+.logo.sq{width:36px;height:36px;border-radius:11px;flex:none;background:linear-gradient(135deg,var(--accent-fill),var(--cta));color:#fff;font:800 .8rem var(--f);box-shadow:0 3px 0 var(--edge)}
+.tb-brand b{font:800 1.15rem var(--f);letter-spacing:-.03em;color:var(--go-ink);white-space:nowrap}
+.chip.streak{background:var(--sun-soft);color:var(--sun-ink);border-color:color-mix(in srgb,var(--sun) 40%,transparent)} .chip.streak svg.i{color:var(--sun)}
+.chip.gem{background:var(--accent-soft);color:var(--accent-ink);border-color:color-mix(in srgb,var(--accent) 30%,transparent)} .chip.gem svg.i{color:var(--accent)}
+.avbtn{width:40px;height:40px;flex:none;border-radius:50%;border:0;background:var(--cta);color:#fff;display:grid;place-items:center;box-shadow:0 3px 0 var(--cta-edge)}
+.avbtn:active{transform:translateY(2px);box-shadow:0 1px 0 var(--cta-edge)}
+.phead{display:flex;align-items:flex-end;gap:10px;padding:4px 4px 0}
+.ph-t{flex:1;min-width:0}
+.ph-t h1{font:800 1.8rem/1.15 var(--f);letter-spacing:-.03em}
+.ph-t p{margin:4px 0 0;color:var(--muted);font-size:.9rem;font-weight:500}
+.chip.time{background:var(--accent-soft);color:var(--accent-ink);border-color:color-mix(in srgb,var(--accent) 30%,transparent);height:34px} .chip.time svg.i{color:var(--accent)}
+body.focus .phead{display:none}
+@media (max-width:900px){
+  .topbar{position:sticky;top:0;margin:0 -16px;border-radius:0;background:color-mix(in srgb,var(--g1) 92%,transparent);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);padding:10px 16px}
+  .tb-brand{display:flex}
+  .phead{padding-top:14px}
+}
+@media (max-width:374px){.tb-brand b{display:none}}
+
+/* a white card with an icon square, an eyebrow, a lilac inset and a green 3D button (Stitch "Smart Focus") */
+.fcard{display:flex;flex-direction:column;gap:14px}
+.fc-head{display:flex;align-items:center;gap:12px}
+.fc-head>div{flex:1;min-width:0}
+.fc-head small,.mhead small{display:block}
+.fc-head small{font:800 .72rem var(--f);letter-spacing:.07em;text-transform:uppercase;color:var(--sun-ink)}
+.fc-head h2{font-size:1.4rem;font-weight:800;letter-spacing:-.02em}
+.fc-head h3{font-size:1.08rem;font-weight:800}
+.sq{width:44px;height:44px;flex:none;border-radius:13px;display:grid;place-items:center;background:var(--sun-soft);color:var(--sun-ink);box-shadow:0 3px 0 color-mix(in srgb,var(--sun) 40%,transparent)}
+.sq svg.i{width:21px;height:21px}
+.sq.ind{background:var(--accent-soft);color:var(--accent-ink);box-shadow:0 3px 0 color-mix(in srgb,var(--accent) 30%,transparent)}
+.fc-head .sq.ind+div small{color:var(--accent-ink)}
+.fc-text{margin:0;font-size:.95rem;max-width:62ch}
+.fpill{display:inline-flex;align-items:center;gap:5px;flex:none;border-radius:999px;padding:5px 11px;font:800 .74rem var(--f);background:var(--accent-soft);color:var(--accent-ink);white-space:nowrap}
+.fpill svg.i{width:13px;height:13px}
+.fpill.bad{background:var(--badbg);color:var(--bad)} .fpill.ok{background:var(--go-soft);color:var(--go-ink)} .fpill.amb{background:var(--sun-soft);color:var(--sun-ink)} .fpill.open{background:var(--panel2);color:var(--muted)}
+.inset{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;background:var(--accent-soft);border-radius:14px;padding:12px 14px}
+.inset small{display:block;font:700 .72rem var(--f);color:var(--muted)}
+.inset b{font-size:.95rem;font-weight:800}
+.inset b.fail{color:var(--bad)} .inset b.pass{color:var(--ok)}
+.inset .pbar{grid-column:1/-1;height:8px;border-radius:99px;background:var(--panel);overflow:hidden}
+.inset .pbar i{display:block;height:100%;background:var(--go);border-radius:99px}
+.fc-cta{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px}
+.fc-cta .btn{justify-content:flex-start}
+.xpbox{display:inline-flex;align-items:center;gap:6px;border-radius:16px;padding:0 16px;background:var(--sun-soft);color:var(--sun-ink);font:800 .9rem var(--f);box-shadow:0 4px 0 color-mix(in srgb,var(--sun) 45%,transparent);white-space:nowrap}
+.xpbox svg.i{width:16px;height:16px}
+.done-note{margin:0;font-weight:700;color:var(--go-ink)}
+.shead{display:flex;align-items:baseline;justify-content:space-between;gap:10px;padding:6px 4px 0}
+.shead h3{font-size:1.25rem;font-weight:800;letter-spacing:-.02em}
+.shead small{font:800 .74rem var(--f);color:var(--muted);letter-spacing:.03em}
+
+/* the day's blocks as white list cards */
+.today .blocks{margin:0}
+.blk{background:var(--panel);border:2px solid var(--line);box-shadow:0 3px 0 var(--edge);border-radius:16px;padding:14px}
+.blk.next{border-color:var(--go);box-shadow:0 3px 0 var(--go-edge)}
+.blk.rest{background:transparent;border-style:dashed;box-shadow:none}
+.pfoot{display:flex;flex-direction:column;gap:12px}
+.pfoot .seg-tabs{align-self:flex-start;background:var(--panel2);box-shadow:none}
+.pfoot p{margin:0;font-size:.86rem}
+
+/* Üben tiles: a badge top right, a big title at the bottom */
+.ttop{display:flex;justify-content:space-between;align-items:flex-start;width:100%;margin-bottom:auto}
+.tile[class*="p-"] .ttop .ic{margin:0}
+.ugrid .tile span.ttop{display:flex;overflow:visible;-webkit-line-clamp:unset}
+.ttop em{font:800 .72rem var(--f);font-style:normal;background:rgba(255,255,255,.24);color:#fff;border-radius:999px;padding:4px 10px;opacity:1}
+.tile[class*="p-"]{min-height:168px;gap:2px}
+.tile[class*="p-"] b{font-size:1.5rem;letter-spacing:-.025em}
+.gtag{font:800 .68rem var(--f);font-style:normal;background:var(--sun-soft);color:var(--sun-ink);border-radius:6px;padding:2px 7px;vertical-align:2px;margin-left:4px;letter-spacing:.03em}
+.gtag.ind{background:var(--accent-soft);color:var(--accent-ink)}
+.grow b{font-size:1.02rem;font-weight:800}
+
+/* the exam tip at the bottom of a page */
+.tipcard{display:flex;gap:12px;align-items:flex-start;background:var(--accent-soft);border-radius:20px;padding:16px 18px}
+.tipcard .sq{width:36px;height:36px;border-radius:50%;background:var(--panel);color:var(--accent);box-shadow:none}
+.tipcard .sq svg.i{width:18px;height:18px}
+.tipcard small{font:800 .72rem var(--f);letter-spacing:.06em;text-transform:uppercase;color:var(--accent-ink)}
+.tipcard p{margin:4px 0 0;font-size:.95rem;font-weight:500}
+
+/* Prüfung: a hero card and one card per module */
+.exhero h2{font-size:1.65rem;font-weight:800;letter-spacing:-.025em;margin:2px 0 -4px}
+.lastrun{grid-template-columns:auto minmax(0,1fr) auto;align-items:center;background:var(--panel2)}
+.lastrun .sq{width:40px;height:40px;background:var(--go-soft);color:var(--go-ink);box-shadow:none}
+.exhero .btn.big{justify-content:flex-start}
+.mhead{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:12px;align-items:center}
+.mhead h3{font-size:1.15rem;font-weight:800}
+.mhead small{font:600 .78rem var(--f);color:var(--muted);margin-top:2px}
+.sq.m1{background:var(--accent-soft);color:var(--accent-ink);box-shadow:0 3px 0 color-mix(in srgb,var(--accent) 30%,transparent)}
+.sq.m2{background:var(--go-soft);color:var(--go-ink);box-shadow:0 3px 0 color-mix(in srgb,var(--go) 35%,transparent)}
+.sq.m4{background:var(--p-sky);color:var(--der);box-shadow:0 3px 0 color-mix(in srgb,var(--der) 30%,transparent)}
+.setgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.setgrid .btn{justify-content:space-between;text-align:left;border-radius:14px;padding:12px 14px}
+.setgrid .btn>span{display:flex;flex-direction:column;line-height:1.25}
+.setgrid .btn small{font-size:.72rem;font-weight:600;opacity:.8}
+
+/* Fortschritt: a solid arc, ticked streak days, level bars */
+.gauge .arc-t,.gauge .arc-v{fill:none;stroke-width:22;stroke-linecap:round}
+.gauge .arc-t{stroke:var(--panel2)} .gauge .arc-v{stroke:var(--t2)} .gauge .arc-v.hot{stroke:var(--cta)}
+.gnote{align-self:center;display:inline-flex;align-items:center;gap:7px;margin:14px 0 0;background:var(--sun-soft);color:var(--sun-ink);border-radius:999px;padding:8px 16px;font:700 .84rem var(--f);box-shadow:0 3px 0 color-mix(in srgb,var(--sun) 40%,transparent)}
+.gnote svg.i{width:15px;height:15px}
+.dots i{display:grid;place-items:center}
+.dots i.on{box-shadow:0 3px 0 var(--lime-edge)}
+.dots i svg.i{width:58%;height:58%;color:#3A2200;stroke-width:3}
+.lvls{display:flex;flex-direction:column;gap:14px;margin-bottom:16px}
+.lvlrow>div:first-child{display:flex;align-items:center;gap:6px;margin-bottom:6px}
+.lvlrow b{font-size:.9rem;font-weight:700}
+.lvlrow svg.i{width:14px;height:14px;color:var(--faint)}
+.lvlrow span{margin-left:auto;font-weight:800;color:var(--go-ink)}
+.lvlrow.off b,.lvlrow.off span{color:var(--muted)}
+.b-rings .btn.big{margin-top:auto}
+.seg-tabs button svg.i{width:15px;height:15px;vertical-align:-3px;margin-right:4px}
+/* ---------- Stitch screens, part 2: activity header, lesson, quiz drawers, Blitz, Tabelle, reading, writing, settings ---------- */
+.acthead{display:flex;align-items:center;gap:12px;padding:2px 2px 0}
+.acthead>div{flex:1;min-width:0}
+.acthead small{display:block;font:800 .7rem var(--f);letter-spacing:.07em;text-transform:uppercase;color:var(--go-ink)}
+.acthead b{display:block;font-size:1.12rem;font-weight:800;letter-spacing:-.02em;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.acthead .iconbtn{width:40px;height:40px}
+.acthead .clock{flex:none}
+.eyebrow{display:block;font:800 .7rem var(--f);letter-spacing:.07em;text-transform:uppercase;color:var(--muted);margin-bottom:6px}
+.sq.m2{background:var(--go-soft);color:var(--go-ink);box-shadow:0 3px 0 color-mix(in srgb,var(--go) 35%,transparent)}
+.sq.bad{background:var(--badbg);color:var(--bad);box-shadow:0 3px 0 color-mix(in srgb,var(--die) 30%,transparent)}
+.fc-head .sq.m2+div small{color:var(--go-ink)} .fc-head .sq.bad+div small{color:var(--bad)}
+.fc-head>div:first-child small{color:var(--accent-ink)}
+.btn.big svg.i:last-child:not(:first-child){margin-left:auto}
+
+/* lesson: title head, a picture block, a Merk-Tipp in amber, examples with a speaker on the right */
+.lintro .fc-head{margin-bottom:14px}
+.lintro .fc-head h2{font-size:1.75rem}
+.lintro .cover-hero{margin-bottom:14px}
+.intro .tip,.gtt .tip{position:relative;background:var(--sun-soft);border:2px solid color-mix(in srgb,var(--sun) 35%,transparent);box-shadow:0 4px 0 color-mix(in srgb,var(--sun) 35%,transparent);border-radius:18px;padding:14px 16px 14px 52px;font-weight:500}
+.intro .tip::before,.gtt .tip::before{content:"";position:absolute;left:14px;top:14px;width:26px;height:26px;border-radius:50%;background:var(--sun) url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%233A2200' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='M15 14c.2-1 .7-1.7 1.5-2.5 1-.9 1.5-2.2 1.5-3.5A6 6 0 0 0 6 8c0 1 .2 2.2 1.5 3.5.7.7 1.3 1.5 1.5 2.5'/%3E%3Cpath d='M9 18h6M10 22h4'/%3E%3C/svg%3E") center/16px no-repeat}
+.exlist{display:flex;flex-direction:column;gap:10px}
+.ex.exr{display:flex;align-items:center;gap:12px;background:var(--panel2);border:0;border-radius:16px;padding:12px 14px;margin:0}
+.ex.exr>div{flex:1;min-width:0}
+.ex.exr b{font-size:1.05rem;font-weight:700}
+.ex.exr .say{flex:none;width:42px;height:42px;border-radius:50%;background:var(--accent-soft);color:var(--accent);box-shadow:0 3px 0 color-mix(in srgb,var(--accent) 30%,transparent)}
+
+/* quiz feedback: light drawers with a coloured top edge (Stitch "Instant Evaluation Drawers") */
+.fb{color:var(--ink);box-shadow:none;border-top:4px solid}
+.fb.ok{background:var(--okbg);border-top-color:var(--go)} .fb.no{background:var(--badbg);border-top-color:var(--die)}
+.fb.ok h3{color:var(--ok)} .fb.no h3{color:var(--bad)} .fb .fbxp{color:var(--ok)}
+.fb .fbi{border:0}
+.fb.ok .fbi{background:var(--go)!important;color:#fff} .fb.no .fbi{background:var(--die)!important;color:#fff}
+.fbans b{text-decoration-color:var(--die)}
+.fbwhy{background:var(--panel);border:2px solid var(--line)}
+.fb #next,.fb #next.go{background:var(--cta);color:#fff;box-shadow:0 4px 0 var(--cta-edge)}
+.fb.no #next{background:var(--die);box-shadow:0 4px 0 color-mix(in srgb,var(--die) 60%,#000)}
+.fb #next:active:not(:disabled){box-shadow:0 1px 0 var(--cta-edge)}
+.fb .btn.ghost{background:var(--panel);color:var(--ink);box-shadow:inset 0 0 0 2px var(--line),0 4px 0 var(--line)}
+.fb .say{background:var(--panel);color:var(--accent);box-shadow:inset 0 0 0 2px var(--line)}
+
+/* Blitz: stat tiles, a word card, three article tiles */
+.gtiles,.bopts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.gtiles span,.bopts .opt{display:flex;flex-direction:column;align-items:center;gap:2px;background:var(--panel);border:2px solid var(--line);border-top:6px solid var(--c);border-radius:16px;padding:14px 6px;box-shadow:0 4px 0 var(--edge)}
+.gtiles .m,.bopts [data-g="m"]{--c:var(--der)} .gtiles .f,.bopts [data-g="f"]{--c:var(--die)} .gtiles .n,.bopts [data-g="n"]{--c:var(--das)}
+.gtiles b,.bopts .opt{font-size:1.6rem;font-weight:800;color:var(--c)}
+.gtiles small,.bopts .opt small{font:800 .64rem var(--f);letter-spacing:.06em;text-transform:uppercase;color:var(--muted)}
+.bopts .opt kbd{display:none}
+.bopts .opt:hover:not(:disabled){border-color:var(--line);border-top-color:var(--c);box-shadow:0 4px 0 var(--c)}
+.bopts .opt:active{transform:translateY(3px);box-shadow:0 1px 0 var(--edge)}
+.bstats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.bstats div{background:var(--go-soft);color:var(--go-ink);border-radius:16px;padding:10px;text-align:center;box-shadow:0 3px 0 color-mix(in srgb,var(--go) 30%,transparent)}
+.bstats .amb{background:var(--sun-soft);color:var(--sun-ink);box-shadow:0 3px 0 color-mix(in srgb,var(--sun) 40%,transparent)}
+.bstats .ind{background:var(--accent-soft);color:var(--accent-ink);box-shadow:0 3px 0 color-mix(in srgb,var(--accent) 30%,transparent)}
+.bstats b{display:block;font:800 1.5rem/1.1 var(--f)}
+.bstats small{font:800 .64rem var(--f);letter-spacing:.06em;text-transform:uppercase}
+.blitz .word{font-size:2.3rem;font-weight:800;letter-spacing:-.03em}
+#bz{text-align:center;padding-block:30px}
+
+/* Tabelle: search, case pills, the matrix, the Eselsbrücke */
+.tsearch{display:flex;align-items:center;gap:10px;background:var(--panel);border:2px solid var(--line);border-radius:16px;padding:0 14px;box-shadow:0 3px 0 var(--edge);color:var(--muted)}
+.tsearch input{flex:1;min-width:0;border:0;background:none;font:inherit;color:var(--ink);padding:13px 0;outline:none}
+.tsearch:focus-within{border-color:var(--accent)}
+.tfilter{display:flex;gap:8px;overflow-x:auto;padding:2px 2px 6px;scrollbar-width:none}
+.tfilter button{flex:none;border:2px solid var(--line);background:var(--panel);border-radius:999px;padding:8px 14px;font-weight:700;font-size:.84rem;color:var(--ink);box-shadow:0 3px 0 var(--edge)}
+.tfilter button[aria-pressed="true"]{background:var(--cta);border-color:var(--cta);color:#fff;box-shadow:0 3px 0 var(--cta-edge)}
+table.mx td,table.mx th{vertical-align:middle;padding:9px 6px} table.mx{width:100%;min-width:0;table-layout:fixed} table.mx th{font-size:.72rem} table.mx td:first-child,table.mx th:first-child{width:21%;padding-left:10px}
+table.mx td b{display:block;font-size:1.05rem}
+table.mx td small{display:block;font-size:.72rem;color:var(--muted)}
+table.mx td.hl{background:var(--accent-soft)}
+table.mx tr.akk td.hl{background:var(--badbg)} table.mx tr.akk td.hl b{color:var(--bad)}
+table.mx tr.dat td.hl b{color:var(--accent-ink)}
+table.mx tr.gen td.hl{background:var(--sun-soft)} table.mx tr.gen td.hl b{color:var(--sun-ink)}
+.eselcard{background:var(--sun-soft);border:2px solid color-mix(in srgb,var(--sun) 40%,transparent);box-shadow:0 4px 0 color-mix(in srgb,var(--sun) 40%,transparent);border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:14px}
+.eselcard .sq{background:var(--panel)}
+.esel{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.esel div{display:flex;justify-content:space-between;align-items:baseline;gap:6px;background:var(--panel);border-radius:14px;padding:12px 14px}
+.esel span{font-size:.84rem;color:var(--muted)}
+.esel b{font-size:1.25rem;font-weight:800;color:var(--accent-ink)}
+
+/* reading and listening: a head card with chips, letter options, a green read-aloud bar */
+.taskhead h2{font-size:1.5rem;font-weight:800;margin:12px 0 4px}
+.readbar{display:flex;gap:8px;margin:2px 0 12px}
+.readbar .btn{flex:1}
+.readbar .btn.ghost{flex:none}
+.iopts{display:flex;flex-direction:column;gap:8px}
+.io{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border-radius:14px;padding:10px 12px}
+.io kbd{flex:none;width:30px;height:30px;border-radius:9px;display:grid;place-items:center;background:var(--panel2);font:800 .82rem var(--f);color:var(--muted)}
+.io.sel kbd{background:var(--accent);color:#fff}
+.io.right kbd{background:var(--go);color:#fff} .io.wrong kbd{background:var(--die);color:#fff}
+.ix{border-radius:14px;padding:12px 14px}
+.ix.ok{background:var(--okbg);color:var(--ok)} .ix.no{background:var(--badbg);color:var(--bad)}
+
+/* writing: criteria chips, mistake cards */
+.crits{display:flex;flex-wrap:wrap;gap:6px}
+.crits span{display:inline-flex;align-items:center;gap:5px;background:var(--go-soft);color:var(--go-ink);border-radius:999px;padding:5px 11px;font:700 .8rem var(--f)}
+.crits svg.i{width:13px;height:13px}
+.fc-head small.wtag{color:var(--accent-ink)}
+.wcheck{margin-top:8px;padding-top:16px;border-top:2px solid var(--line)}
+.scorepill{font-size:.95rem;padding:6px 14px}
+.checks,.mist{list-style:none;padding:0;margin:0;display:flex;flex-direction:column;gap:8px}
+.checks li,.mist li{display:flex;gap:10px;align-items:flex-start;border-radius:14px;padding:12px 14px}
+.checks li.no,.mist li{background:var(--badbg)} .checks li.ok{background:var(--okbg);padding-block:8px}
+.ci{flex:none;width:24px;height:24px;border-radius:7px;display:grid;place-items:center;color:#fff;margin-top:1px}
+.ci svg.i{width:14px;height:14px;stroke-width:3}
+.checks li.no .ci,.mist .ci{background:var(--die)} .checks li.ok .ci{background:var(--go)}
+.mist s{color:var(--bad)} .mist ins{color:var(--ok);text-decoration:none;font-weight:700}
+
+/* settings: a version row like the Stitch screen */
+.verrow{display:flex;align-items:center;gap:12px}
+.verrow>div{flex:1;min-width:0}
+.verrow small{display:block;font:800 .72rem var(--f);letter-spacing:.06em;text-transform:uppercase;color:var(--go-ink)}
+.verrow span{font-size:.86rem;color:var(--muted)}
+@media (max-width:480px){.verrow{flex-wrap:wrap}.verrow .btn{width:100%}}
 </style>
 
 <div class="shell">
   <aside class="side" id="tabs" aria-label="Sections"></aside>
   <div class="mainwrap">
     <header class="topbar">
-      <div class="tb-title"><h1 id="vtitle">Heute</h1><p id="vsub"></p></div>
-      <div class="chips"><span class="chip" id="chipStreak" title="Days in a row"></span><span class="chip" id="chipXp" title="Minutes studied today / daily goal"></span>
-        <button class="iconbtn always" id="searchBtn" aria-label="Look something up" title="Look something up"></button><button class="iconbtn always" id="moveBtn" aria-label="Settings and moving progress" title="Settings"></button><button class="iconbtn" id="modeBtn" aria-label="Switch light or dark"></button><span class="avatar" aria-hidden="true">M</span></div>
+      <button class="tb-brand" data-goto="heute" aria-label="Weg zur B1, today"><span class="logo sq">B1</span><b>Weg zur B1</b></button>
+      <div class="chips"><span class="chip streak" id="chipStreak" title="Days in a row"></span><span class="chip gem" id="chipGem" title="XP in total"></span>
+        <button class="iconbtn always" id="moveBtn" aria-label="Settings" title="Settings"></button><button class="avbtn" id="meBtn" aria-label="My progress" title="My progress"></button></div>
     </header>
+    <div class="phead"><div class="ph-t"><h1 id="vtitle">Heute</h1><p id="vsub"></p></div><span class="chip time" id="chipXp" title="Minutes studied today / daily goal"></span><button class="iconbtn always" id="searchBtn" aria-label="Look something up" title="Look something up"></button></div>
     <main id="main" class="stack"></main>
   </div>
 </div>
@@ -6573,7 +6801,7 @@ const LUC = {heute:'House', pfad:'Route', ueben:'Dumbbell', pruefung:'Graduation
   say:'Volume2', flame:'Flame', play:'Play', sun:'Sun', moon:'Moon', x:'X', back:'ArrowLeft', next:'ArrowRight', check:'Check', clock:'Clock', list:'ListChecks',
   target:'Target', zap:'Zap', brain:'Brain', chevL:'ChevronLeft', chevR:'ChevronRight', cloud:'Cloud', device:'Smartphone', snow:'Snowflake', trophy:'Trophy',
   shapes:'Shapes', dialog:'MessagesSquare', repeat:'Repeat', timer:'Timer', spell:'SpellCheck', headphones:'Headphones', sparkles:'Sparkles',
-  book:'BookMarked', video:'CirclePlay', ext:'ArrowUpRight', move:'ArrowLeftRight', copy:'ClipboardCopy', gear:'Settings', phone:'Phone', mic:'Mic', eye:'Eye', eyeoff:'EyeOff', trend:'TrendingUp', fortschritt:'TrendingUp', search:'Search', suche:'Search', reset:'RotateCcw', zin:'ZoomIn', zout:'ZoomOut', fileup:'FileUp', trash:'Trash2'};
+  book:'BookMarked', video:'CirclePlay', ext:'ArrowUpRight', move:'ArrowLeftRight', copy:'ClipboardCopy', gear:'Settings', phone:'Phone', mic:'Mic', eye:'Eye', eyeoff:'EyeOff', trend:'TrendingUp', fortschritt:'TrendingUp', search:'Search', suche:'Search', gem:'Gem', sliders:'SlidersHorizontal', user:'User', bulb:'Lightbulb', lock:'Lock', badge:'BadgeCheck', palette:'Palette', reset:'RotateCcw', zin:'ZoomIn', zout:'ZoomOut', fileup:'FileUp', trash:'Trash2'};
 const iconCache = {};
 const icon = k => {
   if (iconCache[k]) return iconCache[k];
@@ -6587,7 +6815,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = 'c5808a7';  // build.py puts the build number here
+const APP_VERSION = '420613c';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -6674,7 +6902,7 @@ function nav(){
         <label class="switch" for="soundSw">Read answers aloud <input type="checkbox" id="soundSw"></label>
         <button class="sync" data-view="daten">${icon('gear')}<span>Settings · saved on this device</span></button>
       </div>`;
-    document.getElementById('moveBtn').innerHTML = icon('gear');
+    document.getElementById('moveBtn').innerHTML = icon('sliders'); document.getElementById('meBtn').innerHTML = icon('user');
     document.getElementById('searchBtn').innerHTML = icon('search');
     navBuilt = true;
   }
@@ -6687,8 +6915,6 @@ function nav(){
   tabs.querySelector('#soundSw').checked = !!state.sound;
   placePill();
   document.body.classList.toggle('focus', !!activity);
-  const mb = document.getElementById('modeBtn'), want = curMode() === 'dark' ? 'sun' : 'moon';
-  if (mb && mb.dataset.icon !== want){ mb.innerHTML = icon(want); mb.dataset.icon = want; }
 }
 // The highlight behind the current main tab is one element that glides from tab to tab (transform only).
 function placePill(){
@@ -6709,15 +6935,16 @@ document.getElementById('tabs').addEventListener('click', e => {
 document.getElementById('tabs').addEventListener('change', e => { if (e.target.id === 'soundSw'){ state.sound = e.target.checked; save(); } });
 document.getElementById('searchBtn').addEventListener('click', () => { stopActivity(); view = 'suche'; render(); toTop(); });
 document.getElementById('moveBtn').addEventListener('click', () => { stopActivity(); view = 'daten'; render(); toTop(); });
-document.getElementById('modeBtn').addEventListener('click', () => setMode(curMode() === 'dark' ? 'light' : 'dark'));
+document.getElementById('meBtn').addEventListener('click', () => { stopActivity(); view = 'fortschritt'; render(); toTop(); });
 function chips(){
   const t = today(), s = streakInfo(state.met, t);
   const cs = document.getElementById('chipStreak');
   cs.innerHTML = `${icon('flame')}${s.streak}`; cs.classList.toggle('lit', s.todayDone); cs.title = `${s.streak} days in a row`;
-  document.getElementById('chipXp').innerHTML = `${icon('clock')}${minutesOn(state, t)}/${state.planMin} min`;
+  document.getElementById('chipXp').innerHTML = `${icon('clock')}${minutesOn(state, t)}/${state.planMin}m`;
+  document.getElementById('chipGem').innerHTML = `${icon('gem')}${state.xp}`;
 }
-const TITLES = {pfad:['Lernpfad','Weg zur B1 / Lernpfad'], ueben:['Üben','Weg zur B1 / Üben'], fortschritt:['Fortschritt','Weg zur B1 / Your progress'], suche:['Nachschlagen','Weg zur B1 / Look something up'], pruefung:['Prüfung','Weg zur B1 / Goethe-Zertifikat B1'],
-  tabelle:['Tabelle','Weg zur B1 / Grammatik auf einen Blick'], karten:['Karten','Üben / Karten'], lesen:['Lesen','Üben / Lesen'], schreiben:['Schreiben','Üben / Schreiben'], telefon:['Sprechen','Üben / Sprechen'], daten:['Einstellungen','Weg zur B1 / Gemini and your progress']};
+const TITLES = {pfad:['Lernpfad','Dein Weg von A1 bis B1'], ueben:['Üben','Gezieltes Training · A1 bis B1'], fortschritt:['Fortschritt','Serie, Statistik und Ziele'], suche:['Nachschlagen','Wörter, Grammatik und Lektionen'], pruefung:['Prüfung','Goethe-Zertifikat B1'],
+  tabelle:['Grammatik-Tabellen','Alle Fälle auf einen Blick'], karten:['Karten','Spaced Repetition'], lesen:['Lesen','Texte lesen und hören'], schreiben:['Schreiben','Briefe, E-Mails und Meinungen'], telefon:['Sprechen','Rollenspiele am Telefon'], daten:['Einstellungen','Gemini, Stimme und Fortschritt']};
 function setHead(t, sub){ document.getElementById('vtitle').textContent = t; document.getElementById('vsub').textContent = sub || ''; }
 function setTitle(){
   const h = new Date().getHours(), [t, sub] = view === 'heute'
@@ -6797,21 +7024,21 @@ function completeLesson(l){
 
 // ---- views ----
 let calOffset = 0;
+// Short exam tips for the tip cards (one per day). Facts about the format: Goethe-Zertifikat B1, Erwachsene.
+const EXAM_TIPS = [
+  ['Lesen', 'Read the questions first, then the text. You are looking for the answer, not for every word.'],
+  ['Hören', 'Teil 2 and Teil 3 play only once. Use the time before the audio to read the tasks and underline the key words.'],
+  ['Schreiben', 'Every task point you leave out costs points. Tick them off before you hand in.'],
+  ['Schreiben', 'Formal e-mail (Teil 3): start with „Sehr geehrte Frau …,“ and end with „Mit freundlichen Grüßen“.'],
+  ['Sprechen', 'Join your ideas: weil, obwohl and dass send the verb to the end; deshalb and trotzdem put it right after them.'],
+  ['Sprechen', 'In Teil 1, make suggestions and react to your partner: „Wie wäre es, wenn …?“, „Gute Idee, aber …“.']];
+const actHead = (id, eyebrow, title, extra = '') => `<div class="acthead"><button class="iconbtn always" id="${id}" aria-label="Close">${icon('x')}</button><div><small>${esc(eyebrow)}</small><b>${esc(title)}</b></div>${extra}</div>`;
+const tipCard = (i = 0) => { const [part, t] = EXAM_TIPS[(new Date().getDate() + i) % EXAM_TIPS.length];
+  return `<section class="tipcard"><span class="sq">${icon('bulb')}</span><div><small>B1 Prüfungstipp · ${part}</small><p>${t}</p></div></section>`; };
+// One thick half-circle arc, as in the Stitch Tagesziel card.
 function gaugeSvg(frac, hot){
-  const N = 12, R = 92, cx = 110, cy = 112, gap = 4, on = Math.round(Math.min(1, frac) * N);
-  let p = '';
-  for (let i = 0; i < N; i++){
-    const a0 = Math.PI + (i * 180 / N + gap / 2) * Math.PI / 180, a1 = Math.PI + ((i + 1) * 180 / N - gap / 2) * Math.PI / 180;
-    p += `<path class="seg${i < on ? ' on' : ''}${i < on && hot ? ' hot' : ''}" style="--i:${i}" d="M${(cx + R * Math.cos(a0)).toFixed(1)} ${(cy + R * Math.sin(a0)).toFixed(1)} A${R} ${R} 0 0 1 ${(cx + R * Math.cos(a1)).toFixed(1)} ${(cy + R * Math.sin(a1)).toFixed(1)}"/>`;
-  }
-  return `<svg viewBox="0 0 220 122" role="img" aria-label="${Math.round(Math.min(1, frac) * 100)}% of today’s goal">${p}</svg>`;
-}
-function ringsSvg(vals){
-  const rs = [70, 53, 36];
-  return `<svg viewBox="0 0 170 170" role="img" aria-label="${vals.map(v => `${v.label} ${v.pct}%`).join(', ')}">${vals.map((v, i) => {
-    const r = rs[i], c = 2 * Math.PI * r, len = c * v.pct / 100;
-    return `<circle class="trk" cx="85" cy="85" r="${r}"/>` + (v.pct ? `<circle class="val" cx="85" cy="85" r="${r}" stroke="${v.color}" style="--len:${len.toFixed(1)}" stroke-dasharray="${len.toFixed(1)} ${c.toFixed(1)}" stroke-dashoffset="0" transform="rotate(-90 85 85)"/>` : '');
-  }).join('')}</svg>`;
+  const pct = Math.round(Math.min(1, frac) * 100), d = 'M20 112 A90 90 0 0 1 200 112';
+  return `<svg viewBox="0 0 220 128" role="img" aria-label="${pct}% of today’s goal"><path class="arc-t" d="${d}"/>${pct ? `<path class="arc-v${hot ? ' hot' : ''}" d="${d}" pathLength="100" stroke-dasharray="${pct} 100"/>` : ''}</svg>`;
 }
 function calHtml(){
   const now = new Date(), base = new Date(now.getFullYear(), now.getMonth() + calOffset, 1), y = base.getFullYear(), mo = base.getMonth();
@@ -6876,26 +7103,26 @@ function vHeute(){
         ${b.t === 'app' && !done ? `<button class="btn ghost sm" data-run="${b.key}">Start</button>` : ''}</li>`;
     };
     const pct = Math.min(100, Math.round(mins / goal * 100));
-    card = `<section class="card step plancard">
-      <div class="phero" style="--sc:${stageColor(st)}">
-        <div class="ptop"><span class="plabel">${st ? `${st.name} · stage ${sn} of ${STAGES.length}` : 'Exam training'}</span>
-</div>
-        <h2>Dein Plan für heute</h2>
-        <p class="pcan">${st ? st.can : 'All lessons are done. Now it is exam training: reading, writing, listening and full practice exams.'}</p>
-        <div class="pmeta"><span>Studied today</span><span>${mins} / ${goal} min</span></div><div class="pbar"><i style="width:${pct}%"></i></div>
-        ${next ? `<div class="cta-row"><button class="btn lime" id="go">${icon(next.t === 'app' ? 'play' : 'check')}<span>${next.t === 'app' ? 'Next: ' : 'Done: '}${esc(next.title)}</span><span class="bmin">${next.min} min</span></button></div>`
-               : `<p class="done-note">Plan complete. ${mins >= goal ? 'Daily goal reached. Your streak is safe.' : 'Well done. Choose a longer plan above if you want to keep going.'}</p>`}
-      </div>
-      <ol class="blocks">${plan.blocks.map(row).join('')}</ol>
-      <div class="pfoot"><div class="seg-tabs" role="group" aria-label="Length of the plan">${[[30, '30 min'], [60, '1 hour'], [120, '2 hours']].map(([v, l]) => `<button data-size="${v}" aria-pressed="${goal === v}">${l}</button>`).join('')}</div>
-        <p class="muted">Lessons and exercises count by themselves. Tick book and video blocks when you finish them.</p></div>
-    </section>`;
+    const nb = plan.blocks.filter(b => b.t !== 'rest'), nd = nb.filter(b => plan.done[b.key]).length;
+    card = `<section class="card fcard">
+      <div class="fc-head"><span class="sq">${icon('target')}</span><div><small>Dein Plan für heute</small><h2>${st ? esc(st.name) : 'Prüfungstraining'}</h2></div><span class="fpill">${st ? `Stufe ${sn}/${STAGES.length}` : 'B1'}</span></div>
+      <p class="fc-text">${st ? st.can : 'All lessons are done. Now it is exam training: reading, writing, listening and full practice exams.'}</p>
+      <div class="inset"><div><small>Heute gelernt</small><b>${mins} / ${goal} min</b></div><div><small>Plan</small><b>${nd} von ${nb.length} erledigt</b></div><div class="pbar"><i style="width:${pct}%"></i></div></div>
+      ${next ? `<div class="fc-cta"><button class="btn big" id="go">${icon(next.t === 'app' ? 'play' : 'check')}<span>${next.t === 'app' ? 'Next: ' : 'Done: '}${esc(next.title)}</span></button><span class="xpbox">${icon('clock')}${next.min} min</span></div>`
+             : `<p class="done-note">Plan complete. ${mins >= goal ? 'Daily goal reached. Your streak is safe.' : 'Well done. Choose a longer plan below if you want to keep going.'}</p>`}
+    </section>
+    <div class="shead"><h3>Deine Blöcke</h3><small>${nb.length} Schritte</small></div>
+    <ol class="blocks">${plan.blocks.map(row).join('')}</ol>
+    <section class="card pfoot"><div class="fc-head"><span class="sq ind">${icon('clock')}</span><div><small>Planlänge</small><h3>How long today?</h3></div></div>
+      <div class="seg-tabs" role="group" aria-label="Length of the plan">${[[30, '30 min'], [60, '1 hour'], [120, '2 hours']].map(([v, l]) => `<button data-size="${v}" aria-pressed="${goal === v}">${l}</button>`).join('')}</div>
+      <p class="muted">Lessons and exercises count by themselves. Tick book and video blocks when you finish them.</p></section>`;
   }
   $main.innerHTML = `<div class="today">${card}
     <section class="card daily">
       <div class="dstreak" title="${s.streak} days in a row">${icon('flame')}<b>${s.streak}</b><span>${s.streak === 1 ? 'day' : 'days'} in a row</span></div>
       <div class="dgoal"><div class="progline"><span>Daily goal</span><b>${mins} / ${goal} min</b></div><div class="bar"><i style="width:${Math.min(100, Math.round(mins / goal * 100))}%"></i></div></div>
     </section>
+    ${first ? '' : tipCard()}
     <div class="row more"><button class="linkbtn" data-goto="fortschritt">${icon('trend')}See my progress</button><button class="linkbtn" data-goto="suche">${icon('suche')}Look something up</button><button class="linkbtn" data-goto="ueben">${icon('ueben')}Practise something else</button></div></div>`;
   const goBtn = document.getElementById('go');   // gone when the whole plan is done
   if (goBtn) goBtn.onclick = first ? startSession : () => { if (next.t === 'app') runBlock(next); else { tickBlock(next.key, true); render(); } };
@@ -6913,7 +7140,7 @@ function vFortschritt(){
   const week = Array.from({length:7}, (_, i) => { const k = addDays(t, i - 6), [yy, mm, dd] = k.split('-').map(Number); return {k, xp:minutesOn(state, k), met:!!state.met[k], dow:DOW[new Date(yy, mm - 1, dd).getDay()]}; });
   const top = Math.max(state.planMin, ...week.map(w => w.xp)), ymax = Math.ceil(top / 30) * 30 || 30, wsum = week.reduce((a, w) => a + w.xp, 0);
   // last 28 days for the streak matrix
-  const dots = Array.from({length:35}, (_, i) => addDays(t, i - 34)).map(k => `<i class="${state.met[k] ? 'on' : s.frozen[k] ? 'frz' : ''}${k === t ? ' today' : ''}" title="${k}"></i>`).join('');
+  const dots = Array.from({length:35}, (_, i) => addDays(t, i - 34)).map(k => `<i class="${state.met[k] ? 'on' : s.frozen[k] ? 'frz' : ''}${k === t ? ' today' : ''}" title="${k}">${state.met[k] ? icon('check') : ''}</i>`).join('');
   const lv = l => { const all = LESSONS.filter(x => x.level === l); return Math.round(all.filter(x => state.done[x.id]).length / all.length * 100); };
   const readPct = Math.round(LIBRARY.filter(r => state.read[r.id]).length / LIBRARY.length * 100);
   const cal = calHtml(), nr = nextReading(), lastExam = (state.exams || []).slice(-1)[0], monthDays = Object.keys(state.met).filter(k => state.met[k] && k.slice(0, 7) === t.slice(0, 7)).length;
@@ -6926,7 +7153,7 @@ function vFortschritt(){
       <div class="chead"><h3>Tagesziel</h3>
         <span class="goalsel"><label class="tag" for="goal" style="position:absolute;left:-9999px">Daily goal</label><select id="goal">${[[30, '30 min'], [60, '1 hour'], [120, '2 hours']].map(([g, l]) => `<option value="${g}" ${state.planMin === g ? 'selected' : ''}>${l}</option>`).join('')}</select></span></div>
       <div class="gauge">${gaugeSvg(xpT / state.planMin, s.todayDone)}<div class="read"><b>${xpT}</b><small>of ${state.planMin} min</small></div></div>
-      <p class="muted" style="text-align:center;margin:10px 0 0;font-size:.86rem">${s.todayDone ? 'Goal reached. Your streak is safe today.' : `${state.planMin - xpT} min to keep your streak`}</p>
+      <p class="gnote">${icon(s.todayDone ? 'check' : 'zap')}${s.todayDone ? 'Goal reached. Your streak is safe today.' : `${state.planMin - xpT} min to keep your streak`}</p>
     </section>
     <section class="card b-streak">
       <div class="chead"><h3>Serie</h3><span class="tag">${icon('snow')} ${s.freezes} freeze${s.freezes === 1 ? '' : 's'}</span></div>
@@ -6949,9 +7176,11 @@ function vFortschritt(){
       <div class="legend" style="margin-top:10px"><span><i style="background:var(--accent)"></i>minutes</span><span><i style="background:var(--sun)"></i>goal reached</span><span><i style="border:1.5px dashed var(--faint);background:none"></i>daily goal</span></div>
     </section>
     <section class="card b-rings">
-      <div class="chead"><h3>Fortschritt</h3></div>
-      <div class="rings"><div class="mid"><span><b>${pct}%</b><small>of all lessons</small></span></div>${ringsSvg([{label:'A1', pct:lv('A1'), color:'var(--accent)'}, {label:'A2', pct:lv('A2'), color:'var(--sun)'}, {label:'Lesen', pct:readPct, color:'var(--ring3)'}])}</div>
-      <div class="legend" style="justify-content:center"><span><i style="background:var(--accent)"></i>A1 ${lv('A1')}%</span><span><i style="background:var(--sun)"></i>A2 ${lv('A2')}%</span><span><i style="background:var(--ring3)"></i>Lesen ${readPct}%</span></div>
+      <div class="chead"><h3>Dein B1-Fortschritt</h3><span class="fpill ok">${pct}% aller Lektionen</span></div>
+      <div class="lvls">${[['A1', 'Grundkenntnisse'], ['A2', 'Alltag & Beruf'], ['B1', 'Zertifikat Deutsch']].map(([l, n]) => { const v = lv(l);
+        return `<div class="lvlrow${v ? '' : ' off'}"><div><b>Stufe ${l} · ${n}</b>${v ? '' : icon('lock')}<span>${v}%</span></div><div class="bar"><i style="width:${v}%"></i></div></div>`; }).join('')}
+        <div class="lvlrow${readPct ? '' : ' off'}"><div><b>Lesen · ${LIBRARY.length} Texte</b><span>${readPct}%</span></div><div class="bar"><i style="width:${readPct}%"></i></div></div></div>
+      <button class="btn big" data-goto="pfad">Weiterlernen${icon('next')}</button>
     </section>
     <section class="card b-weak">
       <div class="chead"><h3>Deine Schwächen</h3>${weak.length ? `<button class="btn ghost" id="weakBtn" style="padding:7px 14px;font-size:.82rem">${icon('target')}Train</button>` : ''}</div>
@@ -7076,18 +7305,19 @@ function openLesson(l, onDone){
   const i = LESSONS.indexOf(l);
   setHead(l.title, `Lernpfad / ${l.level} / Lektion ${i + 1}`);
   $main.innerHTML = `
-  <div class="row"><button class="linkbtn" id="back">${icon('back')}Back</button></div>
-  <section class="card intro">
-    <div class="cover-hero ${kindClass(l)}" style="--sc:${stageColor(stageOf(l))}"><span class="phrase">${coverHtml(l)}</span><span class="pill">${l.level} · Lesson ${i+1} · ${l.kind}</span></div>
-    <h2 style="margin:0 0 .5em">${l.title}</h2>
+  ${actHead('back', `Niveau ${l.level}`, `Lektion ${i + 1} · ${l.title}`)}
+  <div class="row" style="gap:6px"><span class="fpill">${icon('lesen')}${l.level} · Lektion ${i + 1} · ${esc(l.kind)}</span>${state.done[l.id] ? `<span class="fpill ok">${icon('check')}Erledigt</span>` : ''}</div>
+  <section class="card intro lintro">
+    <div class="fc-head"><div><small>${esc(stageOf(l) ? stageOf(l).name : l.level)}</small><h2>${l.title}</h2></div><span class="sq ind">${icon(l.th ? 'karten' : 'tabelle')}</span></div>
+    <div class="cover-hero ${kindClass(l)}" style="--sc:${stageColor(stageOf(l))}"><span class="phrase">${coverHtml(l)}</span></div>
     ${l.intro}
-    <h4>Examples · tap to listen</h4>
-    ${l.ex.map(([de,en]) => `<div class="ex">${sayBtn(de)}<div><b>${de}</b><span>${en}</span></div></div>`).join('')}
     ${l.repeat ? `<h4>Listen and repeat</h4><p class="muted" style="margin:0 0 6px">Tap ${icon('say')} to hear the word, then say it out loud.${SpeechRec ? ` Tap ${icon('mic')} and say it: the app tells you if it understood you.` : ''}</p>
     <div class="repeat">${l.repeat.map((w, k) => `<div class="rp">${sayBtn(w)}<b>${esc(w)}</b>${SpeechRec ? `<button class="say" data-rp="${k}" aria-label="Say ${esc(w)}">${icon('mic')}</button>` : ''}<span class="rpres" id="rp${k}"></span></div>`).join('')}</div>` : ''}
     ${l.th ? `<h4>Words in this lesson (${VOCAB.filter(v => v.th === l.th).length})</h4><div class="words">${VOCAB.filter(v => v.th === l.th).map(v => `<span>${v.g ? gspan(v.g, G[v.g])+' ' : ''}${v.de} <span class="muted">· ${v.en}</span></span>`).join('')}</div>` : ''}
   </section>
-  <button class="btn big" id="practice">${state.done[l.id] ? 'Practise again' : 'Start practice'} · ${l.drills.reduce((a,d) => a+d[1], 0)} questions</button>
+  ${l.ex.length ? `<section class="card"><div class="chead"><h3>Audio-Beispiele</h3><span class="tag">Tap to listen</span></div><div class="exlist">
+    ${l.ex.map(([de,en]) => `<div class="ex exr"><div><b>${de}</b><span>${en}</span></div>${sayBtn(de)}</div>`).join('')}</div></section>` : ''}
+  <button class="btn big" id="practice">${icon('play')}<span>${state.done[l.id] ? 'Practise again' : 'Jetzt üben'} · ${l.drills.reduce((a,d) => a+d[1], 0)} Fragen</span>${icon('next')}</button>
   ${state.done[l.id] ? '' : '<button class="btn ghost" id="testout">Test out</button><p class="muted hint">Already know this? 80% right on the first try completes the lesson.</p>'}
   ${resHtml(l)}`;
   $main.querySelectorAll('[data-rp]').forEach(b => b.onclick = () => {
@@ -7326,29 +7556,32 @@ function vKarten(){
 function vUeben(){
   const pron = grammarPool().filter(d => ['pron','dialog','ptable'].includes(d[0]));
   const due = dueCards().length, nr = nextReading(), weak = weakSpots().slice(0, 4), wdone = Object.keys(state.writing).length;
+  const w0 = weak[0], s0 = w0 && state.stats[w0.k];
   $main.innerHTML = `
-  <section class="card">
-    <div class="chead"><h3>Deine Schwächen</h3>${weak.length ? `<button class="btn" id="weak">${icon('target')}Train my weak spots</button>` : ''}</div>
-    ${weak.length ? `<div class="wlist">${weak.map(w => { const st = state.stats[w.k];
-      return `<div class="wrow"><span class="wi">${icon('brain')}</span><span style="min-width:0"><b>${w.name}</b><br><span class="muted" style="font-size:.8rem">${st.c} of ${st.n} right on the first try</span></span><span class="pct ${w.pct < 60 ? 'fail' : w.pct >= 80 ? 'pass' : ''}">${w.pct}%</span><span></span></div>`; }).join('')}</div>`
-      : '<p class="empty">Every exercise type you practise is tracked. After a few lessons your weakest topics show up here, and Fall-Training gives you more of them.</p>'}
+  <section class="card fcard">
+    <div class="fc-head"><span class="sq">${icon('target')}</span><div><small>Smart Focus</small><h2>${w0 ? esc(w0.name) : 'Fall-Training'}</h2></div>${w0 ? `<span class="fpill bad">${w0.pct}% richtig</span>` : ''}</div>
+    <p class="fc-text">${w0 ? `You get this right ${s0.c} of ${s0.n} times on the first try. Fall-Training gives you more of it until it sticks.`
+      : 'Every exercise type you practise is tracked. After a few lessons your weakest topic shows up here, and Fall-Training gives you more of it.'}</p>
+    ${weak.length > 1 ? `<div class="inset wk">${weak.slice(1).map(w => `<div><small>${esc(w.name)}</small><b class="${w.pct < 60 ? 'fail' : w.pct >= 80 ? 'pass' : ''}">${w.pct}%</b></div>`).join('')}</div>` : ''}
+    <div class="fc-cta"><button class="btn big" id="weak">${icon('play')}${w0 ? '5 Min Fall-Training' : 'Start Fall-Training'}</button><span class="xpbox">${icon('gem')}+XP</span></div>
   </section>
-  <h3 class="sechead">Trainieren</h3>
+  <div class="shead"><h3>Trainieren</h3><small>4 Fertigkeiten</small></div>
   <section class="ugrid">
-    <button class="tile p-rose" data-goto="karten"><span class="ic">${icon('karten')}</span><b>Karten</b><span>${due ? `${due} due today` : `${Object.keys(state.cards).length} words`}</span></button>
-    <button class="tile p-mint" data-goto="lesen"><span class="ic">${icon('lesen')}</span><b>Lesen</b><span>${nr ? `Next: ${esc(nr.title)}` : 'All texts read'}</span></button>
-    <button class="tile p-violet" data-goto="schreiben"><span class="ic">${icon('schreiben')}</span><b>Schreiben</b><span>${wdone ? `${wdone} of ${WRITING.length} written` : `${WRITING.length} tasks, A1 to B1`}</span></button>
-    <button class="tile p-lilac" data-goto="telefon"><span class="ic">${icon('phone')}</span><b>Sprechen</b><span>${CALLS.length} role-plays</span></button>
+    <button class="tile p-rose" data-goto="karten"><span class="ttop"><span class="ic">${icon('karten')}</span><em>${due ? `${due} fällig` : `${Object.keys(state.cards).length} Wörter`}</em></span><b>Karten</b><span>Spaced repetition</span></button>
+    <button class="tile p-mint" data-goto="lesen"><span class="ttop"><span class="ic">${icon('lesen')}</span><em>${nr ? `${nr.level} Text` : 'Alles gelesen'}</em></span><b>Lesen</b><span>${nr ? esc(nr.title) : 'All texts read'}</span></button>
+    <button class="tile p-violet" data-goto="schreiben"><span class="ttop"><span class="ic">${icon('schreiben')}</span><em>${getKey() ? 'KI-Korrektur' : `${wdone}/${WRITING.length}`}</em></span><b>Schreiben</b><span>${WRITING.length} tasks, A1 to B1</span></button>
+    <button class="tile p-lilac" data-goto="telefon"><span class="ttop"><span class="ic">${icon('phone')}</span><em>Audio</em></span><b>Sprechen</b><span>${CALLS.length} role-plays</span></button>
   </section>
-  <h3 class="sechead">Spiele</h3>
+  <div class="shead"><h3>Spiele &amp; Drills</h3><small>4 Spiele</small></div>
   <section class="glist">
-    <button class="grow" data-g="blitz" style="--gc:var(--t5)"><span class="gi">${icon('zap')}</span><span><b>der-die-das Blitz</b><span>60 seconds of articles${state.best.blitz ? `. Best: ${state.best.blitz}` : ''}</span></span>${icon('chevR')}</button>
-    <button class="grow" data-g="fall" style="--gc:var(--t2)"><span class="gi">${icon('target')}</span><span><b>Fall-Training</b><span>10 questions, more of what you get wrong</span></span>${icon('chevR')}</button>
-    <button class="grow" data-g="pron" style="--gc:var(--t1)" ${pron.length ? '' : 'disabled'}><span class="gi">${icon('dialog')}</span><span><b>Pronomen-Duell</b><span>${pron.length ? 'ich, mich, mir: pronouns only' : 'Unlocks at lesson 7'}</span></span>${icon('chevR')}</button>
+    <button class="grow" data-g="blitz" style="--gc:var(--t5)"><span class="gi">${icon('zap')}</span><span><b>der-die-das Blitz${state.best.blitz ? ` <em class="gtag">Rekord ${state.best.blitz}</em>` : ''}</b><span>60 seconds of articles</span></span>${icon('chevR')}</button>
+    <button class="grow" data-g="fall" style="--gc:var(--t2)"><span class="gi">${icon('target')}</span><span><b>Fall-Training <em class="gtag ind">10 Fragen</em></b><span>More of what you get wrong</span></span>${icon('chevR')}</button>
+    <button class="grow" data-g="pron" style="--gc:var(--t1)" ${pron.length ? '' : 'disabled'}><span class="gi">${icon('dialog')}</span><span><b>Pronomen-Duell</b><span>${pron.length ? 'ich, mich, mir: pronouns only' : 'Unlocks at lesson 7'}</span></span>${icon(pron.length ? 'chevR' : 'lock')}</button>
     <button class="grow" data-g="verb" style="--gc:var(--t3)"><span class="gi">${icon('timer')}</span><span><b>Verb-Sprint</b><span>Conjugate sein, haben and the modal verbs</span></span>${icon('chevR')}</button>
-  </section>`;
+  </section>
+  ${tipCard(1)}`;
   const wk = document.getElementById('weak');
-  if (wk) wk.onclick = () => runQuiz(mixedDrill(10, true), {title:'Schwächen: your weak spots', onDone: render});
+  if (wk) wk.onclick = () => w0 ? runQuiz(mixedDrill(10, true), {title:'Schwächen: your weak spots', onDone: render}) : runQuiz(mixedDrill(), {title:'Fall-Training', onDone: render});
   $main.querySelectorAll('[data-g]').forEach(b => b.onclick = () => {
     const g = b.dataset.g;
     if (g === 'blitz') runBlitz(render);
@@ -7361,22 +7594,21 @@ function vUeben(){
 let blitzTimer;
 function runBlitz(onDone){
   activity = true; nav(); keyHandler = null; setHead('der-die-das Blitz', 'Üben / Spiele');
-  $main.innerHTML = `<section class="card blitz stack" style="align-items:center">
-    <h2>60 seconds. Pick the article.</h2>
-    <p class="muted">Right answers in a row build a combo. Every mistake shows you the right article, so you learn while you play.</p>
-    <p class="gtrio" style="justify-content:center"><span class="m">1 · der</span><span class="f">2 · die</span><span class="n">3 · das</span></p>
-    <button class="btn big" id="start">Los geht’s!</button><button class="linkbtn" id="back">Back</button></section>`;
+  $main.innerHTML = `${actHead('back', 'Mini-Spiel', 'der-die-das Blitz')}
+    <section class="card fcard">
+    <div class="fc-head"><span class="sq">${icon('zap')}</span><div><small>60 Sekunden</small><h2>Pick the article.</h2></div>${state.best.blitz ? `<span class="fpill amb">${icon('trophy')}Rekord ${state.best.blitz}</span>` : ''}</div>
+    <p class="fc-text">Right answers in a row build a combo. Every mistake shows you the right article, so you learn while you play.</p>
+    <div class="gtiles"><span class="m"><b>der</b><small>Maskulin · 1</small></span><span class="f"><b>die</b><small>Feminin · 2</small></span><span class="n"><b>das</b><small>Neutrum · 3</small></span></div>
+    <button class="btn big" id="start">${icon('play')}Los geht’s!</button></section>`;
   document.getElementById('back').onclick = () => { stopActivity(); onDone(); };
   document.getElementById('start').onclick = play;
   function play(){
     const pool = shuffle(VOCAB.filter(v => ['m','f','n'].includes(v.g)));
     let i = 0, score = 0, combo = 0, bestCombo = 0, end = Date.now() + 60000;
     const misses = [];
-    $main.innerHTML = `<section class="card blitz" id="bz">
-      <div class="row" style="justify-content:space-between"><span class="timer" id="tm">60</span><span class="combo" id="cb"></span><span class="timer" id="sc">0</span></div>
-      <div class="word" id="w"></div><div class="muted" id="en"></div>
-      <div class="opts gopts">${['der','die','das'].map((a,j) => `<button class="opt" data-g="${'mfn'[j]}"><kbd>${j+1}</kbd>${a}</button>`).join('')}</div>
-      <p class="muted" id="last" style="min-height:1.6em;margin-top:12px"></p></section>`;
+    $main.innerHTML = `<div class="bstats"><div><small>Zeit</small><b id="tm">60</b></div><div class="amb"><small>Punkte</small><b id="sc">0</b></div><div class="ind"><small>Combo</small><b id="cb">0</b></div></div>
+      <section class="card blitz" id="bz"><div class="word" id="w"></div><div class="muted" id="en"></div><p class="muted" id="last" style="min-height:1.6em;margin:10px 0 0"></p></section>
+      <div class="opts gopts bopts">${['der','die','das'].map((a,j) => `<button class="opt" data-g="${'mfn'[j]}"><kbd>${j+1}</kbd>${a}<small>${['Maskulin','Feminin','Neutrum'][j]}</small></button>`).join('')}</div>`;
     const bz = document.getElementById('bz');
     const showWord = () => { const v = pool[i % pool.length]; document.getElementById('w').textContent = v.de; document.getElementById('en').textContent = v.en; };
     const pick = g => {
@@ -7384,12 +7616,12 @@ function runBlitz(onDone){
       if (ok){ combo++; bestCombo = Math.max(bestCombo, combo); score += combo >= 5 ? 2 : 1; }
       else { combo = 0; if (!misses.includes(v)) misses.push(v); }
       document.getElementById('sc').textContent = score;
-      document.getElementById('cb').textContent = combo >= 5 ? `combo ×2 (${combo})` : combo >= 2 ? `combo ${combo}` : '';
+      document.getElementById('cb').textContent = combo >= 5 ? `×2 · ${combo}` : combo;
       document.getElementById('last').innerHTML = ok ? '' : `${gspan(v.g, G[v.g])} ${v.de}`;
       bz.classList.remove('flash-ok','flash-no'); void bz.offsetWidth; bz.classList.add(ok ? 'flash-ok' : 'flash-no');
       i++; showWord();
     };
-    bz.querySelectorAll('.opt').forEach(b => b.onclick = () => pick(b.dataset.g));
+    $main.querySelectorAll('.bopts .opt').forEach(b => b.onclick = () => pick(b.dataset.g));
     keyHandler = e => { const k = {'1':'m','2':'f','3':'n',ArrowLeft:'m',ArrowDown:'f',ArrowRight:'n'}[e.key]; if (k){ e.preventDefault(); pick(k); } };
     showWord();
     clearInterval(blitzTimer);
@@ -7419,7 +7651,20 @@ function runBlitz(onDone){
 // ---- cheat sheet ----
 function vTabelle(){
   $main.innerHTML = `
-  <section class="card intro">
+  <label class="tsearch">${icon('search')}<input type="search" id="tq" placeholder="Search a case, an article, a table (e.g. Dativ)" aria-label="Search the tables" autocomplete="off"></label>
+  <div class="tfilter" role="group" aria-label="Filter">${[['', 'Alle Fälle'], ['Nominativ', 'Nominativ (Wer?)'], ['Akkusativ', 'Akkusativ (Wen?)'], ['Dativ', 'Dativ (Wem?)'], ['Genitiv', 'Genitiv (Wessen?)']].map(([q, l], k) => `<button data-tf="${q}" aria-pressed="${!k}">${l}</button>`).join('')}</div>
+  <section class="card tmatrix" data-find="Nominativ Akkusativ Dativ Genitiv Artikel">
+    <div class="chead"><h3>Artikel-Matrix</h3><span class="fpill ok">Bestimmt · unbestimmt</span></div>
+    <div class="tablewrap"><table class="ct mx"><tr><th>Fall</th><th class="m">Maskulin</th><th class="f">Feminin</th><th class="n">Neutrum</th><th class="pl">Plural</th></tr>
+      ${[['Nom.', 'Wer/Was?', 'nom', [['der', 'ein'], ['die', 'eine'], ['das', 'ein'], ['die', '–']]], ['Akk.', 'Wen/Was?', 'akk', [['den', 'einen', 1], ['die', 'eine'], ['das', 'ein'], ['die', '–']]], ['Dat.', 'Wem?', 'dat', [['dem', 'einem', 1], ['der', 'einer', 1], ['dem', 'einem', 1], ['den', '+n', 1]]], ['Gen.', 'Wessen?', 'gen', [['des', 'eines (+s)', 1], ['der', 'einer', 1], ['des', 'eines (+s)', 1], ['der', '–', 1]]]].map(([c, q, k, cells]) => `<tr class="${k}"><td><b>${c}</b><small>${q}</small></td>${cells.map(([a, b, h]) => `<td class="${h ? 'hl' : ''}"><b>${a}</b><small>${b}</small></td>`).join('')}</tr>`).join('')}</table></div>
+    <p class="muted" style="margin:10px 0 0;font-size:.84rem">Coloured cells change from the Nominativ. Genitiv: masculine and neuter nouns add -s or -es (des Mannes).</p>
+  </section>
+  <section class="eselcard" data-find="Dativ Eselsbrücke">
+    <div class="fc-head"><span class="sq">${icon('bulb')}</span><div><small>Die Eselsbrücke</small><h3>Die M-R-M-N Regel im Dativ</h3></div></div>
+    <div class="esel">${[['Maskulin', 'dem'], ['Feminin', 'der'], ['Neutrum', 'dem'], ['Plural', 'den (+n)']].map(([g, a]) => `<div><span>${g}</span><b>${a}</b></div>`).join('')}</div>
+  </section>
+  <button class="btn big" id="tfall">${icon('zap')}<span>Fall-Training testen · 10 Fragen</span>${icon('next')}</button>
+  <section class="card intro" data-find="Nominativ Akkusativ Dativ Genitiv Pronomen Präpositionen Perfekt Adjektiv Modal Reflexiv Verb">
     <h2>Die Tabelle</h2>
     <p class="muted">Cases at a glance first. Below it, every grammar table from A1 to B1, chapter by chapter, each with how to read it.</p>
     <h4>Step 1 · Ask the question</h4>
@@ -7473,6 +7718,19 @@ function vTabelle(){
       <ul class="gtread">${t.read.map(x => `<li>${x}</li>`).join('')}</ul>${t.tip ? `<p class="tip">${t.tip}</p>` : ''}
       ${(t.ex || []).map(([de, en]) => `<div class="ex">${sayBtn(de)}<div><b>${de}</b><span>${en}</span></div></div>`).join('')}</section>`).join('')}</details>`).join('')}`;
   $main.querySelectorAll('[data-gt]').forEach(b => b.onclick = () => { const d = document.getElementById('gt-' + b.dataset.gt); d.open = true; d.scrollIntoView({block:'start'}); });
+  // search and filter: hide what doesn't match, open the chapters that do
+  const tq = document.getElementById('tq'), norm = x => x.toLowerCase();
+  const filter = () => {
+    const q = norm(tq.value.trim());
+    $main.querySelectorAll('[data-tf]').forEach(b => b.setAttribute('aria-pressed', String(norm(b.dataset.tf) === q)));
+    $main.querySelectorAll('[data-find]').forEach(c => c.hidden = !!q && !norm(c.dataset.find + ' ' + c.textContent).includes(q));
+    $main.querySelectorAll('.gtch').forEach(d => { let any = false;
+      d.querySelectorAll('.gtt').forEach(t => { const hit = !q || norm(t.textContent).includes(q); t.hidden = !hit; any = any || hit; });
+      d.hidden = !any; d.open = !!q && any; });
+  };
+  tq.oninput = filter;
+  $main.querySelectorAll('[data-tf]').forEach(b => b.onclick = () => { tq.value = b.dataset.tf; filter(); });
+  document.getElementById('tfall').onclick = () => runQuiz(mixedDrill(), {title:'Fall-Training', onDone: render});
 }
 
 // ---- Gemini key: stored on this device only, never in the progress code ----
@@ -7544,7 +7802,7 @@ function runTask(task, {eyebrow = '', title = '', deadline = null, passLine = fa
   const num = {}; order.forEach((j, n) => num[j] = n + 1);
   const itemHtml = j => { const it = task.items[j];
     return `<div class="item" data-item="${j}"><div class="iq"><b>${num[j]}</b><span>${esc(it.q)}</span></div>
-      <div class="iopts">${it.o.map((o, k) => `<button class="io" data-j="${j}" data-k="${k}">${esc(o)}</button>`).join('')}</div><div class="ix" hidden></div></div>`; };
+      <div class="iopts">${it.o.map((o, k) => `<button class="io" data-j="${j}" data-k="${k}"><kbd>${'ABCDEFGH'[k]}</kbd><span>${esc(o)}</span></button>`).join('')}</div><div class="ix" hidden></div></div>`; };
   const itemsFor = i => ads ? '' : order.filter(j => task.items[j].ref === i).map(itemHtml).join('');
   const rest = order.filter(j => ads || !(task.items[j].ref >= 0 && task.items[j].ref < blocks.length));
   const paras = s => esc(s).split('\n').filter(x => x.trim()).map(x => `<p>${x}</p>`).join('');
@@ -7552,10 +7810,11 @@ function runTask(task, {eyebrow = '', title = '', deadline = null, passLine = fa
     ? `<section class="card stack"><div class="audio"><button class="btn" data-play="${i}">${icon('play')}<span>${esc(b.label || 'Audio')}</span></button>
         <span class="tag" id="plays${i}">plays ${plays[i]}×</span><button class="linkbtn" data-stop>Stop</button></div>
         ${itemsFor(i)}<div class="transcript" id="tr${i}" hidden>${b.lines.map(([w, t]) => `<p><b>${esc(w)}:</b> ${esc(t)}</p>`).join('')}</div></section>`
-    : `<section class="card textcard">${b.h ? `<h3>${esc(b.h)}</h3>` : ''}${paras(b.body)}${b.body.length > 300 ? `<div class="row" style="gap:8px;margin-top:6px"><button class="btn ghost" data-read="${i}">${icon('say')}<span>Vorlesen · listen</span></button><button class="linkbtn" data-stop>Stop</button></div>` : ''}</section>${itemsFor(i) ? `<div class="stack">${itemsFor(i)}</div>` : ''}`;
+    : `<section class="card textcard"><small class="eyebrow">Lesetext · ${wordCount(b.body)} Wörter</small>${b.h ? `<h3>${esc(b.h)}</h3>` : ''}${b.body.length > 300 ? `<div class="readbar"><button class="btn" data-read="${i}">${icon('say')}<span>Vorlesen · listen</span></button><button class="btn ghost" data-stop>Stop</button></div>` : ''}${paras(b.body)}</section>${itemsFor(i) ? `<div class="stack">${itemsFor(i)}</div>` : ''}`;
   $main.innerHTML = `
-  <div class="row"><button class="linkbtn" id="tquit">${icon('back')}Back</button>${deadline ? '<span class="clock" id="clock"></span>' : ''}</div>
-  <section class="card"><h2>${esc(title || task.title)}</h2>
+  ${actHead('tquit', eyebrow || (audio ? 'Hören' : 'Lesen'), title || task.title, deadline ? '<span class="clock" id="clock"></span>' : '')}
+  <section class="card taskhead"><div class="row" style="gap:6px">${eyebrow ? `<span class="fpill">${esc(eyebrow)}</span>` : ''}<span class="fpill open">${task.items.length} Fragen</span>${audio ? `<span class="fpill ok">${icon('headphones')}Audio</span>` : `<span class="fpill open">${icon('lesen')}${blocks.reduce((a, b) => a + wordCount(b.body || ''), 0)} Wörter</span>`}</div>
+    <h2>${esc(title || task.title)}</h2>
     ${task.instr ? `<p class="instr">${esc(task.instr)}</p>` : ''}
     ${audio ? '<p class="muted" style="font-size:.88rem;margin-bottom:0">Read the questions first, then press play. Your device’s German voice reads the text. The transcript appears after you check.</p>' : ''}</section>
   ${ads ? `<div class="ads">${blocks.map(b => `<div class="card"><b>${esc(b.h)}</b>${esc(b.body)}</div>`).join('')}</div>` : blocks.map(blockHtml).join('')}
@@ -7787,12 +8046,13 @@ function voiceCard(){
 
 // ---- settings: Gemini key and moving progress between devices ----
 function vDaten(){
+  setTimeout(() => $main.querySelectorAll('[data-setmode]').forEach(b => b.onclick = () => { setMode(b.dataset.setmode); vDaten(); }));
   const me = progressSummary(state);
   const when = t => t ? new Date(t).toLocaleString('de-DE', {day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'}) : 'not yet';
   const sum = s => `<b>${s.xp}</b> XP · <b>${s.lessons}</b> of ${LESSONS.length} lessons done · <b>${s.days}</b> days at goal`;
   $main.innerHTML = `
-  <div class="row" style="margin:0 4px;align-items:center"><p class="muted" style="margin:0;font-size:.84rem;flex:1;min-width:0">App version ${esc(APP_VERSION)}. It updates itself when you open it with internet.</p><button class="btn ghost" id="updBtn">Check for updates</button></div>
-  <section class="card stack"><h2>Gemini</h2>
+  <section class="card verrow"><span class="sq m2">${icon('badge')}</span><div><small>Version ${esc(APP_VERSION)}</small><span>It updates itself when you open it with internet.</span></div><button class="btn ghost" id="updBtn">Check for updates</button></section>
+  <section class="card stack"><div class="fc-head"><span class="sq ind">${icon('sparkles')}</span><div><small>KI-Assistent</small><h2>Gemini</h2></div>${getKey() ? '<span class="fpill ok">Aktiv</span>' : '<span class="fpill open">Optional</span>'}</div>
     <p style="margin:0">Optional. The app works fully without it. With a free key from Google (and internet), it can <b>explain the mistakes in your writing</b>, <b>write new reading texts</b> and <b>write new exam sets</b>.</p>
     <ol class="steps"><li>Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> and sign in with your Google account.</li><li>Tap <b>Create API key</b> and copy the key.</li><li>Paste it below and tap <b>Save</b>.</li></ol>
     <label class="field" for="gkey">Your Gemini key<input type="password" id="gkey" autocomplete="off" spellcheck="false" placeholder="${getKey() ? 'Saved on this device. Paste a new key to replace it.' : 'Paste your key here'}"></label>
@@ -7805,7 +8065,9 @@ function vDaten(){
       <label class="field" for="gmodel">Model (leave empty for the standard one: ${GEMINI_MODEL})<input type="text" id="gmodel" value="${esc(getModel() === GEMINI_MODEL ? '' : getModel())}" autocomplete="off" spellcheck="false"></label>
     </div></details>
   </section>
-  <section class="card stack" id="voice"><h2>German voice</h2>
+  <section class="card stack"><div class="fc-head"><span class="sq ind">${icon('palette')}</span><div><small>Erscheinungsbild</small><h2>Light or dark</h2></div></div>
+    <div class="seg-tabs" role="group" aria-label="Colour scheme">${[['light', 'Hell', 'sun'], ['dark', 'Dunkel', 'moon']].map(([m, l, ic]) => `<button data-setmode="${m}" aria-pressed="${curMode() === m}">${icon(ic)}${l}</button>`).join('')}</div></section>
+  <section class="card stack" id="voice"><div class="fc-head"><span class="sq m2">${icon('say')}</span><div><small>Sprachausgabe</small><h2>German voice</h2></div></div>
     <p style="margin:0">The voice that reads words, sentences and the Hören tasks aloud. Natural or Google voices sound the most real.</p>
     <div class="row" id="vrow"></div>
     <details><summary>No German voice, or it sounds robotic?</summary><div class="stack" style="margin-top:8px">
@@ -7813,26 +8075,26 @@ function vDaten(){
       <p style="margin:0"><b>Windows:</b> Settings → Time &amp; language → Speech → Add voices → Deutsch. In Microsoft Edge the “Natural” online voices sound best.</p>
     </div></details>
   </section>
-  <section class="card stack" id="books"><h2>My books</h2>
+  <section class="card stack" id="books"><div class="fc-head"><span class="sq m2">${icon('book')}</span><div><small>Meine Lehrbücher</small><h2>My books</h2></div></div>
     <p style="margin:0">Add the PDFs of your course books once. Then every page number in the app (“p. 118”) opens the book right at that page, inside the app.</p>
     <p class="muted" style="margin:0;font-size:.86rem">On a phone, the file picker often opens on “Recent”, which can look empty. Tap ☰ (top left) or “Browse”, open your phone’s storage and go to the folder with your books, for example Download.</p>
     <p class="muted" style="margin:0;font-size:.86rem">The PDFs stay on this device only. They are not part of your progress code and are never uploaded. Add them again on each device you use.</p>
     <div class="stack" id="booklist" style="gap:8px"><p class="muted" style="margin:0">Loading …</p></div>
   </section>
-  <section class="card stack"><h2>Copy my progress</h2>
+  <section class="card stack"><div class="fc-head"><span class="sq ind">${icon('copy')}</span><div><small>Sichern</small><h2>Copy my progress</h2></div></div>
     <p class="muted" style="margin:0">This device: ${sum(me)}. Last saved ${when(me.at)}.</p>
     <p style="margin:0">Copy the code and send it to yourself, for example on WhatsApp or by e-mail. Then open the app on your other device, come to this page and paste it below.</p>
     <div class="row"><button class="btn" id="pcopy">${icon('copy')}Copy progress code</button></div>
     <div id="pout" hidden class="stack"><p class="muted" style="margin:0">Your device didn’t allow copying. Select all of the code below and copy it yourself.</p>
       <textarea class="write code" id="pcode" readonly aria-label="Your progress code"></textarea></div>
   </section>
-  <section class="card stack"><h2>Start again from zero</h2>
+  <section class="card stack"><div class="fc-head"><span class="sq bad">${icon('reset')}</span><div><small>Zurücksetzen</small><h2>Start again from zero</h2></div></div>
     <p class="muted" style="margin:0">Deletes all progress on this device: XP, lessons, flashcards, streak, exam and call results, and your writing drafts. Your own words, your daily goal, your Gemini key and light/dark mode stay. If you might want it back, copy your progress code above first.</p>
     <div class="row"><button class="btn ghost" id="preset">${icon('reset')}Reset my progress</button></div>
     <div id="pconfirm" hidden class="stack"><p class="tip" style="margin:0">Are you sure? This deletes ${sum(me)}. It can’t be undone.</p>
       <div class="row"><button class="btn danger" id="presetYes">Yes, delete my progress</button><button class="btn ghost" id="presetNo">Cancel</button></div></div>
   </section>
-  <section class="card stack"><h2>Load progress from another device</h2>
+  <section class="card stack"><div class="fc-head"><span class="sq ind">${icon('move')}</span><div><small>Übertragen</small><h2>Load progress from another device</h2></div></div>
     <textarea class="write code" id="pin" spellcheck="false" autocomplete="off" placeholder="Paste a code that starts with WZB1." aria-label="Paste a progress code"></textarea>
     <div id="pcheck"></div>
   </section>`;
@@ -8038,10 +8300,13 @@ function vSchreiben(){
 }
 function editorHtml(w, label){
   return `<section class="card stack">
-    <div><h3>${esc(w.title)}</h3><p class="muted" style="margin:2px 0 0;font-size:.84rem">${label || `${w.level}${w.exam ? ` · Goethe B1 Schreiben, Aufgabe ${w.exam}` : w.speak ? ' · Goethe B1 Sprechen, Teil 2' : ''}`}</p></div>
+    <div class="fc-head"><div><small class="wtag">${label ? esc(label) : `Aufgabe · ${w.level}${w.exam ? ` · Goethe B1 Schreiben ${w.exam}` : w.speak ? ' · Sprechen Teil 2' : ''}`}</small><h2>${esc(w.title)}</h2></div><span class="sq ind">${icon('schreiben')}</span></div>
     <p class="task" style="margin:0">${esc(w.situation)}</p>
     ${w.exam ? `<p class="instr" style="margin:0">${esc(W_NOTE[w.exam])}</p>` : ''}
-    <ul class="points">${w.points.map(p => `<li>${esc(p)}</li>`).join('')}</ul>
+    <div><small class="eyebrow">Inhaltliche Kriterien</small><div class="crits">${w.points.map(p => `<span>${icon('check')}${esc(p)}</span>`).join('')}</div></div>
+  </section>
+  <section class="card stack">
+    <div class="chead" style="margin:0"><h3>Dein Text</h3></div>
     <div class="umlauts" data-for="${w.id}">${['ä','ö','ü','ß','Ä','Ö','Ü','„','“'].map(c => `<button type="button" data-ch="${c}" aria-label="Insert ${c}">${c}</button>`).join('')}
       <span class="tag" style="margin-left:auto" id="wc-${w.id}"></span></div>
     <textarea class="write" id="ta-${w.id}" spellcheck="false" lang="de" aria-label="Your text" placeholder="Schreib hier …"></textarea>
@@ -8063,12 +8328,13 @@ function bindEditor(w){
 }
 function correctionHtml(w, r){
   const crit = r.criteria ? Object.entries(r.criteria).slice(0, 4).map(([k, v]) => `<div><span class="tag">${esc(k)}</span><b>${esc(v)} / 5</b></div>`).join('') : '';
-  return `<div class="stack" style="margin-top:6px;border-top:1px dashed var(--line);padding-top:12px">
-    <div><div class="score">${r.score}%</div><span class="tag">${w.exam ? `about ${Math.round(r.score * EXAM_POINTS[w.exam] / 100)} of ${EXAM_POINTS[w.exam]} points · ` : ''}${r.score >= 60 ? '<span class="pass">on track</span>' : '<span class="fail">keep practising</span>'}</span></div>
+  return `<div class="stack wcheck">
+    <div class="fc-head"><span class="sq ind">${icon('sparkles')}</span><div><small>KI-Feedback · Gemini</small><h3>Sofortige Grammatikanalyse</h3></div><span class="fpill ${r.score >= 60 ? 'ok' : 'bad'}">${r.score}%</span></div>
+    <div><span class="tag">${w.exam ? `about ${Math.round(r.score * EXAM_POINTS[w.exam] / 100)} of ${EXAM_POINTS[w.exam]} points · ` : ''}${r.score >= 60 ? '<span class="pass">on track</span>' : '<span class="fail">keep practising</span>'}</span></div>
     ${r.points.length ? `<ul class="points" style="list-style:none;padding:0;margin:0">${w.points.map((p, i) => `<li>${r.points[i] ? '<span class="pass">✓</span>' : '<span class="fail">✗</span>'} ${esc(p)}</li>`).join('')}</ul>` : ''}
     ${crit ? `<div class="crit">${crit}</div>` : ''}
     ${r.good ? `<p style="margin:0"><b>Gut:</b> ${esc(r.good)}</p>` : ''}
-    ${r.mistakes.length ? `<h4 style="margin:0">Mistakes (${r.mistakes.length})</h4><ul class="mist">${r.mistakes.map(m => `<li><s>${esc(m.wrong)}</s> → <ins>${esc(m.right)}</ins><br><span class="muted">${esc(m.why)}</span></li>`).join('')}</ul>` : '<p class="pass" style="margin:0">No mistakes found.</p>'}
+    ${r.mistakes.length ? `<h4 style="margin:0">Mistakes (${r.mistakes.length})</h4><ul class="mist">${r.mistakes.map(m => `<li><span class="ci">${icon('x')}</span><span><s>${esc(m.wrong)}</s> → <ins>${esc(m.right)}</ins><br><span class="muted">${esc(m.why)}</span></span></li>`).join('')}</ul>` : '<p class="pass" style="margin:0">No mistakes found.</p>'}
     ${r.tip ? `<p class="tip" style="margin:0"><b>Next:</b> ${esc(r.tip)}</p>` : ''}
     ${r.corrected ? `<details open><summary>Corrected text</summary><div class="prose" style="margin-top:8px">${esc(r.corrected)}</div></details>` : ''}
     ${r.model ? `<details><summary>Model answer</summary><div class="row" style="margin-top:8px;align-items:flex-start">${sayBtn(r.model)}<div class="prose" style="flex:1;min-width:0">${esc(r.model)}</div></div></details>` : ''}
@@ -8076,10 +8342,10 @@ function correctionHtml(w, r){
 }
 function checkHtml(w, text){
   const auto = writingChecks(w, text), ok = auto.filter(c => c.ok).length;
-  return `<div class="stack wcheck" data-ok="${ok}" data-n="${auto.length}" style="margin-top:6px;border-top:1px dashed var(--line);padding-top:12px">
-    <div><div class="score" data-est>–</div><span class="tag">${w.exam ? `about <b data-pts>0</b> of ${EXAM_POINTS[w.exam]} points · ` : ''}your estimate: half the checks, half the points you tick</span></div>
-    <h4 style="margin:0">Automatic checks</h4>
-    <ul class="checks">${auto.map(c => `<li><span class="${c.ok ? 'pass' : 'fail'}">${c.ok ? '✓' : '✗'}</span><span><b>${esc(c.label)}</b>${c.note ? `<br><span class="muted">${esc(c.note)}</span>` : ''}</span></li>`).join('')}</ul>
+  return `<div class="stack wcheck" data-ok="${ok}" data-n="${auto.length}">
+    <div class="fc-head"><span class="sq ind">${icon('sparkles')}</span><div><small>Automatische Prüfung</small><h3>${auto.length - ok ? `${auto.length - ok} Korrektur${auto.length - ok === 1 ? '' : 'en'}` : 'Alles richtig'}</h3></div><span class="fpill ok scorepill" data-est>–</span></div>
+    <span class="tag">${w.exam ? `about <b data-pts>0</b> of ${EXAM_POINTS[w.exam]} points · ` : ''}your estimate: half the checks, half the points you tick</span>
+    <ul class="checks">${auto.map(c => `<li class="${c.ok ? 'ok' : 'no'}"><span class="ci">${icon(c.ok ? 'check' : 'x')}</span><span><b>${esc(c.label)}</b>${c.note ? `<br><span class="muted">${esc(c.note)}</span>` : ''}</span></li>`).join('')}</ul>
     <h4 style="margin:0">Did you write about every point? Tick the ones you covered.</h4>
     <div class="ticks">${w.points.map((p, i) => `<label><input type="checkbox" data-pt="${i}"><span>${esc(p)}</span></label>`).join('')}</div>
     <h4 style="margin:0">Read your text once more and check</h4>
@@ -8100,7 +8366,7 @@ function bindCheck(box, w, onEst){
 }
 function openWriting(w, back, onChecked){
   activity = true; nav(); toTop(); setHead(w.title, `Schreiben / ${w.level}`);
-  $main.innerHTML = `<div class="row"><button class="linkbtn" id="wback">${icon('back')}Back</button></div>${editorHtml(w)}
+  $main.innerHTML = `${actHead('wback', `Schreiben · ${w.level}`, w.title)}${editorHtml(w)}
     <button class="btn big" id="wcheck">Prüfen · check my text</button>
     ${getKey() ? '<button class="btn ghost big" id="wai">Explain my mistakes with Gemini</button>' : '<p class="muted" style="font-size:.85rem;margin:0">Want every mistake explained and a corrected text? Add a free Gemini key in <button class="linkbtn" data-goto="daten" style="display:inline;padding:0">Settings</button>.</p>'}
     <p class="muted" style="font-size:.85rem;margin:0">Your draft is saved on this device while you type.</p>`;
@@ -8134,21 +8400,31 @@ function openWriting(w, back, onChecked){
 
 // ---- Prüfung: Goethe B1 simulator ----
 function vPruefung(){
-  const hist = (state.exams || []).slice(-8).reverse();
+  const hist = (state.exams || []).slice(-8).reverse(), last = hist[0];
+  const best = name => { const r = (state.exams || []).filter(h => h.m.split(' · ')[0] === name); return r.length ? Math.max(...r.map(h => h.s)) : null; };
+  const mhead = (ic, name, n, meta) => { const b = best(name);
+    return `<div class="mhead"><span class="sq m${n}">${icon(ic)}</span><div><h3>${name} <em class="gtag">Modul ${n}</em></h3><small>${meta}</small></div>
+      <span class="fpill ${b === null ? 'open' : b >= 60 ? 'ok' : 'bad'}">${b === null ? 'Noch offen' : `${icon('check')}${b}/100`}</span></div>`; };
+  const rec = ['lesen', 'hoeren'].find(k => best(EXAM[k].name) === null) || 'lesen';
   const modCard = (key, desc, extra = '') => { const m = EXAM[key];
-    return `<section class="card stack">
-      <div class="row" style="justify-content:space-between"><h3>${m.name}</h3><span class="tag">${m.min} min · ${m.teile.length} Teile · 30 Aufgaben</span></div>
+    return `<section class="card stack mcard">
+      ${mhead(key === 'lesen' ? 'lesen' : 'headphones', m.name, key === 'lesen' ? 1 : 2, `${m.min} min · ${m.teile.length} Teile · 30 Aufgaben`)}
       <p class="muted" style="margin:0">${desc}</p>
-      <div class="row">${examSets(key).map((x, si) => `<button class="btn${si ? ' ghost' : ''}" data-mod="${key}:${si}">Full simulation · Set ${si + 1}</button>`).join('')}${getKey() ? `<button class="btn ghost" data-mod="${key}:ai">New set from Gemini</button>` : ''}</div>
+      <div class="setgrid">${examSets(key).map((x, si) => `<button class="btn${si ? ' ghost' : ''}" data-mod="${key}:${si}"><span>Set ${si + 1}<small>Full simulation</small></span>${icon('play')}</button>`).join('')}${getKey() ? `<button class="btn ghost" data-mod="${key}:ai"><span>New set<small>from Gemini</small></span>${icon('sparkles')}</button>` : ''}</div>
       <details><summary>Practise one Teil</summary><div class="stack" style="margin-top:10px">${m.teile.map((t, i) => `<div class="row" style="justify-content:space-between">
         <span style="min-width:0">${esc(t.title)}</span><span class="row" style="gap:6px">${examSets(key).map((x, si) => `<button class="btn ghost" data-teil="${key}:${i}:${si}">Set ${si + 1}</button>`).join('')}${getKey() ? `<button class="btn ghost" data-teil="${key}:${i}:ai">New</button>` : ''}</span></div>`).join('')}${getKey() ? '' : '<p class="muted" style="margin:0">Add a free Gemini key in Settings to get new sets whenever you want.</p>'}</div></details>
       ${extra}
     </section>`; };
   $main.innerHTML = `
-  <section class="card"><h2>Prüfung simulieren</h2>
-    <p class="muted">Four modules, 100 points each. You pass a module with 60 points, and you can take the modules separately. Practise here in the real format: same parts, same question types, same time limits. Each set is a complete practice exam.</p>
-    ${hist.length ? `<h4>Your results</h4><div class="hist">${hist.map(h => `<div><span>${esc(h.d)} · ${esc(h.m)}</span><span class="${h.s >= 60 ? 'pass' : 'fail'}">${h.s}/100</span></div>`).join('')}</div>` : ''}
+  <section class="card fcard exhero">
+    <div class="row" style="gap:6px"><span class="fpill ok">${icon('badge')}Goethe-Zertifikat B1</span><span class="fpill amb">Official format</span></div>
+    <h2>Vollständige Prüfungs&shy;simulation</h2>
+    <p class="fc-text">Four modules, 100 points each. You pass a module with 60 points, and you can take the modules separately. Practise here in the real format: same parts, same question types, same time limits. Each set is a complete practice exam.</p>
+    ${last ? `<div class="inset lastrun"><span class="sq">${icon('pruefung')}</span><div><small>Letzter Probelauf (${esc(last.d)})</small><b>${esc(last.m)}</b></div><span class="fpill ${last.s >= 60 ? 'ok' : 'bad'}">${last.s}/100</span></div>` : ''}
+    <button class="btn big" data-mod="${rec}:0">${icon('play')}Start: ${EXAM[rec].name} · Set 1<span class="bmin">${EXAM[rec].min} min</span></button>
+    ${hist.length > 1 ? `<details><summary>All results</summary><div class="hist" style="margin-top:8px">${hist.map(h => `<div><span>${esc(h.d)} · ${esc(h.m)}</span><span class="${h.s >= 60 ? 'pass' : 'fail'}">${h.s}/100</span></div>`).join('')}</div></details>` : ''}
   </section>
+  <div class="shead"><h3>Module einzeln trainieren</h3><small>4 Module</small></div>
   ${modCard('lesen', 'A blog, newspaper articles, ads, opinions and rules. Read fast and answer exactly.')}
   ${modCard('hoeren', 'Announcements, a guided tour or talk, a conversation and a radio discussion, read aloud by your device. Some texts play only once, like in the exam.', `<details><summary>Real exam recordings, free from the Goethe-Institut</summary><div class="reslist" style="margin-top:10px">
         ${[['https://goethemp4s.akamaized.net/resources/files/mp468/pruefungstraining_1_hoeren_b1_erwachsene.mp4', 'Practice exam 1: Hören audio', 'Real speakers, real exam speed', 'video'],
@@ -8158,19 +8434,20 @@ function vPruefung(){
            ['https://bfu.goethe.de/b1_mod/index.php', 'Online practice exam', 'Click through it with audio, it marks your answers', 'pruefung']]
           .map(([u, t, sub, ic]) => `<a class="resrow" href="${u}" target="_blank" rel="noopener">${icon(ic)}<div><b>${t}</b><span>${sub}</span></div>${icon('ext')}</a>`).join('')}
         <p class="muted" style="margin:4px 0 0;font-size:.82rem">Play the audio once per Teil, like in the exam, and answer on the PDF. Then check with the answers at the end.</p></div></details>`)}
-  <section class="card stack">
-    <div class="row" style="justify-content:space-between"><h3>Schreiben</h3><span class="tag">60 min · 3 Aufgaben</span></div>
+  <section class="card stack mcard">
+    ${mhead('schreiben', 'Schreiben', 3, '60 min · 3 Aufgaben')}
     <p class="muted" style="margin:0">An informal e-mail (about 80 words, 40 points), a forum opinion (about 80 words, 40 points) and a formal e-mail (about 40 words, 20 points). The app checks each text, you tick the task points you covered and compare with a model answer.</p>
-    <div class="row"><button class="btn" id="wexam">Full simulation</button><button class="btn ghost" data-goto="schreiben">Practise single tasks</button></div>
+    <div class="setgrid"><button class="btn" id="wexam"><span>All 3 tasks<small>Full simulation</small></span>${icon('play')}</button><button class="btn ghost" data-goto="schreiben"><span>One task<small>Practise single tasks</small></span>${icon('next')}</button></div>
   </section>
-  <section class="card stack">
-    <div class="row" style="justify-content:space-between"><h3>Sprechen</h3><span class="tag">15 min · with a partner</span></div>
+  <section class="card stack mcard">
+    ${mhead('mic', 'Sprechen', 4, '15 min · with a partner')}
     <p style="margin:0">Teil 1: plan something together with your partner. Teil 2: present a topic on five slides (about 3 minutes). Teil 3: answer questions about your presentation and react to your partner’s. You get 15 minutes to prepare.</p>
     <p class="tip" style="margin:0">Teil 1 and Teil 3: the app plays your partner and you answer out loud. Teil 2: write your presentation, compare it with the model, then say it out loud with a timer.</p>
     <h4 style="margin:0">Teil 1 · plan something together</h4><div class="row">${CALLS.filter(c => c.part === 1).map(c => `<button class="btn ghost" data-sc1="${CALLS.indexOf(c)}">${icon('dialog')}${esc(c.title.replace('Teil 1: ', ''))}</button>`).join('')}</div>
     <h4 style="margin:0">Teil 2 · present a topic</h4><div class="row">${WRITING.filter(w => w.speak).map(w => `<button class="btn ghost" data-sp="${w.id}">${esc(w.title.replace('Sprechen Teil 2: ', ''))}</button>`).join('')}</div>
     <h4 style="margin:0">Teil 3 · feedback and questions</h4><div class="row">${CALLS.filter(c => c.part === 3).map(c => `<button class="btn ghost" data-sc1="${CALLS.indexOf(c)}">${icon('dialog')}${esc(c.title.replace('Teil 3: ', ''))}</button>`).join('')}</div>
-  </section>`;
+  </section>
+  ${tipCard(2)}`;
   $main.querySelectorAll('[data-mod]').forEach(b => b.onclick = () => { const [k, si] = b.dataset.mod.split(':'); runModule(k, si === 'ai' ? 'ai' : +si); });
   $main.querySelectorAll('[data-teil]').forEach(b => b.onclick = () => { const [k, i, si] = b.dataset.teil.split(':'); practiceTeil(k, +i, si === 'ai' ? 'ai' : +si); });
   $main.querySelectorAll('[data-sp]').forEach(b => b.onclick = () => openWriting(WRITING.find(w => w.id === b.dataset.sp), 'pruefung'));
