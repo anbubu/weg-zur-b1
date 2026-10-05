@@ -6815,7 +6815,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = '420613c';  // build.py puts the build number here
+const APP_VERSION = 'b96587e';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -6849,19 +6849,26 @@ function addXP(n){
 }
 // The daily goal is study time: minutes inside lessons and exercises (counted below) plus the book and video blocks you tick.
 function checkGoal(){
-  const t = today(), m = minutesOn(state, t);
-  if (!state.met[t] && m >= state.planMin){
+  const t = today(), m = minutesOn(state, t), pl = state.plan;
+  const planDone = pl && pl.d === t && pl.blocks.every(b => pl.done[b.key]);   // finishing the whole plan reaches the goal too
+  if (!state.met[t] && (m >= state.planMin || planDone)){
     state.met[t] = true;
     toast(`Tagesziel geschafft: ${m} Minuten! Streak: ${streakInfo(state.met, t).streak}`);
   }
 }
 let lastInput = Date.now(), tickN = 0;
 for (const ev of ['pointerdown', 'keydown', 'touchstart', 'scroll', 'wheel']) addEventListener(ev, () => { lastInput = Date.now(); }, {passive:true, capture:true});
-setInterval(() => {   // counts time only while a lesson or exercise is open, the page is visible and you touched it in the last 3 minutes
-  if (document.visibilityState !== 'visible' || !activity || Date.now() - lastInput > 180000) return;
+// Counts time while you study: a lesson or exercise, the book reader, the grammar tables or search are open, the page is visible,
+// and you touched it in the last 10 minutes (or the app is reading aloud).
+setInterval(() => {
+  let talking = false; try { talking = speechSynthesis.speaking; } catch(e) {}
+  if (talking) lastInput = Date.now();
+  if (document.visibilityState !== 'visible' || !(activity || reader || view === 'tabelle' || view === 'suche') || Date.now() - lastInput > 600000) return;
   const t = today(); state.secs[t] = (state.secs[t] || 0) + 5;
-  if (++tickN % 6 === 0){ save(); checkGoal(); chips(); }
+  if (reader){ state.rsecs = state.rsecs || {}; state.rsecs[t] = (state.rsecs[t] || 0) + 5; }
+  if (++tickN % 6 === 0){ if (reader) setCredit(); save(); checkGoal(); chips(); }
 }, 5000);
+document.addEventListener('visibilitychange', () => { if (document.visibilityState === 'hidden') save(); });
 let toastT;
 function toast(msg){
   let el = document.querySelector('.toast');
@@ -7065,8 +7072,14 @@ function getPlan(){
 function tickBlock(key, on){
   const pl = state.plan;
   if (on) pl.done[key] = true; else delete pl.done[key];
-  state.credit[pl.d] = pl.blocks.filter(b => pl.done[b.key] && (b.t === 'book' || b.t === 'video')).reduce((a, b) => a + b.min, 0);
-  checkGoal(); save(); chips();
+  setCredit(); checkGoal(); save(); chips();
+}
+// Ticked blocks the app can't time count their planned minutes: videos (YouTube), the break, and the book block. Minutes already
+// read in the app's book reader today are taken off the book block, so the same reading isn't counted twice.
+function setCredit(){
+  const pl = state.plan; if (!pl) return;
+  const read = Math.floor(((state.rsecs || {})[pl.d] || 0) / 60);
+  state.credit[pl.d] = pl.blocks.filter(b => pl.done[b.key] && b.t !== 'app').reduce((a, b) => a + (b.t === 'book' ? Math.max(0, b.min - read) : b.min), 0);
 }
 function runBlock(b){
   const back = () => { stopActivity(); view = 'heute'; render(); toTop(); };
@@ -7115,7 +7128,7 @@ function vHeute(){
     <ol class="blocks">${plan.blocks.map(row).join('')}</ol>
     <section class="card pfoot"><div class="fc-head"><span class="sq ind">${icon('clock')}</span><div><small>Planlänge</small><h3>How long today?</h3></div></div>
       <div class="seg-tabs" role="group" aria-label="Length of the plan">${[[30, '30 min'], [60, '1 hour'], [120, '2 hours']].map(([v, l]) => `<button data-size="${v}" aria-pressed="${goal === v}">${l}</button>`).join('')}</div>
-      <p class="muted">Lessons and exercises count by themselves. Tick book and video blocks when you finish them.</p></section>`;
+      <p class="muted">Time in lessons, exercises, the book reader and the tables counts by itself. Tick the video, the break and the book block when you finish them. Finishing the whole plan always reaches your goal.</p></section>`;
   }
   $main.innerHTML = `<div class="today">${card}
     <section class="card daily">
