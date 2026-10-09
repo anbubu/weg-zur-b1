@@ -1275,6 +1275,8 @@ table.mx tr.gen td.hl{background:var(--sun-soft)} table.mx tr.gen td.hl b{color:
 .rgrid div.ok{background:var(--okbg);color:var(--ok)} .rgrid div.bad{background:var(--badbg);color:var(--bad)}
 .rgrid small{display:block;font:800 .66rem var(--f);letter-spacing:.05em;text-transform:uppercase;opacity:.85}
 .rgrid b{font:800 1.2rem var(--f)}
+.lpick{display:flex;align-items:center;gap:8px;background:var(--panel2);border-radius:14px;padding:4px 4px 4px 12px;font:700 .84rem var(--f);color:var(--muted)}
+.lpick select{flex:1;min-width:0;font:700 .92rem var(--f);color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:10px;padding:9px 10px}
 </style>
 
 <div class="shell">
@@ -6944,7 +6946,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = '4a17e51';  // build.py puts the build number here
+const APP_VERSION = '1f63d1a';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -7189,15 +7191,17 @@ function calHtml(){
 }
 // The day's blocks are fixed when the day's plan is first built, so finishing the lesson doesn't change the rest of the plan.
 function getPlan(){
-  const t = today(), prev = state.plan;
-  if (!prev || prev.d !== t || prev.size !== state.planMin){
+  const t = today(), prev = state.plan, pick = state.pick && state.pick.d === t ? LESSONS.find(l => l.id === state.pick.id) : null;
+  const prevId = prev && (prev.blocks.find(b => b.key === 'lesson' && b.act === 'lesson') || {}).id;
+  if (!prev || prev.d !== t || prev.size !== state.planMin || (pick && pick.id !== prevId)){
     // A lesson day carries over: until its lesson, book pages and video are ticked, the plan stays on that lesson,
     // also on the next day or when the plan length changes (finishing the questions alone doesn't move it on).
     const pb = prev && prev.blocks.find(b => b.key === 'lesson' && b.act === 'lesson');
     const open = pb && prev.blocks.some(b => ['lesson', 'book', 'video'].includes(b.key) && !prev.done[b.key]);
-    const nl = (open && LESSONS.find(l => l.id === pb.id)) || nextLesson(), lvl = LV[(nl || {level:'B1'}).level];
+    const nl = pick || (open && LESSONS.find(l => l.id === pb.id)) || nextLesson(), lvl = LV[(nl || {level:'B1'}).level];
     const done = prev && prev.d === t ? prev.done : {};
-    if (open && nl && state.done[nl.id]) done.lesson = true;
+    if (nl && nl.id !== prevId) for (const k of ['lesson', 'book', 'video']) delete done[k];
+    else if (!pick && open && nl && state.done[nl.id]) done.lesson = true;
     state.plan = {d:t, size:state.planMin, done,
       blocks:planBlocks(state.planMin, {early:Object.values(state.done).filter(Boolean).length < 5, due:dueCards().length, lesson:nl, reading:nextReading(), writing:WRITING.find(w => !w.speak && !state.writing[w.id] && LV[w.level] <= lvl), weak:weakSpots().length > 0})};
     save();
@@ -7229,7 +7233,7 @@ function runBlock(b){
 function vHeute(){
   const t = today(), s = streakInfo(state.met, t), nl = nextLesson(), mins = minutesOn(state, t), goal = state.planMin;
   const first = !state.xp && !Object.values(state.done).some(Boolean);
-  const st = nl ? stageOf(nl) : null, sn = st ? STAGES.indexOf(st) + 1 : 0;
+  let st = nl ? stageOf(nl) : null, sn = st ? STAGES.indexOf(st) + 1 : 0, pl = null;
   let card, plan = null, next = null;
   if (first){
     card = `<section class="card step">
@@ -7240,6 +7244,8 @@ function vHeute(){
     </section>`;
   } else {
     plan = getPlan();
+    pl = LESSONS.find(l => l.id === (plan.blocks.find(b => b.key === 'lesson' && b.act === 'lesson') || {}).id);
+    if (pl){ st = stageOf(pl); sn = STAGES.indexOf(st) + 1; }
     next = plan.blocks.find(b => b.t !== 'rest' && !plan.done[b.key]);
     const row = b => {
       const done = !!plan.done[b.key], refs = (b.refs || []).map(([bk, ch, sec, pg]) => `<button class="ref" data-book="${bk}" data-pg="${pg}" data-ch="${esc(ch)}" data-sec="${esc(sec)}">${icon('book')}<span>${BOOKS[bk].short} ${ch}, <span class="nw">${pagesTxt(bk, pg)}</span></span></button>`).join('');
@@ -7255,6 +7261,8 @@ function vHeute(){
     card = `<section class="card fcard">
       <div class="fc-head"><span class="sq">${icon('target')}</span><div><small>Dein Plan für heute</small><h2>${st ? esc(st.name) : 'Prüfungstraining'}</h2></div><span class="fpill">${st ? `Stufe ${sn}/${STAGES.length}` : 'B1'}</span></div>
       <p class="fc-text">${st ? st.can : 'All lessons are done. Now it is exam training: reading, writing, listening and full practice exams.'}</p>
+      <label class="lpick" for="lpick">${icon('pfad')}<span>Lesson today</span><select id="lpick">${LESSONS.map((l, i) => [l, i]).filter(([l]) => state.done[l.id] || l === nl || l === pl)
+        .map(([l, i]) => `<option value="${l.id}" ${pl === l ? 'selected' : ''}>${i + 1}. ${esc(l.title)}${state.done[l.id] ? ' ✓' : ''}</option>`).join('')}</select></label>
       <div class="inset"><div><small>Heute gelernt</small><b>${mins} / ${goal} min</b></div><div><small>Plan</small><b>${nd} von ${nb.length} erledigt</b></div><div class="pbar"><i style="width:${pct}%"></i></div></div>
       ${next ? `<div class="fc-cta"><button class="btn big" id="go">${icon(next.t === 'app' ? 'play' : 'check')}<span>${next.t === 'app' ? 'Next: ' : 'Done: '}${esc(next.title)}</span></button><span class="xpbox">${icon('clock')}${next.min} min</span></div>`
              : `<p class="done-note">Plan complete. ${mins >= goal ? 'Daily goal reached. Your streak is safe.' : 'Well done. Choose a longer plan below if you want to keep going.'}</p>`}
@@ -7280,6 +7288,7 @@ function vHeute(){
   $main.querySelectorAll('[data-run]').forEach(b => b.onclick = () => runBlock(plan.blocks.find(x => x.key === b.dataset.run)));
   $main.querySelectorAll('[data-size]').forEach(b => b.onclick = () => { state.planMin = +b.dataset.size; save(); chips(); render(); });
   const bk = document.getElementById('bkp'); if (bk) bk.onclick = () => { saveBackup(); render(); };
+  const lp = document.getElementById('lpick'); if (lp) lp.onchange = () => { state.pick = {d:today(), id:lp.value}; save(); render(); };
 }
 
 function vFortschritt(){
