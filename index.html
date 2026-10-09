@@ -6944,7 +6944,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = 'ab4edea';  // build.py puts the build number here
+const APP_VERSION = '4a17e51';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -7189,10 +7189,16 @@ function calHtml(){
 }
 // The day's blocks are fixed when the day's plan is first built, so finishing the lesson doesn't change the rest of the plan.
 function getPlan(){
-  const t = today();
-  if (!state.plan || state.plan.d !== t || state.plan.size !== state.planMin){
-    const nl = nextLesson(), lvl = LV[(nl || {level:'B1'}).level];
-    state.plan = {d:t, size:state.planMin, done:state.plan && state.plan.d === t ? state.plan.done : {},
+  const t = today(), prev = state.plan;
+  if (!prev || prev.d !== t || prev.size !== state.planMin){
+    // A lesson day carries over: until its lesson, book pages and video are ticked, the plan stays on that lesson,
+    // also on the next day or when the plan length changes (finishing the questions alone doesn't move it on).
+    const pb = prev && prev.blocks.find(b => b.key === 'lesson' && b.act === 'lesson');
+    const open = pb && prev.blocks.some(b => ['lesson', 'book', 'video'].includes(b.key) && !prev.done[b.key]);
+    const nl = (open && LESSONS.find(l => l.id === pb.id)) || nextLesson(), lvl = LV[(nl || {level:'B1'}).level];
+    const done = prev && prev.d === t ? prev.done : {};
+    if (open && nl && state.done[nl.id]) done.lesson = true;
+    state.plan = {d:t, size:state.planMin, done,
       blocks:planBlocks(state.planMin, {early:Object.values(state.done).filter(Boolean).length < 5, due:dueCards().length, lesson:nl, reading:nextReading(), writing:WRITING.find(w => !w.speak && !state.writing[w.id] && LV[w.level] <= lvl), weak:weakSpots().length > 0})};
     save();
   }
