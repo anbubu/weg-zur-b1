@@ -1638,6 +1638,11 @@ u.end{text-decoration:underline;text-decoration-thickness:2px;text-underline-off
 .slides details ul{margin:6px 0 0;padding-left:1.1em;font-size:.88rem}
 .rmbar{position:sticky;bottom:8px;display:flex;flex-direction:column;gap:3px;background:var(--ink);color:var(--panel);border-radius:4px;padding:12px 14px;font-size:.9rem}
 .rmbar b{font:700 .72rem var(--fh);letter-spacing:.1em;text-transform:uppercase;opacity:.75}
+/* skip rendering of rows that are off screen (measured on a 4x slower CPU: Lernpfad 1.24 s -> 0.12 s) */
+.unit,.tdeck,.course,.stack > button.lesson,.glist > .grow,.fhlist > li,.b1row,.resrow{content-visibility:auto;contain-intrinsic-size:auto 90px}
+.unit{contain-intrinsic-size:auto 900px}
+.course{contain-intrinsic-size:auto 260px}
+.words,.tablewrap{content-visibility:auto;contain-intrinsic-size:auto 220px}
 </style>
 
 <div class="shell">
@@ -7293,6 +7298,7 @@ const bookLine = l => (RES[l.id] ? RES[l.id].b : []).slice(0, 2).map(([b, ch, , 
 // ---------- UI ----------
 const $main = document.getElementById('main');
 // The finish moment: whenever a finish screen (.celebrate) appears, add a ring, confetti, count-up numbers and a short vibration.
+const touchOnly = () => matchMedia('(hover: none) and (pointer: coarse)').matches;
 const reduceMotion = () => matchMedia('(prefers-reduced-motion: reduce)').matches;
 function countUp(el, delay){
   const m = el.textContent.match(/\d+/); if (!m || +m[0] < 2) return;
@@ -7345,7 +7351,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = '1d69c49';  // build.py puts the build number here
+const APP_VERSION = '395c7dd';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -7538,7 +7544,10 @@ const backTo = (label, v) => `<div class="row"><button class="linkbtn" data-goto
 document.addEventListener('click', e => { const b = e.target.closest('[data-goto]'); if (b){ stopActivity(); view = b.dataset.goto; render(); toTop(); } });
 
 const nextLesson = () => LESSONS.find(l => !state.done[l.id] && !(l.primer && Object.values(state.done).some(Boolean)));
-const dueCards = () => Object.keys(state.cards).filter(id => VBYID[id] && state.cards[id].d <= today());
+// counted once per saved state and day, not on every call (it walks the whole deck)
+let dueMemo = {};
+const dueCards = () => { const k = state.updatedAt + '|' + today() + '|' + Object.keys(state.cards).length;
+  if (dueMemo.k !== k) dueMemo = {k, r:Object.keys(state.cards).filter(id => VBYID[id] && state.cards[id].d <= today())}; return dueMemo.r; };
 function grammarPool(){
   const upto = LESSONS.indexOf(nextLesson()), last = upto === -1 ? LESSONS.length - 1 : upto;
   return LESSONS.filter((l, i) => i <= last || state.done[l.id]).flatMap(l => l.drills).filter(d => !['meaning','gender'].includes(d[0]));
@@ -7956,7 +7965,7 @@ function runQuiz(questions, {title, onDone, onAnswer}){
         <div class="fbrow">${ok ? '<button class="btn ghost" id="why">Why?</button>' : ''}${q.say ? sayBtn(q.say) : ''}<button class="btn ${ok ? 'go' : ''}" id="next">Weiter${icon('next')}</button></div></div>`;
       const wb = document.getElementById('why'); if (wb) wb.onclick = () => { document.getElementById('why-txt').hidden = false; wb.remove(); };
       document.getElementById('next').onclick = show;
-      document.getElementById('next').focus({preventScroll:true});
+      if (!touchOnly()) document.getElementById('next').focus({preventScroll:true});   // keyboard users; on a phone it only costs a layout
       if (state.sound && q.say) say(q.say);
     };
     btns.forEach(b => b.onclick = () => choose(+b.dataset.i));
@@ -7975,7 +7984,7 @@ function runQuiz(questions, {title, onDone, onAnswer}){
       <p class="muted" style="margin:0;max-width:44ch">${pct < 70 ? 'Mistakes are how this works. Read the lesson again and repeat it tomorrow.' : 'Your answers are saved. The ones you missed come back later.'}</p>
       <button class="btn big" id="cont">Weiter${icon('next')}</button></section>`;
     document.getElementById('cont').onclick = () => { activity = false; onDone(firstTry, total); };
-    document.getElementById('cont').focus({preventScroll:true});
+    if (!touchOnly()) document.getElementById('cont').focus({preventScroll:true});
   }
   show();
 }
