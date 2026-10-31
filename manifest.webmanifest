@@ -1,13 +1,13 @@
 {
- "name": "Weg zur B1",
- "short_name": "Weg zur B1",
+ "name": "Bestanden",
+ "short_name": "Bestanden",
  "description": "German from A1 to the Goethe-Zertifikat B1, offline.",
  "lang": "de",
  "start_url": "./",
  "scope": "./",
  "display": "standalone",
- "background_color": "#FAE3DC",
- "theme_color": "#E5603F",
+ "background_color": "#E7EAEE",
+ "theme_color": "#FFFFFF",
  "icons": [
   {
    "src": "icon-192.png",

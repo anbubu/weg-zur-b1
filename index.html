@@ -1,16 +1,16 @@
 <!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#E5603F">
+<meta name="theme-color" content="#FFFFFF">
 <meta name="description" content="German from A1 to the Goethe-Zertifikat B1, offline.">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <meta name="apple-mobile-web-app-capable" content="yes">
-<meta name="apple-mobile-web-app-title" content="Weg zur B1">
+<meta name="apple-mobile-web-app-title" content="Bestanden">
 <style>:root{padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}</style>
 </head><body>
-<title>Weg zur B1</title>
+<title>Bestanden</title>
 <link rel="stylesheet" href="fonts.css">
 <script src="lucide.min.js"></script>
 <style>
@@ -1277,13 +1277,324 @@ table.mx tr.gen td.hl{background:var(--sun-soft)} table.mx tr.gen td.hl b{color:
 .rgrid b{font:800 1.2rem var(--f)}
 .lpick{display:flex;align-items:center;gap:8px;background:var(--panel2);border-radius:14px;padding:4px 4px 4px 12px;font:700 .84rem var(--f);color:var(--muted)}
 .lpick select{flex:1;min-width:0;font:700 .92rem var(--f);color:var(--ink);background:var(--panel);border:2px solid var(--line);border-radius:10px;padding:9px 10px}
+/* ================= Bestanden: the exam paper you fill in every day =================
+   White sheets on a grey desk, graphite print, hairline form fields, black section bars, answer bubbles,
+   one violet office-stamp accent. der blue, die red, das green. This layer replaces the earlier looks. */
+:root{
+  --g1:#E7EAEE; --g2:#E7EAEE; --g3:#E7EAEE; --frame:transparent;
+  --panel:#FFFFFF; --panel2:#F2F4F6; --line:#D2D7DD; --edge:#B7BEC7; --ink:#15181C; --muted:#56606B; --faint:#8A929C;
+  --accent:#4F35B5; --accent-fill:#4F35B5; --accent-ink:#3A2590; --accent-soft:#ECE8F9; --on-accent:#FFFFFF;
+  --cta:#4F35B5; --cta-edge:#3A2590; --on-cta:#FFFFFF; --navy:#15181C; --navy-edge:#15181C;
+  --go:#1C7F45; --go-edge:#1C7F45; --on-go:#FFFFFF; --lime:#4F35B5; --lime-edge:#3A2590; --on-lime:#FFFFFF;
+  --sun:#15181C; --sun-soft:#F2F4F6; --sun-ink:#15181C; --ring3:#15181C; --glow:#F2F4F6; --go-soft:#E7F3EC; --go-ink:#17663A;
+  --hero1:#15181C; --hero2:#15181C;
+  --t1:#15181C; --t2:#15181C; --t3:#15181C; --t4:#15181C; --t5:#15181C; --t6:#15181C;
+  --p-rose:#F2F4F6; --p-butter:#F2F4F6; --p-mint:#F2F4F6; --p-lilac:#F2F4F6; --p-sky:#F2F4F6;
+  --der:#1F5FBF; --die:#C0263B; --das:#1C7F45;
+  --ok:#17663A; --okbg:#E7F3EC; --bad:#B42333; --badbg:#FBEAEC; --bad-sheet:#B42333;
+  --f:"Barlow",ui-sans-serif,system-ui,"Segoe UI",sans-serif; --fh:"Barlow Semi Condensed","Barlow",ui-sans-serif,system-ui,sans-serif; --fm:var(--f);
+  --r-panel:4px; --r-card:4px; --r-field:3px;
+  --lift:0 1px 2px rgba(17,22,28,.06),0 12px 28px -20px rgba(17,22,28,.32);
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]):not([data-mode="light"]){
+  --g1:#0E1012; --g2:#0E1012; --g3:#0E1012;
+  --panel:#1A1D21; --panel2:#23272C; --line:#353B42; --edge:#474E57; --ink:#ECEEF1; --muted:#A4ACB6; --faint:#757D87;
+  --accent:#B3A1F5; --accent-fill:#6B52D6; --accent-ink:#C9BCFA; --accent-soft:#2A2445; --on-accent:#FFFFFF;
+  --cta:#6B52D6; --cta-edge:#6B52D6; --navy:#ECEEF1; --navy-edge:#ECEEF1; --lime:#6B52D6; --lime-edge:#6B52D6;
+  --go:#4CBF7D; --go-edge:#4CBF7D; --on-go:#0E1012; --sun:#ECEEF1; --sun-soft:#23272C; --sun-ink:#ECEEF1; --ring3:#ECEEF1; --glow:#23272C; --go-soft:#16291E; --go-ink:#7AD6A0;
+  --t1:#2E333A; --t2:#2E333A; --t3:#2E333A; --t4:#2E333A; --t5:#2E333A; --t6:#2E333A;
+  --p-rose:#23272C; --p-butter:#23272C; --p-mint:#23272C; --p-lilac:#23272C; --p-sky:#23272C;
+  --der:#76A9F4; --die:#F27E8C; --das:#5DCB8D; --ok:#7AD6A0; --okbg:#16291E; --bad:#F27E8C; --badbg:#35191D; --bad-sheet:#9C2232;
+  --lift:0 1px 2px rgba(0,0,0,.3),0 12px 28px -18px rgba(0,0,0,.6);
+}}
+:root[data-theme="dark"]:not([data-mode="light"]),:root[data-mode="dark"]{
+  --g1:#0E1012; --g2:#0E1012; --g3:#0E1012;
+  --panel:#1A1D21; --panel2:#23272C; --line:#353B42; --edge:#474E57; --ink:#ECEEF1; --muted:#A4ACB6; --faint:#757D87;
+  --accent:#B3A1F5; --accent-fill:#6B52D6; --accent-ink:#C9BCFA; --accent-soft:#2A2445; --on-accent:#FFFFFF;
+  --cta:#6B52D6; --cta-edge:#6B52D6; --navy:#ECEEF1; --navy-edge:#ECEEF1; --lime:#6B52D6; --lime-edge:#6B52D6;
+  --go:#4CBF7D; --go-edge:#4CBF7D; --on-go:#0E1012; --sun:#ECEEF1; --sun-soft:#23272C; --sun-ink:#ECEEF1; --ring3:#ECEEF1; --glow:#23272C; --go-soft:#16291E; --go-ink:#7AD6A0;
+  --t1:#2E333A; --t2:#2E333A; --t3:#2E333A; --t4:#2E333A; --t5:#2E333A; --t6:#2E333A;
+  --p-rose:#23272C; --p-butter:#23272C; --p-mint:#23272C; --p-lilac:#23272C; --p-sky:#23272C;
+  --der:#76A9F4; --die:#F27E8C; --das:#5DCB8D; --ok:#7AD6A0; --okbg:#16291E; --bad:#F27E8C; --badbg:#35191D; --bad-sheet:#9C2232;
+  --lift:0 1px 2px rgba(0,0,0,.3),0 12px 28px -18px rgba(0,0,0,.6);
+}
+
+/* ---- paper, type, browser surfaces ---- */
+body{background:var(--g3);font:15.5px/1.55 var(--f);font-weight:400;font-variant-numeric:tabular-nums}
+::selection{background:var(--accent-fill);color:#fff}
+*{scrollbar-color:var(--edge) transparent}
+:focus-visible{outline:2px solid var(--accent-fill);outline-offset:2px;border-radius:3px}
+h1,h2,h3{font-family:var(--fh);font-weight:700;letter-spacing:0}
+h4{font:700 .74rem var(--fh);letter-spacing:.09em;text-transform:uppercase;color:var(--muted)}
+a{color:var(--accent-ink)}
+input,select,textarea{caret-color:var(--accent-fill)}
+
+/* ---- no tactile bevels anywhere: one soft lift for sheets only, one corner radius ---- */
+.btn,.tile,.grow,.opt,.course,.lesson,.fc,.blk,.tipcard,.eselcard,.bstats div,.gtiles span,.bopts .opt,.tfilter button,.tsearch,.sq,.xpbox,.gnote,.road div,
+.pnode,.ppop,.ubanner,.cstats div,.week i,.seg-tabs,.seg-tabs button,.avbtn,.ex.exr .say,.chip,.logo,.io,.dots i,.dots i.on,.iconbtn,.say,.fb,.pbub,.pstage,.lesson.next,.course.next{box-shadow:none!important}
+.card,.ppop,.tile,.grow,.opt,.course,.lesson,.fc,.blk,.tipcard,.eselcard,.inset,.tin,.tsearch,.fixcard,.bub,.model,.ix,.checks li,.mist li,.alpha span,.rgrid div,.bstats div,
+.gtiles span,.esel div,.ex.exr,.resrow,.hit,.bookrow,.tdeck,.lpick,.lpick select,.seg-tabs,.seg-tabs button,.tfilter button,.btn,.chip,.fpill,.gtag,.xpbox,.ubanner,
+.field input,textarea,.write,.tablewrap,.fb,.fbwhy,.iconbtn,.avbtn,.say,.cover-hero,.course .cover,.sfacts div,.tip,.gnote,.io,.kchip,.pbub,.road div,.pstage,.celebrate .cstats div{border-radius:4px!important}
+.card{background:var(--panel);border:1px solid var(--line);border-top:3px solid var(--ink);box-shadow:var(--lift)!important}
+
+/* ---- header: the form head strip ---- */
+.topbar{background:var(--panel)}
+@media (max-width:900px){.topbar{background:var(--panel);backdrop-filter:none;border-bottom:1px solid var(--line)}}
+.stampmark{display:inline-block;font:800 1.02rem/1 var(--fh);letter-spacing:.12em;text-transform:uppercase;color:var(--accent-fill);
+  border:2px solid currentColor;outline:1px solid currentColor;outline-offset:2px;padding:5px 8px 4px;transform:rotate(-3deg);border-radius:3px}
+:root[data-mode="dark"] .stampmark{color:var(--accent)}
+@media (prefers-color-scheme: dark){:root:not([data-mode="light"]) .stampmark{color:var(--accent)}}
+.tb-brand{gap:0} .tb-brand b{display:none}
+.brand{border-bottom:1px solid var(--line);flex-direction:column;align-items:flex-start;gap:10px;padding:6px 8px 16px}
+.brand small{font:600 .72rem var(--fh);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.chip{background:var(--panel);border:1px solid var(--line);color:var(--ink);font:700 .86rem var(--f);height:34px;padding:0 10px}
+.chip.streak,.chip.gem,.chip.time{background:var(--panel);color:var(--ink);border-color:var(--line)}
+.chip svg.i,.chip.streak svg.i,.chip.gem svg.i,.chip.time svg.i,.chip.lit svg.i{color:var(--ink)}
+.chip.streak.lit{border-color:var(--ink)}
+.iconbtn{background:var(--panel);border:1px solid var(--line);color:var(--ink)}
+.avbtn{background:var(--ink);color:var(--panel)}
+.phead{border-bottom:2px solid var(--ink);padding-bottom:10px;margin-inline:2px}
+.ph-t h1{font:700 1.85rem/1.1 var(--fh);letter-spacing:-.005em}
+.ph-t p{font-weight:500}
+
+/* ---- navigation: a paper index, active item marked in violet ---- */
+.navgroup button{border-radius:3px;font-weight:500}
+.navgroup button[aria-current="page"]{background:transparent;color:var(--accent-ink);font-weight:700}
+.navpill{background:var(--accent-soft)!important;border-radius:3px!important}
+.navgroup button .badge,.navgroup button[aria-current="page"] .badge{background:var(--ink);color:var(--panel);border-radius:3px}
+.modes button{border-radius:3px;background:var(--panel2)} .modes button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
+@media (max-width:900px){
+  .side{background:var(--panel);border-radius:0;border-top:1px solid var(--line);box-shadow:none}
+  .navpill{background:transparent!important;border-top:2px solid var(--accent-fill);border-radius:0!important}
+  .navgroup.primary button{border-radius:0;font:600 .7rem var(--fh);letter-spacing:.04em;text-transform:uppercase}
+  .navgroup.primary button[aria-current="page"]::after{display:none}
+}
+
+/* ---- buttons: printed rectangles; the primary is the violet stamp ---- */
+.btn{background:var(--accent-fill);color:#fff;font:600 .95rem var(--f);letter-spacing:.01em;border:0;padding:12px 18px;transition:background .15s,transform .08s}
+.btn:hover:not(:disabled){background:var(--accent-ink);filter:none}
+.btn:active:not(:disabled){transform:translateY(1px)}
+:root[data-mode="dark"] .btn:hover:not(:disabled){background:#7B63E2}
+.btn.ghost,.fb .btn.ghost{background:var(--panel);color:var(--ink);box-shadow:inset 0 0 0 1.5px var(--ink)!important}
+.btn.ghost:hover:not(:disabled){background:var(--panel2)}
+.btn.go,.btn.lime,.btn.coral,.fb #next,.fb #next.go,.fb.no #next,.ppop .btn,.ppop.todo .btn{background:var(--accent-fill);color:#fff}
+.btn.big{padding:15px 18px;font-size:1rem}
+.btn:disabled{opacity:.4}
+.linkbtn{color:var(--muted)} .linkbtn:hover{color:var(--ink)}
+.seg-tabs{background:var(--panel2);border:1px solid var(--line);padding:3px}
+.seg-tabs button[aria-pressed="true"],.plancard .seg-tabs button[aria-pressed="true"]{background:var(--ink);color:var(--panel)}
+
+/* ---- headings carry themselves: no eyebrows, no icon tiles in card heads ---- */
+.fc-head small,.fc-head>.sq,.acthead small,.eyebrow,.mhead>.sq,.lastrun>.sq,.verrow>.sq{display:none}
+.fc-head h2{font-size:1.45rem}
+.fpill{background:transparent;border:1px solid currentColor;color:var(--ink);font:700 .74rem var(--fh);letter-spacing:.06em;text-transform:uppercase;padding:4px 8px}
+.fpill.ok{color:var(--ok);background:transparent} .fpill.bad{color:var(--bad);background:transparent} .fpill.amb,.fpill.open{color:var(--muted);background:transparent}
+.gtag,.gtag.ind{background:transparent;border:1px solid currentColor;color:var(--muted);font:700 .66rem var(--fh);letter-spacing:.07em;text-transform:uppercase;padding:1px 6px}
+.tag{font:600 .74rem var(--fh);letter-spacing:.05em;text-transform:uppercase}
+.shead{border-bottom:1px solid var(--edge);padding:14px 2px 6px}
+.shead h3{font:700 1.2rem var(--fh);letter-spacing:0}
+.shead small{font:700 .7rem var(--fh);letter-spacing:.08em;text-transform:uppercase}
+
+/* ---- form fields ---- */
+.inset{background:var(--panel2);border:1px solid var(--line)}
+.inset small,.rgrid small,.bstats small,.sfacts span,.verrow small{font:700 .66rem var(--fh);letter-spacing:.08em;text-transform:uppercase;color:var(--muted)}
+.inset .pbar,.pbar,.bar,.tbar{background:var(--panel);border:1px solid var(--line);border-radius:2px!important;height:8px}
+.inset .pbar i,.pbar i,.bar i,.tbar i{background:var(--ink);border-radius:0!important}
+.xpbox{background:var(--panel);color:var(--ink);border:1px solid var(--line);font:700 .9rem var(--f)}
+.xpbox svg.i{color:var(--ink)}
+.tin,.field input,.write,textarea,.lpick select,.tsearch{border:1px solid var(--edge);background:var(--panel)}
+.tin:focus,.tsearch:focus-within{border-color:var(--accent-fill);box-shadow:0 0 0 3px var(--accent-soft)!important}
+.lpick{background:transparent;border:1px solid var(--line);padding:4px 4px 4px 10px;font:700 .68rem var(--fh);letter-spacing:.08em;text-transform:uppercase}
+.lpick svg.i{display:none}
+.lpick select{font:600 .95rem var(--f)}
+.tip,.gnote,.eselcard{background:var(--panel2);color:var(--ink);border:1px solid var(--line)}
+.intro .tip,.gtt .tip{background:var(--panel2);border:1px solid var(--line);padding-left:48px}
+.intro .tip::before,.gtt .tip::before{background-color:#fff;border:1px solid var(--ink)}
+.tipcard{background:var(--panel);border:1px dashed var(--edge)}
+.tipcard .sq{display:none}
+.tipcard small{color:var(--muted);font:700 .68rem var(--fh);letter-spacing:.08em}
+
+/* ---- answer bubbles: the plan ticks, quiz letters and reading options ---- */
+.tick{width:30px;height:20px;border-radius:50%!important;border:1.5px solid var(--ink);background:transparent;margin-top:3px}
+.tick svg.i{display:none}
+.tick[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);animation:bubbleFill .32s cubic-bezier(.16,1,.3,1)}
+@keyframes bubbleFill{from{transform:scale(.7);background:transparent}to{transform:scale(1)}}
+.blk{background:var(--panel);border:1px solid var(--line)}
+.blk.next{border:1.5px solid var(--accent-fill)}
+.blk.done .bt b{text-decoration:line-through;text-decoration-thickness:1.5px}
+.blk .bm,.blk .bm.num-f{border:1px solid var(--line);background:var(--panel2);border-radius:3px;padding:1px 6px;font:600 .78rem var(--f)}
+.blocks{counter-reset:aufgabe}
+.blk:not(.rest) .bt>b::before{counter-increment:aufgabe;content:counter(aufgabe) ". ";color:var(--muted);font-weight:600}
+.opt{background:var(--panel);border:1px solid var(--edge);color:var(--ink)}
+.opt:hover:not(:disabled){border-color:var(--ink)}
+.opt kbd,.io kbd{display:inline-grid;place-items:center;width:30px;height:20px;border-radius:50%!important;border:1.5px solid var(--ink);background:transparent;color:var(--ink);font:700 .72rem var(--fh);text-transform:uppercase;box-shadow:none}
+.opt.right{border-color:var(--ok);background:var(--okbg);color:var(--ok)} .opt.right kbd{background:var(--ok);border-color:var(--ok);color:#fff}
+.opt.wrong{border-color:var(--bad);background:var(--badbg);color:var(--bad)} .opt.wrong kbd{background:var(--bad);border-color:var(--bad);color:#fff}
+.gopts .opt{font-family:var(--fh)}
+.gopts .opt[data-g="m"]{color:var(--der)} .gopts .opt[data-g="f"]{color:var(--die)} .gopts .opt[data-g="n"]{color:var(--das)}
+.io{background:var(--panel);border:1px solid var(--edge)}
+.io.sel{border-color:var(--ink)} .io.sel kbd{background:var(--ink);color:var(--panel)}
+.io.right kbd{background:var(--ok);border-color:var(--ok);color:#fff} .io.wrong kbd{background:var(--bad);border-color:var(--bad);color:#fff}
+.qlead{background:transparent;border:0;border-bottom:1px solid var(--line);border-radius:0!important;color:var(--muted);padding:0 0 6px;font:700 .72rem var(--fh);letter-spacing:.08em}
+.qlead svg.i{color:var(--muted)}
+.qtop .bar i{background:var(--ink)}
+
+/* ---- feedback: printed correction slips ---- */
+.fb{color:var(--ink);border:1px solid var(--line);border-top:3px solid var(--ink)}
+.fb.ok{background:var(--panel);border-top-color:var(--ok)} .fb.no{background:var(--panel);border-top-color:var(--bad)}
+.fb .fbi{border-radius:50%!important}
+.fbwhy{background:var(--panel2);border:1px solid var(--line)}
+
+/* ---- tiles, rows, icons: outlines, not coloured blocks ---- */
+.tile[class*="p-"]{background:var(--panel);color:var(--ink);border:1px solid var(--line);border-top:3px solid var(--ink);min-height:128px}
+.tile[class*="p-"] span{color:var(--muted);opacity:1}
+.tile[class*="p-"] b{color:var(--ink);font-family:var(--fh);font-size:1.45rem}
+.tile[class*="p-"] .ic{background:transparent;color:var(--ink);border:1px solid var(--line);border-radius:3px}
+.ttop em{background:transparent;color:var(--ink);border:1px solid var(--ink);border-radius:3px;font:700 .66rem var(--fh);letter-spacing:.07em;text-transform:uppercase}
+.tile:hover:not(:disabled){filter:none;background:var(--panel2)}
+.grow{background:var(--panel);border:1px solid var(--line)}
+.grow .gi{background:transparent!important;color:var(--ink)!important;border:1px solid var(--line);border-radius:3px}
+.grow b{font-family:var(--fh)}
+.course,.lesson{border:1px solid var(--line)}
+.course .cover,.course.k-vocab .cover{background:var(--panel2);border-bottom:1px solid var(--line)}
+.course .cover .phrase,.course .cover .lv{color:var(--ink)}
+.course .cover .phrase .m{color:var(--der);opacity:1} .course .cover .phrase .f{color:var(--die);opacity:1} .course .cover .phrase .n{color:var(--das);opacity:1}
+.kchip{background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+.course.next{outline:2px solid var(--accent-fill)}
+.lesson .num{background:var(--panel2);color:var(--ink);border:1px solid var(--line);border-radius:3px}
+.lesson.done .num{background:var(--ink);color:var(--panel)}
+.lesson.next{border:1.5px solid var(--accent-fill)}
+.cover-hero,.cover-hero.k-vocab{background:var(--t1);color:#fff}
+.say{background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+.ex.exr{background:var(--panel2);border:1px solid var(--line)}
+.ex.exr .say{background:var(--panel);color:var(--ink)}
+
+/* ---- Lernpfad: black section bars and numbered bubbles ---- */
+.ubanner{background:var(--t1);color:#fff;border:0}
+.ubanner small,.ubanner p{color:rgba(255,255,255,.72)}
+:root[data-mode="dark"] .ubanner small{color:rgba(255,255,255,.72)}
+.ubanner .uprog{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.45)}
+.pnode,.pnode.todo{width:58px;height:58px;border-radius:50%!important;background:var(--panel);border:1.5px solid var(--ink);color:var(--ink)}
+.pnode.todo{border-color:var(--edge);color:var(--faint)}
+.pnode.done{background:var(--ink);border-color:var(--ink);color:var(--panel)}
+.pnode.cur{background:var(--panel);border:2px solid var(--accent-fill);color:var(--accent-fill)}
+.pnode.cur::after{border-radius:50%!important;border-color:var(--accent-fill)}
+.pnode.review,.pnode.review.done{border-radius:4px!important;background:var(--panel);color:var(--ink);border:1.5px double var(--ink);outline:1px solid var(--ink);outline-offset:3px}
+.pnode.review.done{background:var(--ink);color:var(--panel)}
+.pbub,.pbub::after{background:var(--accent-fill);color:#fff}
+.ppop{background:var(--panel);border:1px solid var(--ink)} .ppop::before{background:var(--panel);border-left:1px solid var(--ink);border-top:1px solid var(--ink)}
+.ppop small{color:var(--muted)}
+.road div.on{background:var(--panel2);border-color:var(--ink);color:var(--ink)}
+.pstage .sn,.pstage.is-done .sn{background:var(--ink);color:var(--panel);border-radius:3px}
+
+/* ---- Fortschritt ---- */
+.gauge .arc-t{stroke:var(--panel2)} .gauge .arc-v{stroke:var(--ink);stroke-linecap:butt} .gauge .arc-v.hot{stroke:var(--accent-fill)}
+.gauge .read b{font-family:var(--fh)}
+.dots i{border-radius:50%!important;background:var(--panel2);border:1px solid var(--line)}
+.dots i.on{background:var(--ink);border-color:var(--ink)}
+.dots i svg.i{color:var(--panel)}
+.bars .fill,.fill{background:var(--ink)} .fill.today{background:var(--accent-fill)} .fill.met{background:var(--ink)}
+.cal i.met{background:var(--ink);color:var(--panel)} .cal i.today{outline:2px solid var(--accent-fill);background:var(--panel)}
+.rgrid div{background:var(--panel2);border:1px solid var(--line)}
+.rgrid div.ok{background:var(--okbg);border-color:var(--ok)} .rgrid div.bad{background:var(--badbg);border-color:var(--bad)}
+.lvlrow span{color:var(--ink)}
+
+/* ---- Blitz, Tabelle, writing, chat: same paper ---- */
+.bstats div,.bstats .amb,.bstats .ind{background:var(--panel);color:var(--ink);border:1px solid var(--line)}
+.gtiles span,.bopts .opt{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--c)}
+.tfilter button{background:var(--panel);border:1px solid var(--line)}
+.tfilter button[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:var(--panel)}
+.eselcard .sq{display:none}
+.esel div{background:var(--panel);border:1px solid var(--line)}
+.esel b{color:var(--ink)}
+table.mx td.hl{background:var(--panel2)}
+.crits span{background:transparent;border:1px solid var(--ok);color:var(--ok)}
+.checks li.no,.mist li{background:var(--panel);border:1px solid var(--bad)}
+.checks li.ok{background:var(--panel);border:1px solid var(--line)}
+.bub.me{background:var(--panel2)} .bub.them{background:var(--panel);border:1px solid var(--line)}
+.cav{background:var(--ink);color:var(--panel)}
+
+/* ---- the stamp: every finish screen gets "Bestanden" pressed onto the sheet ---- */
+.celebrate .cf,.celebrate .cring,.celebrate .spark{display:none!important}
+.celebrate .cbadge,.celebrate .cbadge.zap{width:auto;height:auto;background:transparent;color:var(--accent-fill);border:3px solid currentColor;outline:1.5px solid currentColor;outline-offset:3px;
+  border-radius:6px!important;padding:12px 22px 10px;transform:rotate(-7deg);box-shadow:none!important;animation:stampIn .5s cubic-bezier(.16,1,.3,1) both}
+:root[data-mode="dark"] .celebrate .cbadge{color:var(--accent)}
+.celebrate .cbadge svg.i{display:none}
+.celebrate .cbadge::after{content:"Bestanden";font:800 1.9rem/1 var(--fh);letter-spacing:.14em;text-transform:uppercase}
+@keyframes stampIn{0%{opacity:0;transform:scale(1.7) rotate(-14deg);filter:blur(2px)}60%{opacity:1;filter:blur(0)}100%{opacity:1;transform:scale(1) rotate(-7deg)}}
+@media (prefers-reduced-motion: reduce){.celebrate .cbadge,.tick[aria-pressed="true"]{animation:none}}
+.celebrate .cstats div{background:var(--panel);border:1px solid var(--line)}
+.week i.on{background:var(--ink);border-color:var(--ink);color:var(--panel)}
+.intro .tip,.gtt .tip{box-shadow:none!important}
+.pnode.cur .pbub{animation:none}
+.avbtn{flex:none;width:38px;height:38px;min-width:38px}
+@media (min-width:901px){.topbar{background:transparent;padding:6px 2px 0}}
+/* ---- finish-review fixes ---- */
+.card{border-top:1px solid var(--line)}
+.partbar{display:flex;justify-content:space-between;gap:10px;margin:-20px -20px 16px;padding:9px 20px;background:var(--t1);color:#fff;font:700 .78rem var(--fh);letter-spacing:.1em;text-transform:uppercase;border-radius:3px 3px 0 0}
+.fcard .fc-head h2{font:700 2rem/1.05 var(--fh);letter-spacing:-.01em}
+.fcard .blocks{margin:6px -20px -20px;border-top:1px solid var(--line);gap:0}
+.fcard .blk,.fcard .blk.next{border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;background:var(--panel);padding:14px 20px}
+.fcard .blk:last-child{border-bottom:0!important}
+.fcard .blk.next{box-shadow:inset 3px 0 0 var(--accent-fill)!important}
+.fcard .blk.rest{background:var(--panel2);border-style:solid!important}
+.celebrate .cbadge,.celebrate .cbadge.zap{color:var(--ink)}
+.celebrate .cbadge::after{content:"Erledigt"}
+.celebrate.pass .cbadge{color:var(--accent-fill)}
+:root[data-mode="dark"] .celebrate.pass .cbadge{color:var(--accent)}
+.celebrate.pass .cbadge::after{content:"Bestanden"}
+.celebrate.retry .cbadge::after{content:"Wiederholen"}
+body.focus .stampmark{visibility:hidden}
+@media (max-width:900px){body.focus .topbar{display:none}}
+body[data-view="heute"] #chipXp{display:none}
+.chip.time{background:var(--panel)!important;color:var(--ink)!important;border-color:var(--line)!important}
+.chip.time svg.i{color:var(--ink)!important}
+.ref svg.i,.resrow svg.i,a.ref svg.i{color:var(--ink)}
+table.ct td.hlcell,table.mx td.hl,.intro table tr td.hlcell{background:var(--panel2)}
+.tipcard h3{font:700 .95rem var(--fh);margin:0}
+.verrow b{display:block;font:700 .95rem var(--fh)}
+.ubanner b{font:700 1.15rem var(--fh)}
+/* Lernpfad as an answer-sheet column */
+.upath{display:flex;flex-direction:column;align-items:stretch;gap:0;padding:0;margin:0 0 18px;background:var(--panel);border:1px solid var(--line);border-top:0}
+.upath::before,.upath::after{display:none!important}
+.pnode,.pnode.todo,.pnode.done,.pnode.cur,.pnode.review,.pnode.review.done,.pnode.ready{width:auto!important;height:auto!important;min-height:58px;border:0!important;border-bottom:1px solid var(--line)!important;outline:0!important;
+  border-radius:0!important;background:var(--panel)!important;color:var(--ink)!important;display:flex!important;align-items:center;gap:14px;padding:10px 14px;margin:0!important;transform:none!important;text-align:left;animation:none!important}
+.pnode:last-child{border-bottom:0!important}
+.pnode::after,.pnode.cur::after{display:none!important}
+.pnode .pb{flex:none;width:40px;height:26px;border-radius:50%;border:1.5px solid var(--ink);display:grid;place-items:center;font:700 .78rem var(--fh)}
+.pnode .pb svg.i{width:15px;height:15px}
+.pnode.done .pb{background:var(--ink);color:var(--panel)}
+.pnode.cur{box-shadow:none!important}
+.pnode.cur .pb{border:2px solid var(--accent-fill);color:var(--accent-fill)}
+.pnode.todo .pt b{color:var(--muted)}
+.pnode.review .pb{border-radius:3px;border-style:double;border-width:3px}
+.pnode.review.done .pb{background:var(--ink);color:var(--panel)}
+.pnode .pt{flex:1;min-width:0;display:flex;flex-direction:column}
+.pnode .pt b{font:600 .98rem var(--f)}
+.pnode .pt small{color:var(--muted);font-size:.8rem;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pnode .pbub{position:static!important;transform:none!important;margin:0;padding:5px 10px;font:700 .72rem var(--fh);letter-spacing:.08em;text-transform:uppercase}
+.pnode .pbub::after{display:none}
+.psc{font:700 .8rem var(--fh);color:var(--muted)}
+.ppop{margin:0!important;transform:none!important;width:auto!important;max-width:none!important;border:0!important;border-bottom:1px solid var(--line)!important;border-radius:0!important;background:var(--panel2)!important;position:static!important}
+.ppop::before{display:none!important}
+.fcard .blk.next{box-shadow:none!important}
+.fcard .blk.next .tick{border:2px solid var(--accent-fill)}
+.celebrate .burst{width:auto;min-width:210px;height:auto;padding:28px 0 8px;display:flex;justify-content:center}
+.gtiles span,.bopts .opt,.bopts .opt:hover:not(:disabled){border:1px solid var(--line)!important;border-top:1px solid var(--line)!important}
+.glist.skills .grow>span:first-child{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
+.glist.skills .grow>span:first-child>span{font-size:.84rem;color:var(--muted)}
+.fcard{--pad:20px;overflow:hidden}
+@media (max-width:640px){.fcard{--pad:16px}}
+.partbar{margin:calc(var(--pad) * -1) calc(var(--pad) * -1) 16px;padding:9px var(--pad)}
+.fcard .blocks{margin:6px calc(var(--pad) * -1) calc(var(--pad) * -1)}
+.fcard .blk,.fcard .blk.next{padding:14px var(--pad)}
 </style>
 
 <div class="shell">
   <aside class="side" id="tabs" aria-label="Sections"></aside>
   <div class="mainwrap">
     <header class="topbar">
-      <button class="tb-brand" data-goto="heute" aria-label="Weg zur B1, today"><span class="logo sq">B1</span><b>Weg zur B1</b></button>
+      <button class="tb-brand" data-goto="heute" aria-label="Bestanden, today"><span class="stampmark">Bestanden</span></button>
       <div class="chips"><span class="chip streak" id="chipStreak" title="Days in a row"></span><span class="chip gem" id="chipGem" title="XP in total"></span>
         <button class="iconbtn always" id="moveBtn" aria-label="Settings" title="Settings"></button><button class="avbtn" id="meBtn" aria-label="My progress" title="My progress"></button></div>
     </header>
@@ -6779,7 +7090,7 @@ function progressCode(s){
 }
 function readProgressCode(code){
   const c = String(code || '').replace(/\s+/g, '');
-  if (!c.startsWith(CODE_PREFIX)) throw new Error('This isn’t a Weg zur B1 progress code. A code starts with WZB1.');
+  if (!c.startsWith(CODE_PREFIX)) throw new Error('This isn’t a Bestanden progress code. A code starts with WZB1.');
   let s;
   try { const bin = atob(c.slice(CODE_PREFIX.length)); s = JSON.parse(new TextDecoder().decode(Uint8Array.from(bin, ch => ch.charCodeAt(0)))); }
   catch(e){ throw new Error(BAD_CODE); }
@@ -6932,7 +7243,7 @@ const LUC = {heute:'House', pfad:'Route', ueben:'Dumbbell', pruefung:'Graduation
   say:'Volume2', flame:'Flame', play:'Play', sun:'Sun', moon:'Moon', x:'X', back:'ArrowLeft', next:'ArrowRight', check:'Check', clock:'Clock', list:'ListChecks',
   target:'Target', zap:'Zap', brain:'Brain', chevL:'ChevronLeft', chevR:'ChevronRight', cloud:'Cloud', device:'Smartphone', snow:'Snowflake', trophy:'Trophy',
   shapes:'Shapes', dialog:'MessagesSquare', repeat:'Repeat', timer:'Timer', spell:'SpellCheck', headphones:'Headphones', sparkles:'Sparkles',
-  book:'BookMarked', video:'CirclePlay', ext:'ArrowUpRight', move:'ArrowLeftRight', copy:'ClipboardCopy', gear:'Settings', phone:'Phone', mic:'Mic', eye:'Eye', eyeoff:'EyeOff', trend:'TrendingUp', fortschritt:'TrendingUp', search:'Search', suche:'Search', gem:'Gem', sliders:'SlidersHorizontal', user:'User', bulb:'Lightbulb', lock:'Lock', badge:'BadgeCheck', palette:'Palette', reset:'RotateCcw', zin:'ZoomIn', zout:'ZoomOut', fileup:'FileUp', download:'Download', trash:'Trash2'};
+  book:'BookMarked', video:'CirclePlay', ext:'ArrowUpRight', move:'ArrowLeftRight', copy:'ClipboardCopy', gear:'Settings', phone:'Phone', mic:'Mic', eye:'Eye', eyeoff:'EyeOff', trend:'TrendingUp', fortschritt:'TrendingUp', search:'Search', suche:'Search', gem:'Gem', streak:'CalendarCheck', sliders:'SlidersHorizontal', user:'User', bulb:'Lightbulb', lock:'Lock', badge:'BadgeCheck', palette:'Palette', reset:'RotateCcw', zin:'ZoomIn', zout:'ZoomOut', fileup:'FileUp', download:'Download', trash:'Trash2'};
 const iconCache = {};
 const icon = k => {
   if (iconCache[k]) return iconCache[k];
@@ -6946,7 +7257,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = '1f63d1a';  // build.py puts the build number here
+const APP_VERSION = 'e2c0c90';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -7029,7 +7340,7 @@ function nav(){
   if (!navBuilt){
     const btn = ([k, de, en], extra = '') => `<button data-view="${k}" title="${en}">${icon(k)}<span>${de}</span>${extra}</button>`;
     tabs.innerHTML = `
-      <div class="brand"><span class="logo">B1</span><div><b>Weg zur B1</b><small>Deutsch A1 bis B1</small></div></div>
+      <div class="brand"><span class="stampmark">Bestanden</span><small>Deutsch A1 bis Goethe B1</small></div>
       <p class="navlabel">Hauptmenü</p>
       <div class="navgroup primary"><i class="navpill jump" aria-hidden="true"></i>${VIEWS.map(v => btn(v)).join('')}</div>
       <p class="navlabel">Direkt</p>
@@ -7077,9 +7388,9 @@ document.getElementById('meBtn').addEventListener('click', () => { stopActivity(
 function chips(){
   const t = today(), s = streakInfo(state.met, t);
   const cs = document.getElementById('chipStreak');
-  cs.innerHTML = `${icon('flame')}${s.streak}`; cs.classList.toggle('lit', s.todayDone); cs.title = `${s.streak} days in a row`;
+  cs.innerHTML = `${icon('streak')}${s.streak}`; cs.classList.toggle('lit', s.todayDone); cs.title = `${s.streak} days in a row`;
   document.getElementById('chipXp').innerHTML = `${icon('clock')}${minutesOn(state, t)}/${state.planMin}m`;
-  document.getElementById('chipGem').innerHTML = `${icon('gem')}${state.xp}`;
+  document.getElementById('chipGem').innerHTML = `${state.xp} XP`;
 }
 const TITLES = {pfad:['Lernpfad','Dein Weg von A1 bis B1'], ueben:['Üben','Gezieltes Training · A1 bis B1'], fortschritt:['Fortschritt','Serie, Statistik und Ziele'], suche:['Nachschlagen','Wörter, Grammatik und Lektionen'], pruefung:['Prüfung','Goethe-Zertifikat B1'],
   tabelle:['Grammatik-Tabellen','Alle Fälle auf einen Blick'], karten:['Karten','Spaced Repetition'], lesen:['Lesen','Texte lesen und hören'], schreiben:['Schreiben','Briefe, E-Mails und Meinungen'], telefon:['Sprechen','Rollenspiele am Telefon'], daten:['Einstellungen','Gemini, Stimme und Fortschritt']};
@@ -7119,7 +7430,7 @@ function tabDir(from, to){
 }
 function render(){
   if (maybeReload()) return;
-  const go = () => { nav(); chips(); setTitle(); ({heute:vHeute, pfad:vPfad, ueben:vUeben, pruefung:vPruefung, tabelle:vTabelle, karten:vKarten, lesen:vLesen, schreiben:vSchreiben, telefon:vTelefon, daten:vDaten, fortschritt:vFortschritt, suche:vSuche})[view](); };
+  const go = () => { document.body.dataset.view = view; nav(); chips(); setTitle(); ({heute:vHeute, pfad:vPfad, ueben:vUeben, pruefung:vPruefung, tabelle:vTabelle, karten:vKarten, lesen:vLesen, schreiben:vSchreiben, telefon:vTelefon, daten:vDaten, fortschritt:vFortschritt, suche:vSuche})[view](); };
   go();
   // A short fade of the content. (document.startViewTransition snapshots the whole screen, fixed bottom bar included, and froze phones for about a second.)
   if (rendered && view !== shownView && !reduceMotion()){
@@ -7171,8 +7482,9 @@ const EXAM_TIPS = [
   ['Sprechen', 'Join your ideas: weil, obwohl and dass send the verb to the end; deshalb and trotzdem put it right after them.'],
   ['Sprechen', 'In Teil 1, make suggestions and react to your partner: „Wie wäre es, wenn …?“, „Gute Idee, aber …“.']];
 const actHead = (id, eyebrow, title, extra = '') => `<div class="acthead"><button class="iconbtn always" id="${id}" aria-label="Close">${icon('x')}</button><div><small>${esc(eyebrow)}</small><b>${esc(title)}</b></div>${extra}</div>`;
+const grade = pct => pct >= 80 ? 'pass' : pct < 60 ? 'retry' : '';
 const tipCard = (i = 0) => { const [part, t] = EXAM_TIPS[(new Date().getDate() + i) % EXAM_TIPS.length];
-  return `<section class="tipcard"><span class="sq">${icon('bulb')}</span><div><small>B1 Prüfungstipp · ${part}</small><p>${t}</p></div></section>`; };
+  return `<section class="tipcard"><span class="sq">${icon('bulb')}</span><div><h3>Prüfungstipp: ${part}</h3><p>${t}</p></div></section>`; };
 // One thick half-circle arc, as in the Stitch Tagesziel card.
 function gaugeSvg(frac, hot){
   const pct = Math.round(Math.min(1, frac) * 100), d = 'M20 112 A90 90 0 0 1 200 112';
@@ -7259,27 +7571,23 @@ function vHeute(){
     const pct = Math.min(100, Math.round(mins / goal * 100));
     const nb = plan.blocks.filter(b => b.t !== 'rest'), nd = nb.filter(b => plan.done[b.key]).length;
     card = `<section class="card fcard">
-      <div class="fc-head"><span class="sq">${icon('target')}</span><div><small>Dein Plan für heute</small><h2>${st ? esc(st.name) : 'Prüfungstraining'}</h2></div><span class="fpill">${st ? `Stufe ${sn}/${STAGES.length}` : 'B1'}</span></div>
+      <div class="partbar"><span>Heute</span><span>${st ? `Stufe ${sn} von ${STAGES.length}` : 'B1-Training'}</span></div>
+      <div class="fc-head"><div><h2>${st ? esc(st.name) : 'Prüfungstraining'}</h2></div></div>
       <p class="fc-text">${st ? st.can : 'All lessons are done. Now it is exam training: reading, writing, listening and full practice exams.'}</p>
       <label class="lpick" for="lpick">${icon('pfad')}<span>Lesson today</span><select id="lpick">${LESSONS.map((l, i) => [l, i]).filter(([l]) => state.done[l.id] || l === nl || l === pl)
         .map(([l, i]) => `<option value="${l.id}" ${pl === l ? 'selected' : ''}>${i + 1}. ${esc(l.title)}${state.done[l.id] ? ' ✓' : ''}</option>`).join('')}</select></label>
       <div class="inset"><div><small>Heute gelernt</small><b>${mins} / ${goal} min</b></div><div><small>Plan</small><b>${nd} von ${nb.length} erledigt</b></div><div class="pbar"><i style="width:${pct}%"></i></div></div>
       ${next ? `<div class="fc-cta"><button class="btn big" id="go">${icon(next.t === 'app' ? 'play' : 'check')}<span>${next.t === 'app' ? 'Next: ' : 'Done: '}${esc(next.title)}</span></button><span class="xpbox">${icon('clock')}${next.min} min</span></div>`
              : `<p class="done-note">Plan complete. ${mins >= goal ? 'Daily goal reached. Your streak is safe.' : 'Well done. Choose a longer plan below if you want to keep going.'}</p>`}
+      <ol class="blocks">${plan.blocks.map(row).join('')}</ol>
     </section>
-    <div class="shead"><h3>Deine Blöcke</h3><small>${nb.length} Schritte</small></div>
-    <ol class="blocks">${plan.blocks.map(row).join('')}</ol>
     <section class="card pfoot"><div class="fc-head"><span class="sq ind">${icon('clock')}</span><div><small>Planlänge</small><h3>How long today?</h3></div></div>
       <div class="seg-tabs" role="group" aria-label="Length of the plan">${[[30, '30 min'], [60, '1 hour'], [120, '2 hours']].map(([v, l]) => `<button data-size="${v}" aria-pressed="${goal === v}">${l}</button>`).join('')}</div>
       <p class="muted">Time in lessons, exercises, the book reader and the tables counts by itself. Tick the video, the break and the book block when you finish them. Finishing the whole plan always reaches your goal.</p></section>`;
   }
   $main.innerHTML = `<div class="today">${card}
-    <section class="card daily">
-      <div class="dstreak" title="${s.streak} days in a row">${icon('flame')}<b>${s.streak}</b><span>${s.streak === 1 ? 'day' : 'days'} in a row</span></div>
-      <div class="dgoal"><div class="progline"><span>Daily goal</span><b>${mins} / ${goal} min</b></div><div class="bar"><i style="width:${Math.min(100, Math.round(mins / goal * 100))}%"></i></div></div>
-    </section>
     ${state.examDate && daysBetween(today(), state.examDate) >= 0 ? `<div class="row" style="justify-content:center"><span class="fpill amb">${icon('pruefung')}Goethe B1 in ${daysBetween(today(), state.examDate)} Tagen</span></div>` : ''}
-    ${state.xp >= 50 && (backupAge() == null || backupAge() >= 7) ? `<section class="card verrow"><span class="sq ind">${icon('download')}</span><div><small>Backup</small><span>${backupAge() == null ? 'You have never saved a backup.' : `Your last backup is ${backupAge()} days old.`} If your phone breaks, your progress is gone.</span></div><button class="btn ghost" id="bkp">Save a backup</button></section>` : ''}
+    ${state.xp >= 50 && (backupAge() == null || backupAge() >= 7) ? `<section class="card verrow"><span class="sq ind">${icon('download')}</span><div><b>Back up your progress</b><span>${backupAge() == null ? 'You have never saved a backup.' : `Your last backup is ${backupAge()} days old.`} If your phone breaks, your progress is gone.</span></div><button class="btn ghost" id="bkp">Save a backup</button></section>` : ''}
     ${first ? '' : tipCard()}
     <div class="row more"><button class="linkbtn" data-goto="fortschritt">${icon('trend')}See my progress</button><button class="linkbtn" data-goto="suche">${icon('suche')}Look something up</button><button class="linkbtn" data-goto="ueben">${icon('ueben')}Practise something else</button></div></div>`;
   const goBtn = document.getElementById('go');   // gone when the whole plan is done
@@ -7375,7 +7683,7 @@ function sessionDone(){
   const s = streakInfo(state.met, today()), xpT = minutesOn(state, today()), nl = nextLesson();
   const t = today(), [yy, mm, dd] = t.split('-').map(Number), mon = addDays(t, -((new Date(yy, mm - 1, dd).getDay() + 6) % 7));
   const week = ['Mo','Di','Mi','Do','Fr','Sa','So'].map((d, i) => { const k = addDays(mon, i); return `<span><i class="${state.met[k] ? 'on' : ''}${k === t ? ' today' : ''}">${state.met[k] ? icon('flame') : ''}</i>${d}</span>`; }).join('');
-  $main.innerHTML = `<section class="celebrate">
+  $main.innerHTML = `<section class="celebrate ${s.todayDone ? 'pass' : ''}">
     <div class="burst" aria-hidden="true"><div class="cbadge zap">${icon('flame')}</div>${[1,2,3,4].map(n => `<i class="spark s${n}">${icon('sparkles')}</i>`).join('')}</div>
     ${s.streak ? `<div class="bigstreak">${s.streak}</div>` : ''}
     <h2>${s.todayDone ? (s.streak === 1 ? 'Du hast eine Serie gestartet!' : `${s.streak} Tage in Folge!`) : 'Geschafft!'}</h2>
@@ -7398,11 +7706,11 @@ function vPfad(){
   const unit = (st, n) => {
     const ls = st.ids.map(id => LESSONS.find(l => l.id === id)), d = ls.filter(l => state.done[l.id]).length, rv = reviews[st.name], flip = n % 2 ? 1 : -1;
     const nodes = ls.map((l, k) => { const i = LESSONS.indexOf(l), done = !!state.done[l.id], cur = l === nl;
-      return `<button class="pnode ${done ? 'done' : cur ? 'cur' : 'todo'}" data-l="${i}" style="--x:${OFF[k % 8] * flip}px" aria-label="Lesson ${i + 1}: ${esc(l.title)}${done ? ', done' : cur ? ', next' : ''}">${cur ? '<span class="pbub">Start</span>' : ''}${icon(done ? 'check' : nodeIcon(l))}</button>`; }).join('');
+      return `<button class="pnode ${done ? 'done' : cur ? 'cur' : 'todo'}" data-l="${i}" aria-label="Lesson ${i + 1}: ${esc(l.title)}${done ? ', done' : cur ? ', next' : ''}"><span class="pb">${i + 1}</span><span class="pt"><b>${esc(l.title)}</b><small>${esc(l.sub)}</small></span>${cur ? '<span class="pbub">Start</span>' : done && state.lscore[l.id] != null ? `<span class="psc">${state.lscore[l.id]}%</span>` : ''}</button>`; }).join('');
     const rvState = rv >= 80 ? 'done' : d === ls.length ? 'ready' : 'todo';
     return `<section class="unit" style="--sc:${stageColor(st)}">
-      <header class="ubanner"><div><small>Abschnitt ${n} · ${ls[0].level}</small><b>${esc(st.name)}</b><p>${esc(st.can)}</p></div><span class="uprog">${d}/${ls.length}</span></header>
-      <div class="upath">${nodes}<button class="pnode review ${rvState}" data-rv="${n - 1}" style="--x:${OFF[ls.length % 8] * flip}px" aria-label="Review of ${esc(st.name)}${rv != null ? `, best ${rv}%` : ''}">${icon('trophy')}</button></div></section>`;
+      <header class="ubanner"><div><b>${n}. ${esc(st.name)}</b><p>${esc(st.can)}</p></div><span class="uprog">${ls[0].level} · ${d}/${ls.length}</span></header>
+      <div class="upath">${nodes}<button class="pnode review ${rvState}" data-rv="${n - 1}" aria-label="Test: ${esc(st.name)}${rv != null ? `, best ${rv}%` : ''}"><span class="pb">T</span><span class="pt"><b>Test: ${esc(st.name)}</b><small>10 questions from this part. 80% passes.</small></span>${rv != null ? `<span class="psc">${rv}%</span>` : ''}</button></div></section>`;
   };
   $main.innerHTML = `
   <section class="card pathhead">
@@ -7417,8 +7725,8 @@ function vPfad(){
   <div class="pathwrap">
     ${STAGES.map((st, i) => unit(st, i + 1)).join('')}
     <section class="unit" style="--sc:var(--t3)">
-      <header class="ubanner"><div><small>Ziel</small><b>B1-Training</b><p>Read, write and sit full practice exams in the Goethe format.</p></div></header>
-      <div class="upath">${[['pruefung', 0], ['lesen', 44], ['schreiben', 0]].map(([v, x]) => `<button class="pnode ${left ? 'todo' : 'ready'}" data-goto="${v}" style="--x:${x}px" aria-label="${({pruefung:'Practice exams', lesen:'Reading', schreiben:'Writing'})[v]}">${icon(v)}</button>`).join('')}</div>
+      <header class="ubanner"><div><b>Ziel: B1-Training</b><p>Read, write and sit full practice exams in the Goethe format.</p></div></header>
+      <div class="upath">${[['pruefung', 'Prüfung', 'Full practice exams'], ['lesen', 'Lesen', 'Texts with questions'], ['schreiben', 'Schreiben', 'Letters, e-mails, opinions']].map(([v, t, sub]) => `<button class="pnode ${left ? 'todo' : 'ready'}" data-goto="${v}" aria-label="${t}"><span class="pb">${icon(v)}</span><span class="pt"><b>${t}</b><small>${sub}</small></span></button>`).join('')}</div>
     </section>
   </div>`;
   const path = $main.querySelector('.pathwrap');
@@ -7426,11 +7734,11 @@ function vPfad(){
   const popHtml = b => {
     if (b.dataset.rv != null){
       const st = STAGES[+b.dataset.rv], rv = reviews[st.name];
-      return `<div class="ppop ${b.classList.contains('todo') ? 'todo' : ''}"><small>Wiederholung</small><b>${esc(st.name)}</b>
-        <p>10 questions mixed from this unit. 80% wins the trophy.${rv != null ? ` Your best: ${rv}%.` : ''}</p><button class="btn" data-review="${b.dataset.rv}">Start review</button></div>`;
+      return `<div class="ppop ${b.classList.contains('todo') ? 'todo' : ''}"><b>Test: ${esc(st.name)}</b>
+        <p>10 questions mixed from this part. 80% passes.${rv != null ? ` Your best: ${rv}%.` : ''}</p><button class="btn" data-review="${b.dataset.rv}">Start review</button></div>`;
     }
     const i = +b.dataset.l, l = LESSONS[i], q = l.drills.reduce((a, dr) => a + dr[1], 0), sc = state.lscore[l.id], done = !!state.done[l.id], cur = l === nl;
-    return `<div class="ppop ${done || cur ? '' : 'todo'}"><small>${l.level} · Lektion ${i + 1}</small><b>${esc(l.title)}</b><p>${esc(l.sub)}</p>
+    return `<div class="ppop ${done || cur ? '' : 'todo'}"><b>${l.level} · Lektion ${i + 1}: ${esc(l.title)}</b>
       <span class="pmeta">${q} questions, ${l.ex.length} examples${l.th ? `, ${VOCAB.filter(v => v.th === l.th).length} words` : ''}</span>
       <button class="btn" data-open="${i}">${done ? `Practise again${sc != null ? ` (${sc}%)` : ''}` : cur ? 'Start lesson' : 'Open lesson'}</button>
       ${!done && !cur ? '<span class="pnote">Already know it? You can test out inside the lesson.</span>' : ''}</div>`;
@@ -7450,7 +7758,7 @@ function vPfad(){
     if (!b || same || b.dataset.goto) return;
     b.classList.add('open');
     b.insertAdjacentHTML('afterend', popHtml(b));
-    const pop = b.nextElementSibling; pop.style.setProperty('--x', b.style.getPropertyValue('--x'));
+    const pop = b.nextElementSibling;
     pop.querySelector('.btn').focus({preventScroll:true});
     pop.scrollIntoView({block:'nearest', behavior: reduceMotion() ? 'auto' : 'smooth'});
   });
@@ -7466,7 +7774,6 @@ function openLesson(l, onDone){
   setHead(l.title, `Lernpfad / ${l.level} / Lektion ${i + 1}`);
   $main.innerHTML = `
   ${actHead('back', `Niveau ${l.level}`, `Lektion ${i + 1} · ${l.title}`)}
-  <div class="row" style="gap:6px"><span class="fpill">${icon('lesen')}${l.level} · Lektion ${i + 1} · ${esc(l.kind)}</span>${state.done[l.id] ? `<span class="fpill ok">${icon('check')}Erledigt</span>` : ''}</div>
   <section class="card intro lintro">
     <div class="fc-head"><div><small>${esc(stageOf(l) ? stageOf(l).name : l.level)}</small><h2>${l.title}</h2></div><span class="sq ind">${icon(l.th ? 'karten' : 'tabelle')}</span></div>
     <div class="cover-hero ${kindClass(l)}" style="--sc:${stageColor(stageOf(l))}"><span class="phrase">${coverHtml(l)}</span></div>
@@ -7566,9 +7873,9 @@ function runQuiz(questions, {title, onDone, onAnswer}){
   function finish(){
     keyHandler = null;
     const pct = Math.round(firstTry/total*100);
-    $main.innerHTML = `<section class="celebrate">
+    $main.innerHTML = `<section class="celebrate ${grade(pct)}">
       <div class="burst" aria-hidden="true"><div class="cbadge">${icon(pct >= 70 ? 'trophy' : 'check')}</div>${[1,2,3,4].map(n => `<i class="spark s${n}">${icon('sparkles')}</i>`).join('')}</div>
-      <h2>${pct >= 90 ? 'Ausgezeichnet!' : pct >= 70 ? 'Gut gemacht!' : 'Geschafft!'}</h2>
+      <h2>${pct >= 90 ? 'Ausgezeichnet!' : pct >= 80 ? 'Gut gemacht!' : pct < 60 ? 'Noch einmal' : 'Fast geschafft'}</h2>
       <div class="cstats"><div><small>XP earned</small><b>+${earned}</b></div><div><small>First try</small><b>${firstTry}/${total}</b></div></div>
       <p class="muted" style="margin:0;max-width:44ch">${pct < 70 ? 'Mistakes are how this works. Read the lesson again and repeat it tomorrow.' : 'Your answers are saved. The ones you missed come back later.'}</p>
       <button class="btn big" id="cont">Weiter${icon('next')}</button></section>`;
@@ -7585,7 +7892,7 @@ function runCards(ids, {onDone, extra = false}){
   let cleared = 0, first = 0;
   function show(){
     if (!queue.length){
-      $main.innerHTML = `<section class="celebrate">
+      $main.innerHTML = `<section class="celebrate ${first === total ? 'pass' : ''}">
         <div class="burst" aria-hidden="true"><div class="cbadge">${icon('karten')}</div>${[1,2,3,4].map(n => `<i class="spark s${n}">${icon('sparkles')}</i>`).join('')}</div>
         <h2>${first === total ? 'Alles gewusst!' : 'Karten geschafft!'}</h2>
         <div class="cstats"><div><small>Cards</small><b>${total}</b></div><div><small>Known first time</small><b>${first}</b></div></div>
@@ -7724,14 +8031,14 @@ function vUeben(){
     <p class="fc-text">${w0 ? `You get this right ${s0.c} of ${s0.n} times on the first try. Fall-Training gives you more of it until it sticks.`
       : 'Every exercise type you practise is tracked. After a few lessons your weakest topic shows up here, and Fall-Training gives you more of it.'}</p>
     ${weak.length > 1 ? `<div class="inset wk">${weak.slice(1).map(w => `<div><small>${esc(w.name)}</small><b class="${w.pct < 60 ? 'fail' : w.pct >= 80 ? 'pass' : ''}">${w.pct}%</b></div>`).join('')}</div>` : ''}
-    <div class="fc-cta"><button class="btn big" id="weak">${icon('play')}${w0 ? '5 Min Fall-Training' : 'Start Fall-Training'}</button><span class="xpbox">${icon('gem')}+XP</span></div>
+    <div class="fc-cta"><button class="btn big" id="weak">${icon('play')}${w0 ? '5 Min Fall-Training' : 'Start Fall-Training'}</button><span class="xpbox">+XP</span></div>
   </section>
   <div class="shead"><h3>Trainieren</h3><small>4 Fertigkeiten</small></div>
-  <section class="ugrid">
-    <button class="tile p-rose" data-goto="karten"><span class="ttop"><span class="ic">${icon('karten')}</span><em>${due ? `${due} fällig` : `${Object.keys(state.cards).length} Wörter`}</em></span><b>Karten</b><span>Spaced repetition</span></button>
-    <button class="tile p-mint" data-goto="lesen"><span class="ttop"><span class="ic">${icon('lesen')}</span><em>${nr ? `${nr.level} Text` : 'Alles gelesen'}</em></span><b>Lesen</b><span>${nr ? esc(nr.title) : 'All texts read'}</span></button>
-    <button class="tile p-violet" data-goto="schreiben"><span class="ttop"><span class="ic">${icon('schreiben')}</span><em>${getKey() ? 'KI-Korrektur' : `${wdone}/${WRITING.length}`}</em></span><b>Schreiben</b><span>${WRITING.length} tasks, A1 to B1</span></button>
-    <button class="tile p-lilac" data-goto="telefon"><span class="ttop"><span class="ic">${icon('phone')}</span><em>Audio</em></span><b>Sprechen</b><span>${CALLS.length} role-plays</span></button>
+  <section class="glist skills">
+    <button class="grow" data-goto="karten"><span><b>Karten <em class="gtag">${due ? `${due} fällig` : `${Object.keys(state.cards).length} Wörter`}</em></b><span>Spaced repetition</span></span>${icon('chevR')}</button>
+    <button class="grow" data-goto="lesen"><span><b>Lesen <em class="gtag">${nr ? `${nr.level} Text` : 'Alles gelesen'}</em></b><span>${nr ? `Next: ${esc(nr.title)}` : 'All texts read'}</span></span>${icon('chevR')}</button>
+    <button class="grow" data-goto="schreiben"><span><b>Schreiben <em class="gtag">${wdone}/${WRITING.length}</em></b><span>${WRITING.length} tasks, A1 to B1${getKey() ? ', corrected by Gemini' : ''}</span></span>${icon('chevR')}</button>
+    <button class="grow" data-goto="telefon"><span><b>Sprechen <em class="gtag">Audio</em></b><span>${CALLS.length} role-plays, phone training, conversation partner</span></span>${icon('chevR')}</button>
   </section>
   <div class="shead"><h3>Spiele &amp; Drills</h3><small>8 Übungen</small></div>
   <section class="glist">
@@ -8220,7 +8527,7 @@ function vDaten(){
   const when = t => t ? new Date(t).toLocaleString('de-DE', {day:'numeric', month:'long', hour:'2-digit', minute:'2-digit'}) : 'not yet';
   const sum = s => `<b>${s.xp}</b> XP · <b>${s.lessons}</b> of ${LESSONS.length} lessons done · <b>${s.days}</b> days at goal`;
   $main.innerHTML = `
-  <section class="card verrow"><span class="sq m2">${icon('badge')}</span><div><small>Version ${esc(APP_VERSION)}</small><span>It updates itself when you open it with internet.</span></div><button class="btn ghost" id="updBtn">Check for updates</button></section>
+  <section class="card verrow"><span class="sq m2">${icon('badge')}</span><div><b>Version ${esc(APP_VERSION)}</b><span>It updates itself when you open it with internet.</span></div><button class="btn ghost" id="updBtn">Check for updates</button></section>
   <section class="card stack"><div class="fc-head"><span class="sq ind">${icon('sparkles')}</span><div><small>KI-Assistent</small><h2>Gemini</h2></div>${getKey() ? '<span class="fpill ok">Aktiv</span>' : '<span class="fpill open">Optional</span>'}</div>
     <p style="margin:0">Optional. The app works fully without it. With a free key from Google (and internet), it can <b>explain the mistakes in your writing</b>, <b>write new reading texts</b> and <b>write new exam sets</b>.</p>
     <ol class="steps"><li>Open <a href="https://aistudio.google.com/apikey" target="_blank" rel="noopener">aistudio.google.com/apikey</a> and sign in with your Google account.</li><li>Tap <b>Create API key</b> and copy the key.</li><li>Paste it below and tap <b>Save</b>.</li></ol>
@@ -8382,9 +8689,9 @@ function runType(title, eyebrow, items, onDone){
     inp.focus({preventScroll:true});
   }
   function finish(){
-    $main.innerHTML = `<section class="celebrate">
+    $main.innerHTML = `<section class="celebrate ${grade(right / items.length * 100)}">
       <div class="burst" aria-hidden="true"><div class="cbadge">${icon('headphones')}</div></div>
-      <h2>${right === items.length ? 'Alles richtig!' : right >= items.length * .7 ? 'Gut gemacht!' : 'Geschafft!'}</h2>
+      <h2>${right === items.length ? 'Alles richtig!' : right >= items.length * .8 ? 'Gut gemacht!' : right < items.length * .6 ? 'Noch einmal' : 'Fast geschafft'}</h2>
       <div class="cstats"><div><small>Right</small><b>${right}/${items.length}</b></div><div><small>XP earned</small><b>+${right * 2}</b></div></div>
       <p class="muted" style="margin:0;max-width:44ch">${right < items.length ? 'What you got wrong is in your Fehlerheft now. It comes back tomorrow.' : 'Your ear is getting faster. Try it with “Slower” switched off next time.'}</p>
       <button class="btn big" id="cont">Weiter${icon('next')}</button></section>`;
@@ -8625,9 +8932,9 @@ function runCall(sc, onDone){
   function finish(){
     const pct = Math.round(scores.reduce((a, b) => a + b, 0) / n * 100), xp = 5 + Math.round(pct / 10);
     state.calls = state.calls || {}; state.calls[sc.id] = Math.max(state.calls[sc.id] || 0, pct); addXP(xp);
-    $main.innerHTML = `<section class="celebrate">
+    $main.innerHTML = `<section class="celebrate ${grade(pct)}">
       <div class="burst" aria-hidden="true"><div class="cbadge">${icon(sc.face ? 'dialog' : 'phone')}</div>${[1,2,3,4].map(k => `<i class="spark s${k}">${icon('sparkles')}</i>`).join('')}</div>
-      <h2>${pct >= 80 ? 'Super Gespräch!' : pct >= 50 ? 'Gut gemacht!' : 'Geschafft!'}</h2>
+      <h2>${pct >= 80 ? 'Super Gespräch!' : pct < 60 ? 'Noch einmal' : 'Fast geschafft'}</h2>
       <div class="cstats"><div><small>Key words</small><b>${pct}%</b></div><div><small>XP earned</small><b>+${xp}</b></div></div>
       <p class="muted" style="margin:0;max-width:44ch">${pct >= 80 ? 'Try it again with the text hidden: then it is real listening, like on the phone.' : 'Do the call again tomorrow. Each time the sentences come faster.'}</p>
       <button class="btn big" id="redo">${icon('repeat')}Do this call again</button><button class="btn ghost big" id="back">Back to the calls</button></section>`;
