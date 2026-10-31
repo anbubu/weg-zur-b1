@@ -1581,6 +1581,10 @@ table.ct td.hlcell,table.mx td.hl,.intro table tr td.hlcell{background:var(--pan
 .fcard .blk.next .tick{border:2px solid var(--accent-fill)}
 .celebrate .burst{width:auto;min-width:210px;height:auto;padding:28px 0 8px;display:flex;justify-content:center}
 .gtiles span,.bopts .opt,.bopts .opt:hover:not(:disabled){border:1px solid var(--line)!important;border-top:1px solid var(--line)!important}
+h4{font:700 .95rem var(--fh);letter-spacing:0;text-transform:none;color:var(--ink)}
+.crits span{border:1px solid var(--line);color:var(--ink);background:var(--panel)}
+.stage:nth-child(3){background:var(--panel2);box-shadow:inset 0 0 0 1.5px var(--ink)!important;color:var(--ink)} .stage:nth-child(4){background:var(--ink);color:var(--panel)}
+.taskhead{display:flex;flex-direction:column}.taskhead h2{order:-1;margin:0 0 10px}
 .glist.skills .grow>span:first-child{flex:1;min-width:0;display:flex;flex-direction:column;gap:1px}
 .glist.skills .grow>span:first-child>span{font-size:.84rem;color:var(--muted)}
 .fcard{--pad:20px;overflow:hidden}
@@ -7257,7 +7261,7 @@ const MORE = [['karten','Karten','Flashcards'],['lesen','Lesen','Reading'],['sch
 const DOW = ['So','Mo','Di','Mi','Do','Fr','Sa'];
 const MONTHS = ['Januar','Februar','März','April','Mai','Juni','Juli','August','September','Oktober','November','Dezember'];
 // Light/dark: the viewer's theme by default, the learner's choice when they pick one (this device only)
-const APP_VERSION = 'e2c0c90';  // build.py puts the build number here
+const APP_VERSION = '5b0ebcf';  // build.py puts the build number here
 const MODE_KEY = 'wzb1:mode';
 try { const m = localStorage.getItem(MODE_KEY); if (m) document.documentElement.dataset.mode = m; } catch(e) {}
 function curMode(){ const r = document.documentElement.dataset; return r.mode || r.theme || (matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light'); }
@@ -7961,7 +7965,7 @@ function vKarten(){
   const learned = new Set(ids.map(id => VBYID[id].th)), my = Array.isArray(state.myWords) ? state.myWords : [], dueSet = new Set(due);
   $main.innerHTML = `${backTo('Üben','ueben')}
   <section class="card stack">
-    <div class="row" style="justify-content:space-between"><h2>Karten</h2><span class="tag">${ids.length} words</span></div>
+    <div class="row" style="justify-content:space-between"><h2>Dein Stapel</h2><span class="tag">${ids.length} words</span></div>
     <div class="stages">${['Neu','Lernen','Gut','Sicher'].map((n,i) => `<div class="stage"><b>${st[i]}</b><span>${n}</span></div>`).join('')}</div>
     <p class="muted" style="margin:0">Cards you know come back later and later (1, 2, 4, 8 … days). Cards you miss come back today. From stage “Lernen” on, some cards show English first, so you practise saying the German word.</p>
     <button class="btn big" id="rev" ${due.length ? '' : 'disabled'}>${due.length ? `Review ${due.length} due card${due.length===1?'':'s'}` : 'Nothing due. Come back tomorrow.'}</button>
@@ -8356,7 +8360,7 @@ function tabelleDocs(){   // the grammar table page, split into its headed secti
 const HIT_NAMES = {lesson:'Lessons', table:'Grammar table', word:'Words', example:'Examples', sentence:'In the texts', book:'In your books', video:'Videos'};
 function vSuche(){
   searchIdx = searchIdx || buildSearchIndex(tabelleDocs());
-  $main.innerHTML = `<section class="card stack"><h2>Nachschlagen</h2>
+  $main.innerHTML = `<section class="card stack">
     <p class="muted" style="margin:0">Search grammar, words, example sentences, texts, book pages and videos. German or English. Accents don’t matter: “uber” finds “über”.</p>
     <input type="search" id="sq" placeholder="Try: Akkusativ, weil, mich, Wohnung …" autocomplete="off" autocapitalize="none" spellcheck="false" aria-label="Search" value="${esc(searchQ)}">
     <div class="row" style="gap:6px">${['Akkusativ', 'Dativ', 'weil', 'Perfekt', 'mich dich', 'Wohnung'].map(w => `<button class="sugg" data-s="${w}">${w}</button>`).join('')}</div></section>
@@ -8845,7 +8849,7 @@ function vTelefon(){
     <button class="btn ghost" id="tphr">${icon('karten')}Hotline phrases · ${VOCAB.filter(v => v.th === 'ccsaetze').length} Sätze</button>
     <details><summary>Das Telefonalphabet</summary><div class="alpha">${Object.entries(ALPHA).map(([k, v]) => `<span><b>${k}</b>${v}</span>`).join('')}</div>
       <p class="muted" style="margin:8px 0 0;font-size:.84rem">Say: „M wie Martha, Ü wie Übermut …“. Since 2022 there is also an official version with cities (A wie Aachen, B wie Berlin), but on the phone most people still use these names.</p></details></section>
-  <section class="card stack"><h2>Sprechen</h2><p class="muted" style="margin:0">Role-plays you answer out loud: customer calls, job interviews and the Goethe B1 speaking exam. The app plays the other person and speaks first. ${SpeechRec ? 'Tap the microphone and the app checks the key words of your answer.' : 'Say your answer out loud, then compare it with a good answer.'} Put on headphones if you can.</p></section>
+  <section class="card stack"><h2>Rollenspiele</h2><p class="muted" style="margin:0">Role-plays you answer out loud: customer calls, job interviews and the Goethe B1 speaking exam. The app plays the other person and speaks first. ${SpeechRec ? 'Tap the microphone and the app checks the key words of your answer.' : 'Say your answer out loud, then compare it with a good answer.'} Put on headphones if you can.</p></section>
   ${[['Prüfung: Sprechen Teil 1 und 3', c => c.part, 'The app is your exam partner. Teil 1: make suggestions, react to your partner’s ideas and agree on a plan. Teil 3: give feedback on your partner’s presentation, ask a question, then answer one about yours.'],
      ['Im Kundenservice', c => !c.part && c.lesson.startsWith('cc-'), 'You are the customer adviser. The customer calls you.'],
      ['Bewerbung', c => !c.part && !c.lesson.startsWith('cc-'), '']].map(([h, f, sub]) => `<h3 style="margin-top:4px">${h}</h3>${sub ? `<p class="muted" style="margin:-6px 0 0">${sub}</p>` : ''}
@@ -8950,7 +8954,7 @@ function nextReading(){ const lv = LV[(nextLesson() || {level:'B1'}).level]; ret
 function vLesen(){
   const nr = nextReading();
   $main.innerHTML = `${backTo('Üben','ueben')}
-  <section class="card stack"><h2>Lesen</h2><p class="muted" style="margin:0">Read, answer, then press “Vorlesen” to hear the whole text. Reading and listening to the same story is one of the fastest ways to learn. Open the word list under a text if you get stuck.</p></section>
+  <section class="card stack"><p class="muted" style="margin:0">Read, answer, then press “Vorlesen” to hear the whole text. Reading and listening to the same story is one of the fastest ways to learn. Open the word list under a text if you get stuck.</p></section>
   ${[['Karims Weg', 'A learner from Casablanca on his way to an Ausbildung in Germany. The texts get harder as his German grows.', READING],
      ['Kurzgeschichten', 'Short stories from everyday life in Germany, each built around the grammar of your A1 and A2 lessons.', STORIES],
      ['B1: Zeitung, Forum, Regeln', 'The text types of the Goethe B1 reading exam: a newspaper article, a forum, house rules, a blog and an interview.', B1TEXTS],
@@ -8994,7 +8998,7 @@ function vSchreiben(){
   const groups = [['A1','A1'],['A2','A2'],['B1','B1 · Goethe exam tasks'],['SP','B1 · Sprechen Teil 2, prepared in writing'],['JOB','Beruf: Bewerbung und Kundenservice']];
   const of = g => WRITING.filter(w => g === 'JOB' ? w.job : g === 'SP' ? w.speak : w.level === g && !w.speak && !w.job);
   $main.innerHTML = `${backTo('Üben','ueben')}
-  <section class="card stack"><h2>Schreiben</h2><p class="muted" style="margin:0">Write first, mistakes and all. Then press “Prüfen”: the app checks length, greeting, closing, du or Sie and your linking words. You tick the task points you covered and compare your text with a model answer.</p></section>
+  <section class="card stack"><p class="muted" style="margin:0">Write first, mistakes and all. Then press “Prüfen”: the app checks length, greeting, closing, du or Sie and your linking words. You tick the task points you covered and compare your text with a model answer.</p></section>
   ${groups.map(([g, label]) => `<h3 style="margin-top:4px">${label}</h3><section class="stack">${of(g).map(w => { const last = state.writing[w.id];
     return `<button class="lesson ${last ? 'done' : ''}" data-w="${w.id}"><span class="num" style="font-size:1rem">${w.speak ? 'Sp' : w.level}</span>
       <span style="min-width:0"><b>${esc(w.title)}</b><span>${w.exam ? `Aufgabe ${w.exam} · ` : ''}about ${w.words} words${w.exam ? ` · ${EXAM_POINTS[w.exam]} exam points` : ''}</span></span>
@@ -9006,7 +9010,7 @@ function editorHtml(w, label){
     <div class="fc-head"><div><small class="wtag">${label ? esc(label) : `Aufgabe · ${w.level}${w.exam ? ` · Goethe B1 Schreiben ${w.exam}` : w.speak ? ' · Sprechen Teil 2' : ''}`}</small><h2>${esc(w.title)}</h2></div><span class="sq ind">${icon('schreiben')}</span></div>
     <p class="task" style="margin:0">${esc(w.situation)}</p>
     ${w.exam ? `<p class="instr" style="margin:0">${esc(W_NOTE[w.exam])}</p>` : ''}
-    <div><small class="eyebrow">Inhaltliche Kriterien</small><div class="crits">${w.points.map(p => `<span>${icon('check')}${esc(p)}</span>`).join('')}</div></div>
+    <div><small class="eyebrow">Inhaltliche Kriterien</small><div class="crits">${w.points.map(p => `<span>${esc(p)}</span>`).join('')}</div></div>
   </section>
   <section class="card stack">
     <div class="chead" style="margin:0"><h3>Dein Text</h3></div>
@@ -9047,7 +9051,7 @@ function checkHtml(w, text){
   const auto = writingChecks(w, text), ok = auto.filter(c => c.ok).length;
   return `<div class="stack wcheck" data-ok="${ok}" data-n="${auto.length}">
     <div class="fc-head"><span class="sq ind">${icon('sparkles')}</span><div><small>Automatische Prüfung</small><h3>${auto.length - ok ? `${auto.length - ok} Korrektur${auto.length - ok === 1 ? '' : 'en'}` : 'Alles richtig'}</h3></div><span class="fpill ok scorepill" data-est>–</span></div>
-    <span class="tag">${w.exam ? `about <b data-pts>0</b> of ${EXAM_POINTS[w.exam]} points · ` : ''}your estimate: half the checks, half the points you tick</span>
+    <span class="muted" style="font-size:.84rem">${w.exam ? `About <b data-pts>0</b> of ${EXAM_POINTS[w.exam]} points. ` : ''}Your estimate: half the checks, half the points you tick.</span>
     <ul class="checks">${auto.map(c => `<li class="${c.ok ? 'ok' : 'no'}"><span class="ci">${icon(c.ok ? 'check' : 'x')}</span><span><b>${esc(c.label)}</b>${c.note ? `<br><span class="muted">${esc(c.note)}</span>` : ''}</span></li>`).join('')}</ul>
     <h4 style="margin:0">Did you write about every point? Tick the ones you covered.</h4>
     <div class="ticks">${w.points.map((p, i) => `<label><input type="checkbox" data-pt="${i}"><span>${esc(p)}</span></label>`).join('')}</div>
